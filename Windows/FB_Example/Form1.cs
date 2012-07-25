@@ -97,28 +97,10 @@ namespace my_interface
 
             if (factorydev.Connect(DspPort) == 0)  // if connect call returns zero, connect has been successful
             {
-                for (int i = 0; i < 10; i++)
-                {
-                    factorydev.Mea21WriteRegister(0x002c, 0x707);
-                    System.Threading.Thread.Sleep(500);
-                    factorydev.Mea21WriteRegister(0x002c, 0x700);
-                    System.Threading.Thread.Sleep(500);
-                }
-
-                factorydev.Disconnect();
-            }
-        }
-
-        private void UploadDSPBinary_Click(object sender, EventArgs e)
-        {
-            CMcsUsbFactoryNet factorydev = new CMcsUsbFactoryNet();
-
-            if (factorydev.Connect(DspPort) == 0)  // if connect call returns zero, connect has been successful
-            {
                 int Thresh = (int)(Convert.ToDouble(SpikeThresh.Text) / (5000000 / Math.Pow(2, 24) / 10)); // 5 V input range ADC, 24bit ADC, 10 volt hardware gain
                 int DeadTime = Convert.ToInt32(Deadtime.Text) * Fs / 1000;
 
-                int StimAmplitude = 2*Convert.ToInt32(BoxStimAmplitude.Text); // resolution is 500 uV / bit, thus factor allows user to specify stim amplitude in mV
+                int StimAmplitude = 2 * Convert.ToInt32(BoxStimAmplitude.Text); // resolution is 500 uV / bit, thus factor allows user to specify stim amplitude in mV
                 int StimPeriod = Fs / Convert.ToInt32(BoxStimPeriod.Text);
                 int StimRepeats = Convert.ToInt32(BoxStimRepeats.Text);
                 int StimStepsize = 2 * Convert.ToInt32(BoxStimStepsize.Text); // resolution is 500 uV / bit, thus factor allows user to specify stim amplitude in mV
@@ -132,6 +114,11 @@ namespace my_interface
 
                 factorydev.Disconnect();
             }
+        }
+
+        private void UploadDSPBinary_Click(object sender, EventArgs e)
+        {
+            CMcsUsbFactoryNet factorydev = new CMcsUsbFactoryNet();
 
             string FirmwareFile;
             FirmwareFile = System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location);
@@ -141,7 +128,7 @@ namespace my_interface
             factorydev.LoadUserFirmware(FirmwareFile, DspPort);           // Code for uploading compiled binary
         }
 
-        private void button1_Click(object sender, EventArgs e)
+        private void StopDSP_Click(object sender, EventArgs e)
         {
             CMcsUsbFactoryNet factorydev = new CMcsUsbFactoryNet(); // Create object of class CMcsUsbFactoryNet (provides firmware upgrade and register access capabilities)
 

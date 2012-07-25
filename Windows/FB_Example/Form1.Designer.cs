@@ -80,7 +80,7 @@
             this.StopDSP.TabIndex = 2;
             this.StopDSP.Text = "Stop DSP";
             this.StopDSP.UseVisualStyleBackColor = true;
-            this.StopDSP.Click += new System.EventHandler(this.button1_Click);
+            this.StopDSP.Click += new System.EventHandler(this.StopDSP_Click);
             // 
             // SpikeThresh
             // 
