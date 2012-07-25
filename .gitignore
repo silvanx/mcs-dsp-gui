@@ -1,0 +1,8 @@
+DSP/.metadata/
+DSP/FB_Example/Debug/
+DSP/FB_Example/Release/
+Windows/FB_Example/bin/
+Windows/FB_Example/obj/
+DSP/FB_Example/.settings/org.eclipse.cdt.codan.core.prefs
+DSP/FB_Example/.settings/org.eclipse.cdt.debug.core.prefs
+DSP/FB_Example/.settings/org.eclipse.core.resources.prefs
