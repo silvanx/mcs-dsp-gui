@@ -13,36 +13,74 @@ namespace my_interface
 {
     public partial class Form1 : Form
     {
-
         CMcsUsbListEntryNet RawPort;
         CMcsUsbListEntryNet DspPort;
-        CMcsUsbListEntryNet AnyPort;
+
+        CMcsUsbListNet devices = new CMcsUsbListNet(); // Create object of CMscUsbListNet Class
+
         int Fs = 50000; // sampling rate
 
         public Form1()
         {
             InitializeComponent();
 
+            devices.DeviceArrival += new OnDeviceArrivalRemoval(devices_DeviceArrival);
+            devices.DeviceRemoval += new OnDeviceArrivalRemoval(devices_DeviceRemoval);
 
-            CMcsUsbListNet devices = new CMcsUsbListNet(); // Create object of CMscUsbListNet Class
+            SearchDevice();
+        }
+
+        void devices_DeviceRemoval(CMcsUsbListEntryNet entry)
+        {
+            SearchDevice();
+        }
+
+        void devices_DeviceArrival(CMcsUsbListEntryNet entry)
+        {
+            SearchDevice();
+        }
+
+        private void SearchDevice()
+        {
             devices.Initialize(DeviceEnumNet.MCS_MEAUSB_DEVICE); // Get list of MEA devices connect by USB
 
-            for (uint i = 0; i < devices.GetDeviceNumber(); i++) // loop through number of devices found
+            RawPort = null;
+            DspPort = null;
+
+            rawSerial.Text = "not found";
+            dspSerial.Text = "not found";
+
+            
+            for (uint i = 0; i < devices.Count; i++) // loop through number of devices found
             {
-                if (devices.GetSerialNumber(i).EndsWith("A")) // check for each device if serial number ends with "A" (USB 1) This USB interface will be used by MC_Rack
+                if (devices.GetUsbListEntry(i).SerialNumber.EndsWith("A")) // check for each device if serial number ends with "A" (USB 1) This USB interface will be used by MC_Rack
                 {
                     RawPort = devices.GetUsbListEntry(i); // assign to RawPort "handle"
+                    rawSerial.Text = RawPort.SerialNumber;
                 }
-                if (devices.GetSerialNumber(i).EndsWith("B"))// check for each device if serial number ends with "B" (USB 2) This USB interface will be used to control DSP
+                if (devices.GetUsbListEntry(i).SerialNumber.EndsWith("B"))// check for each device if serial number ends with "B" (USB 2) This USB interface will be used to control DSP
                 {
                     DspPort = devices.GetUsbListEntry(i);  // assign to DSPPort "handle"
+                    dspSerial.Text = DspPort.SerialNumber;
                 }
+            }
 
+            if (RawPort != null && DspPort != null)
+            {
+                btnDeviceOK.BackColor = Color.LawnGreen;
+            }
+            else if (RawPort != null || DspPort != null)
+            {
+                btnDeviceOK.BackColor = Color.Yellow;
+            }
+            else
+            {
+                btnDeviceOK.BackColor = Color.Red;
             }
 
             // Set Filters
             CMcsUsbFactoryNet factorydev = new CMcsUsbFactoryNet(); // Create object of class CMcsUsbFactoryNet (provides firmware upgrade and register access capabilities)
-            if (factorydev.Connect(DspPort) == 0)  // if connect call returns zero, connect has been successful
+            if (DspPort != null && factorydev.Connect(DspPort) == 0)  // if connect call returns zero, connect has been successful
             {
                 factorydev.Mea21WriteRegister(0x8620, 0x0000FE67); // set b[0] fpr 100 Hz HP
                 factorydev.Mea21WriteRegister(0x8628, 0x00030199); // set b[1] fpr 100 Hz HP
@@ -51,14 +89,10 @@ namespace my_interface
                 factorydev.Mea21WriteRegister(0x8634, 0x00000000); // set a[2] fpr 100 Hz HP
                 factorydev.Disconnect();
             }
-
-
         }
 
         private void ConnectMEA_Click(object sender, EventArgs e)
         {
-
-
             CMcsUsbFactoryNet factorydev = new CMcsUsbFactoryNet(); // Create object of class CMcsUsbFactoryNet (provides firmware upgrade and register access capabilities)
 
             if (factorydev.Connect(DspPort) == 0)  // if connect call returns zero, connect has been successful
@@ -73,13 +107,10 @@ namespace my_interface
 
                 factorydev.Disconnect();
             }
-
-
         }
 
         private void UploadDSPBinary_Click(object sender, EventArgs e)
         {
-
             CMcsUsbFactoryNet factorydev = new CMcsUsbFactoryNet();
 
             if (factorydev.Connect(DspPort) == 0)  // if connect call returns zero, connect has been successful
@@ -107,24 +138,18 @@ namespace my_interface
             FirmwareFile += @"\..\..\..\..\TMS320C6454\FB_Example\Release\";
             FirmwareFile += "FB_Example.bin";
 
-            factorydev.UpdateFirmware(FirmwareFile, DspPort, CFirmwareDestinationNet.MCU1, true); // DO NOT change this line of code unless you know what you do
-            // Code for uploading compiled binary
+            factorydev.LoadUserFirmware(FirmwareFile, DspPort);           // Code for uploading compiled binary
         }
 
         private void button1_Click(object sender, EventArgs e)
         {
-
             CMcsUsbFactoryNet factorydev = new CMcsUsbFactoryNet(); // Create object of class CMcsUsbFactoryNet (provides firmware upgrade and register access capabilities)
 
             if (factorydev.Connect(DspPort) == 0)  // if connect call returns zero, connect has been successful
             {
-
                 factorydev.Coldstart(CFirmwareDestinationNet.MCU1);
                 factorydev.Disconnect();
             }
-
-
         }
-
     }
 }

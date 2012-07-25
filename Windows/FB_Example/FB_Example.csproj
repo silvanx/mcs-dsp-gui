@@ -50,7 +50,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="McsNetUsb">
-      <HintPath>..\..\..\..\..\Programming\DllNet\McsNetUsb.dll</HintPath>
+      <HintPath>.\McsNetUsb.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />

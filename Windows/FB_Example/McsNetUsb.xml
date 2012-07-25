@@ -1,0 +1,1404 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        "McsNetUsb"
+    </assembly>
+    <members>
+        <member name="M:UsbNetDll.CPeristalticPumpDeviceNet.#ctor">
+            <summary>
+    Initialize a new instance of the CPeristalticPumpDeviceNet class.
+</summary>
+        </member>
+        <member name="T:UsbNetDll.CPeristalticPumpDeviceNet">
+            <summary>
+    CPeristalticPumpDeviceNet is the class to control a Persistaltic Pump.
+</summary>
+        </member>
+        <member name="M:UsbNetDll.CMcsUsbFactoryNet.UpdateFirmware(System.String,UsbNetDll.CMcsUsbListEntryNet,UsbNetDll.CFirmwareDestinationNet,System.Boolean)">
+            <summary>
+Flashes a firmware file to the device.
+</summary>
+            <param name="FirmwareFile">Filename of the Firmware file.</param>
+            <param name="listEntry">Device to use for the connection.</param>
+        </member>
+        <member name="M:UsbNetDll.CMcsUsbFactoryNet.UpdateFirmware(System.String,UsbNetDll.CMcsUsbListEntryNet,UsbNetDll.CFirmwareDestinationNet)">
+            <summary>
+Flashes a firmware file to the device.
+</summary>
+            <param name="FirmwareFile">Filename of the Firmware file.</param>
+            <param name="listEntry">Device to use for the connection.</param>
+        </member>
+        <member name="M:UsbNetDll.CMcsUsbFactoryNet.UpdateFirmware(System.String,UsbNetDll.CMcsUsbListEntryNet,UsbNetDll.CFirmwareDestinationNet,UsbNetDll.OnUpdateFirmwareStatusChange,UsbNetDll.OnUpdateFirmwareProgress,System.Boolean)">
+            <summary>
+Flashes a firmware file to the device.
+</summary>
+            <param name="FirmwareFile">Filename of the Firmware file.</param>
+        </member>
+        <member name="M:UsbNetDll.CMcsUsbFactoryNet.LoadUserFirmware(System.String,UsbNetDll.CMcsUsbListEntryNet)">
+            <summary>
+  Send the DSP Firmware to the MEA21 device.
+</summary>
+            <param name="FirmwareFile">Filename of the DSP Firmware (*.bin) file.</param>
+            <param name="listEntry">Device to use for the connection. See CMcsUsbListNet.</param>
+        </member>
+        <member name="M:UsbNetDll.CMcsUsbFactoryNet.GetFirmwareVersionFromFile(System.String,System.UInt32@)">
+            <summary>
+Retrives version info from a Firmware update file.
+</summary>
+        </member>
+        <member name="M:UsbNetDll.CFluidControlDeviceNet.GetThermocoupleNanovoltPerKelvin(System.UInt32)">
+            <summary>
+ Reads the proportional constant for the Thermocouple.
+</summary>
+            <param name="channel">Thermocouple channel number.</param>
+            <returns>The proportional constant in Nanovolt per Kelvin.</returns>
+        </member>
+        <member name="M:UsbNetDll.CFluidControlDeviceNet.GetThermocoupleCalibration(System.UInt32)">
+            <summary>
+ Gets the calibration constant for the Thermocouple ADC.
+</summary>
+            <param name="channel">Thermocouple channel number.</param>
+            <returns>The calibration constant for the Thermocouple ADC.</returns>
+        </member>
+        <member name="M:UsbNetDll.CFluidControlDeviceNet.GetReferenceTemperature(System.UInt32)">
+            <summary>
+ Reads the reference temperature for the Thermocouple.
+</summary>
+            <param name="channel">Thermocouple channel number.</param>
+            <returns>The temperature from the Thermocouple in 1/100 °C.</returns>
+        </member>
+        <member name="M:UsbNetDll.CFluidControlDeviceNet.GetThermocoupleTemperature(System.UInt32)">
+            <summary>
+Reads the temperature from Thermocouple. The functions gives the temperature difference
+between both Thermocouple junctions. To get the absolute temperature, add the reference
+temperature.
+</summary>
+            <param name="channel">Thermocouple channel number.</param>
+            <returns>The temperature difference between both Thermocouple junctions in 1/100 °C.</returns>
+        </member>
+        <member name="M:UsbNetDll.CFluidControlDeviceNet.GetDigin">
+            <summary>
+ Reads the digital input.
+</summary>
+            <returns>The bit pattern of the state of the digital inputs.</returns>
+        </member>
+        <member name="M:UsbNetDll.CFluidControlDeviceNet.GetAdc(System.UInt32)">
+            <summary>
+ Reads an ADC Value.
+</summary>
+            <param name="channel">The ADC channel number to query.</param>
+            <returns>The current ADC value.</returns>
+        </member>
+        <member name="M:UsbNetDll.CFluidControlDeviceNet.GetPWM(System.UInt32)">
+            <summary>
+ Gets the state of the PWM output.
+</summary>
+            <returns>The current state of the PWM outputs duty cycle in permille.</returns>
+        </member>
+        <member name="M:UsbNetDll.CFluidControlDeviceNet.GetDigout">
+            <summary>
+ Gets the state of the digital output.
+</summary>
+            <returns>The current state of the digital outputs as a bit pattern.</returns>
+        </member>
+        <member name="M:UsbNetDll.CFluidControlDeviceNet.GetSingleValve(System.UInt16)">
+            <summary>
+Gets the state of a valve.
+</summary>
+            <param name="valve">number of valve</param>
+            <returns>state of the valve</returns>
+        </member>
+        <member name="M:UsbNetDll.CFluidControlDeviceNet.GetValve">
+            <summary>
+ Gets the state of the valves.
+</summary>
+            <returns>The current state of the valves as a bit pattern.</returns>
+        </member>
+        <member name="M:UsbNetDll.CFluidControlDeviceNet.SetThermocoupleNanovoltPerKelvin(System.UInt32,System.UInt32)">
+            <summary>
+ Sets the proportinal constant for the Thermocouple.
+</summary>
+            <param name="channel">Thermocouple channel number.</param>
+            <param name="value">proportinal constant for the Thermocouple in Nanovolt per Kelvin.</param>
+        </member>
+        <member name="M:UsbNetDll.CFluidControlDeviceNet.CalibrateThermocouple(System.UInt32)">
+            <summary>
+Calibrates the ADC which is used for the Thermocouple. For the calibration,
+Short circuit the Thermocouple and use this function to correct a possible offset of the ADC which measures the thermocouple.
+</summary>
+            <param name="channel">Thermocouple channel number.</param>
+        </member>
+        <member name="M:UsbNetDll.CFluidControlDeviceNet.SetPWM(System.UInt32,System.UInt32)">
+            <summary>
+ Sets the duty cycle of the PWM output.
+</summary>
+            <param name="channel">PWM channel number.</param>
+            <param name="value">duty cycle of the PWM output in permille.</param>
+        </member>
+        <member name="M:UsbNetDll.CFluidControlDeviceNet.SetDigout(System.UInt32)">
+            <summary>
+ Define the pattern on the Digital Output.
+</summary>
+            <param name="value">bit pattern on the digital output.</param>
+        </member>
+        <member name="M:UsbNetDll.CFluidControlDeviceNet.SetSingleValve(System.UInt16,System.UInt16)">
+            <summary>
+  Opens or Closes a valve.
+</summary>
+            <param name="valve">number of valve to be changed.</param>
+            <param name="onoff">open or close the valve.</param>
+        </member>
+        <member name="M:UsbNetDll.CFluidControlDeviceNet.SetValve(System.UInt32)">
+            <summary>
+  Open or Close valves.
+</summary>
+            <param name="value">bit pattern of valves which should be open.</param>
+        </member>
+        <member name="M:UsbNetDll.CFluidControlDeviceNet.Dispose">
+            <summary>
+    Default destructor.
+</summary>
+        </member>
+        <member name="M:UsbNetDll.CFluidControlDeviceNet.#ctor">
+            <summary>
+    Initialize a new instance of the CFluidControlDeviceNet class.
+</summary>
+        </member>
+        <member name="T:UsbNetDll.CFluidControlDeviceNet">
+            <summary>
+    CFluidControlDeviceNet is the class to control MCS FluidControl (FCB and FCX) device.
+</summary>
+        </member>
+        <member name="P:UsbNetDll.CSafeISDeviceNet.DacqDevice">
+            <summary>
+Gets the <see cref="T:UsbNetDll.CMcsUsbDacqNet" />. Use this to control the data aquisition.
+</summary>
+        </member>
+        <member name="P:UsbNetDll.CSafeISDeviceNet.FluidControlDevice">
+            <summary>
+Gets the <see cref="T:UsbNetDll.CFluidControlDeviceNet" />. Use this to control the valves. Only SetSingleValve is implemented for <see cref="T:UsbNetDll.CSafeISDeviceNet" />.
+</summary>
+        </member>
+        <member name="P:UsbNetDll.CSafeISDeviceNet.RoboDevice">
+            <summary>
+Gets the <see cref="T:UsbNetDll.CRoboDeviceNet" />. Use this to control the syringe.
+</summary>
+        </member>
+        <member name="M:UsbNetDll.CSafeISDeviceNet.SetDacPeriode(System.UInt32)">
+            <summary>
+Sets the DAC periode.
+</summary>
+            <param name="periode">The periode in units of 10µs.</param>
+        </member>
+        <member name="M:UsbNetDll.CSafeISDeviceNet.SetDacPulseform(System.Int16[])">
+            <summary>
+Sets the DAC pulseform.
+</summary>
+            <param name="pulseform">The pulseform.</param>
+        </member>
+        <member name="M:UsbNetDll.CSafeISDeviceNet.SetDacMode(System.Byte)">
+            <summary>
+Sets the DAC mode.
+</summary>
+            <param name="mode">The mode: 0 = Impedance ; 1 = Amperometry</param>
+        </member>
+        <member name="M:UsbNetDll.CSafeISDeviceNet.SetAdcSamplePos(System.UInt16[])">
+            <summary>
+Sets the sample position of the ADC.
+</summary>
+            <param name="positions">The positions in units of 0.1µs.</param>
+        </member>
+        <member name="M:UsbNetDll.CSafeISDeviceNet.SetAdcChannels(System.Byte)">
+            <summary>
+Sets the ADC channels you want to be sampled
+</summary>
+            <param name="channels">The bitmap of the 8 channels. Set bit to 1 for the channels you want measure</param>
+        </member>
+        <member name="M:UsbNetDll.CSafeISDeviceNet.SetSwitches(System.UInt16)">
+            <summary>
+Sets the switches for all electrodes on the device. Do not use during measurement
+</summary>
+            <param name="switches">The switches: See Schematics for the meaning</param>
+        </member>
+        <member name="M:UsbNetDll.CSafeISDeviceNet.Dispose">
+            <summary>
+Releases unmanaged resources and performs other cleanup operations before the
+<see cref="T:UsbNetDll.CSafeISDeviceNet" /> is reclaimed by garbage collection.
+</summary>
+        </member>
+        <member name="M:UsbNetDll.CSafeISDeviceNet.#ctor">
+            <summary>
+Initializes a new instance of the <see cref="T:UsbNetDll.CSafeISDeviceNet" /> class.
+</summary>
+        </member>
+        <member name="T:UsbNetDll.CSafeISDeviceNet">
+            <summary />
+        </member>
+        <member name="M:UsbNetDll.CTcxDeviceNet.SetThermocoupleNanovoltPerKelvin(System.UInt32,System.UInt32)">
+            <summary>
+ Sets the proportional constant for the thermocouple.
+</summary>
+            <param name="channel">Thermocouple channel number.</param>
+            <param name="value">Proportinal constant in Nanovolt per Kelvin.</param>
+        </member>
+        <member name="M:UsbNetDll.CTcxDeviceNet.GetThermocoupleNanovoltPerKelvin(System.UInt32)">
+            <summary>
+ Gets the proportional constant for the thermocouple.
+</summary>
+            <param name="channel">Thermocouple channel number.</param>
+            <returns>The proportional constant in Nanovolt per Kelvin.</returns>
+        </member>
+        <member name="M:UsbNetDll.CTcxDeviceNet.GetMaxP(System.UInt32)">
+            <summary>
+Gets the maximum heater power of the specified device.
+</summary>
+        </member>
+        <member name="M:UsbNetDll.CTcxDeviceNet.GetD(System.UInt32)">
+            <summary>
+Gets the D-coefficient of the specified device.
+</summary>
+        </member>
+        <member name="M:UsbNetDll.CTcxDeviceNet.GetI(System.UInt32)">
+            <summary>
+Gets the I-coefficient of the specified device.
+</summary>
+        </member>
+        <member name="M:UsbNetDll.CTcxDeviceNet.GetP(System.UInt32)">
+            <summary>
+Gets the P-coefficient of the specified device.
+</summary>
+        </member>
+        <member name="M:UsbNetDll.CTcxDeviceNet.GetOnOff(System.UInt32)">
+            <summary>
+Gets if the specified channel is on or off.
+</summary>
+        </member>
+        <member name="M:UsbNetDll.CTcxDeviceNet.GetSetpoint(System.UInt32)">
+            <summary>
+Gets the target temperate of specified channel in units of 0.1°C.
+</summary>
+        </member>
+        <member name="M:UsbNetDll.CTcxDeviceNet.SetMaxP(System.UInt32,System.Int32)">
+            <summary>
+Sets the maximum heater power of the specified device.
+</summary>
+        </member>
+        <member name="M:UsbNetDll.CTcxDeviceNet.SetD(System.UInt32,System.Int32)">
+            <summary>
+Sets the D-coefficient of the specified device.
+</summary>
+        </member>
+        <member name="M:UsbNetDll.CTcxDeviceNet.SetI(System.UInt32,System.Int32)">
+            <summary>
+Sets the I-coefficient of the specified device.
+</summary>
+        </member>
+        <member name="M:UsbNetDll.CTcxDeviceNet.SetP(System.UInt32,System.Int32)">
+            <summary>
+Sets the P-coefficient of the specified device.
+</summary>
+        </member>
+        <member name="M:UsbNetDll.CTcxDeviceNet.SetOnOff(System.UInt32,System.Int32)">
+            <summary>
+Switches the specified channel on or off.
+</summary>
+        </member>
+        <member name="M:UsbNetDll.CTcxDeviceNet.SetSetpoint(System.UInt32,System.Int32)">
+            <summary>
+Sets the target temperate of specified channel in units of 0.1°C.
+</summary>
+        </member>
+        <member name="M:UsbNetDll.CTcxDeviceNet.GetBoardTemp">
+            <summary>
+Gets the temperate of the mainboard in units of 0.1°C.
+</summary>
+        </member>
+        <member name="M:UsbNetDll.CTcxDeviceNet.GetHasThermocouple">
+            <summary>
+Gets weather the device supports a thermocouple.
+</summary>
+        </member>
+        <member name="M:UsbNetDll.CTcxDeviceNet.GetHeaterLimit(System.UInt32)">
+            <summary>
+Gets the temperate limit of the specified heater in units of 0.1°C.
+</summary>
+        </member>
+        <member name="M:UsbNetDll.CTcxDeviceNet.GetHeaterTemp(System.UInt32)">
+            <summary>
+Gets the temperate of the specified heater in units of 0.1°C.
+</summary>
+        </member>
+        <member name="M:UsbNetDll.CTcxDeviceNet.GetValueHires(System.UInt32)">
+            <summary>
+Gets the temperate of the specified channel in units of 0.01°C.
+</summary>
+        </member>
+        <member name="M:UsbNetDll.CTcxDeviceNet.GetValue(System.UInt32)">
+            <summary>
+Gets the temperate of the specified channel in units of 0.1°C.
+</summary>
+        </member>
+        <member name="M:UsbNetDll.CTcxDeviceNet.GetNumMeasureChannels">
+            <summary>
+Gets the number of channels the device can measure.
+</summary>
+        </member>
+        <member name="M:UsbNetDll.CTcxDeviceNet.GetNumControlChannels">
+            <summary>
+Gets the number of channels the device can control/regulate.
+</summary>
+        </member>
+        <member name="M:UsbNetDll.CTcxDeviceNet.#ctor">
+            <summary>
+Initializes a new instance of CTcxDeviceNet class.
+</summary>
+        </member>
+        <member name="T:UsbNetDll.CTcxDeviceNet">
+            <summary>
+Class to control a Temperature Controller (TCX)
+</summary>
+        </member>
+        <member name="M:UsbNetDll.CGenericDevelopDeviceNet.GetIntBuffer(System.UInt16,System.UInt16,System.Int32)">
+            <summary>
+Gets an array of type int from the device.
+<param name="Value">The value of the request.</param><param name="Index">The index of the request.</param><param name="Size">The size of the array.</param><returns>The array of data from the device.</returns></summary>
+        </member>
+        <member name="M:UsbNetDll.CGenericDevelopDeviceNet.GetUIntBuffer(System.UInt16,System.UInt16,System.Int32)">
+            <summary>
+Gets an array of type unsigned int from the device.
+<param name="Value">The value of the request.</param><param name="Index">The index of the request.</param><param name="Size">The size of the array.</param><returns>The array of data from the device.</returns></summary>
+        </member>
+        <member name="M:UsbNetDll.CGenericDevelopDeviceNet.GetShortBuffer(System.UInt16,System.UInt16,System.Int32)">
+            <summary>
+Gets an array of type short from the device.
+<param name="Value">The value of the request.</param><param name="Index">The index of the request.</param><param name="Size">The size of the array.</param><returns>The array of data from the device.</returns></summary>
+        </member>
+        <member name="M:UsbNetDll.CGenericDevelopDeviceNet.GetUShortBuffer(System.UInt16,System.UInt16,System.Int32)">
+            <summary>
+Gets an array of type unsigned short from the device.
+<param name="Value">The value of the request.</param><param name="Index">The index of the request.</param><param name="Size">The size of the array.</param><returns>The array of data from the device.</returns></summary>
+        </member>
+        <member name="M:UsbNetDll.CGenericDevelopDeviceNet.GetByteBuffer(System.UInt16,System.UInt16,System.Int32)">
+            <summary>
+Gets an array of type char from the device.
+<param name="Value">The value of the request.</param><param name="Index">The index of the request.</param><param name="Size">The size of the array.</param><returns>The array of data from the device.</returns></summary>
+        </member>
+        <member name="M:UsbNetDll.CGenericDevelopDeviceNet.GetUByteBuffer(System.UInt16,System.UInt16,System.Int32)">
+            <summary>
+Gets an array of type unsigned char from the device.
+<param name="Value">The value of the request.</param><param name="Index">The index of the request.</param><param name="Size">The size of the array.</param><returns>The array of data from the device.</returns></summary>
+        </member>
+        <member name="M:UsbNetDll.CGenericDevelopDeviceNet.SetIntBuffer(System.UInt16,System.UInt16,System.Int32[])">
+            <summary>
+Sends an array of type int to the device.
+<param name="Value">The value of the request.</param><param name="Index">The index of the request.</param><param name="buffer">The buffer to send.</param></summary>
+        </member>
+        <member name="M:UsbNetDll.CGenericDevelopDeviceNet.SetUIntBuffer(System.UInt16,System.UInt16,System.UInt32[])">
+            <summary>
+Sends an array of unsigned int to the device.
+<param name="Value">The value of the request.</param><param name="Index">The index of the request.</param><param name="buffer">The buffer to send.</param></summary>
+        </member>
+        <member name="M:UsbNetDll.CGenericDevelopDeviceNet.SetShortBuffer(System.UInt16,System.UInt16,System.Int16[])">
+            <summary>
+Sends an array of type short to the device.
+<param name="Value">The value of the request.</param><param name="Index">The index of the request.</param><param name="buffer">The buffer to send.</param></summary>
+        </member>
+        <member name="M:UsbNetDll.CGenericDevelopDeviceNet.SetUShortBuffer(System.UInt16,System.UInt16,System.UInt16[])">
+            <summary>
+Sends an array of type unsigned short to the device.
+<param name="Value">The value of the request.</param><param name="Index">The index of the request.</param><param name="buffer">The buffer to send.</param></summary>
+        </member>
+        <member name="M:UsbNetDll.CGenericDevelopDeviceNet.SetByteBuffer(System.UInt16,System.UInt16,System.SByte!System.Runtime.CompilerServices.IsSignUnspecifiedByte[])">
+            <summary>
+Sends an array of type char to the device.
+<param name="Value">The value of the request.</param><param name="Index">The index of the request.</param><param name="buffer">The buffer to send.</param></summary>
+        </member>
+        <member name="M:UsbNetDll.CGenericDevelopDeviceNet.SetUByteBuffer(System.UInt16,System.UInt16,System.Byte[])">
+            <summary>
+Sends an array of type unsigned char to the device.
+<param name="Value">The value of the request.</param><param name="Index">The index of the request.</param><param name="buffer">The buffer to send.</param></summary>
+        </member>
+        <member name="M:UsbNetDll.CGenericDevelopDeviceNet.SetValue(System.UInt16,System.UInt16)">
+            <summary>
+Sets .
+<param name="Value">The value of the request.</param><param name="Index">The index of the request.</param></summary>
+        </member>
+        <member name="M:UsbNetDll.CGenericDevelopDeviceNet.#ctor">
+            <summary>
+    Initialize a new instance of the CGenericDevelopDeviceNet class.
+</summary>
+        </member>
+        <member name="T:UsbNetDll.CGenericDevelopDeviceNet">
+            <summary>
+    CGenericDevelopDeviceNet is the class to use during development of a new device.
+</summary>
+        </member>
+        <member name="M:UsbNetDll.CGilsonDeviceNet.#ctor">
+            <summary>
+    Initialize a new instance of the CGilsonDeviceNet class.
+</summary>
+        </member>
+        <member name="T:UsbNetDll.CGilsonDeviceNet">
+            <summary>
+    CGilsonDeviceNet is the class to control a Gilson device.
+</summary>
+        </member>
+        <member name="M:UsbNetDll.CMeaUSBDeviceNet.#ctor">
+            <summary>
+Initializes a new instance of CMeaDeviceNet class.
+</summary>
+        </member>
+        <member name="M:UsbNetDll.CMeaUSBDeviceNet.#ctor(UsbNetDll.OnChannelData,UsbNetDll.OnError)">
+            <summary>
+Initializes a new instance of CMeaDeviceNet class.
+</summary>
+            <param name="channelData">Handler to call when new data is available.</param>
+            <param name="error">Handler to call when an error occurs.</param>
+        </member>
+        <member name="T:UsbNetDll.CMeaUSBDeviceNet">
+            <summary>
+Class for data acquisition via ME and MEA USB amplifiers
+</summary>
+        </member>
+        <member name="M:UsbNetDll.CMC_CardDeviceNet.#ctor">
+            <summary>
+Initializes a new instance of CMC_CardDeviceNet class.
+</summary>
+        </member>
+        <member name="M:UsbNetDll.CMC_CardDeviceNet.#ctor(UsbNetDll.OnChannelData,UsbNetDll.OnError)">
+            <summary>
+Initializes a new instance of CMC_CardDeviceNet class.
+</summary>
+            <param name="channelData">Handler to call when new data is available.</param>
+            <param name="error">Handler to call when an error occurs.</param>
+        </member>
+        <member name="T:UsbNetDll.CMC_CardDeviceNet">
+            <summary>
+Class for data acquisition via MC_Card
+</summary>
+        </member>
+        <member name="M:UsbNetDll.CMeaDeviceNet.SetTriggerMaskValue(System.UInt32,System.UInt32)">
+            <summary>
+Defines a pattern on the digital dataword which will start a trigger when found.
+</summary>
+            <param name="mask">Bits in the digital dataword which are monitored for a match with value.</param>
+            <param name="value">Pattern which must match for the trigger to start.</param>
+            <returns>Error Status. 0 on success.</returns>
+        </member>
+        <member name="M:UsbNetDll.CMeaDeviceNet.SetTriggerPeriod(System.Int32)">
+            <summary>
+Sets the maximum number of samples per trigger.
+</summary>
+            <param name="samples">Number of samples to acquire after the trigger condition is met.</param>
+            <returns>Error Status. 0 on success.</returns>
+        </member>
+        <member name="M:UsbNetDll.CMeaDeviceNet.GetAudioChannels(UsbNetDll.CMeaDeviceNet.s_setaudionet[]@,System.UInt32)">
+            <summary>
+Gets the electrode to monitor and amplification for the audio channels.
+</summary>
+            <param name="channels">Struct which contains the electrode (channel) and amplification on return.</param>
+            <param name="VirtualDevice">Virtual device to use.</param>
+            <returns>Error Status. 0 on success.</returns>
+        </member>
+        <member name="M:UsbNetDll.CMeaDeviceNet.GetAudioChannels(UsbNetDll.CMeaDeviceNet.s_setaudionet[]@)">
+            <summary>
+Gets the electrode to monitor and amplification for the audio channels.
+</summary>
+            <param name="channels">Struct which contains the electrode (channel) and amplification on return.</param>
+            <returns>Error Status. 0 on success.</returns>
+        </member>
+        <member name="M:UsbNetDll.CMeaDeviceNet.SetAudioChannels(UsbNetDll.CMeaDeviceNet.s_setaudionet[],System.UInt32)">
+            <summary>
+Sets the electrode to monitor and amplification for the audio channels.
+</summary>
+            <param name="channels">Struct which defines the electrode (channel) and amplification.</param>
+            <param name="VirtualDevice">Virtual device to use.</param>
+            <returns>Error Status. 0 on success.</returns>
+        </member>
+        <member name="M:UsbNetDll.CMeaDeviceNet.SetAudioChannels(UsbNetDll.CMeaDeviceNet.s_setaudionet[])">
+            <summary>
+Sets the electrode to monitor and amplification for the audio channels.
+</summary>
+            <param name="channels">Struct which defines the electrode (channel) and amplification.</param>
+            <returns>Error Status. 0 on success.</returns>
+        </member>
+        <member name="M:UsbNetDll.CMeaDeviceNet.GetNumberOfAudioChannels">
+            <summary>
+Gets the number of available audio channels.
+</summary>
+            <returns>The number of audio channels available, 0 when there are none.</returns>
+        </member>
+        <member name="M:UsbNetDll.CMeaDeviceNet.SetNumberOfAnalogChannels(System.UInt32,System.UInt32,System.UInt32,System.UInt32,System.UInt32)">
+            <summary>
+Sets the number of analog channels in the datastream for the MEA2100 device.
+</summary>
+            <param name="NumberOfChannels_HS1">Number of analog channels from the Headstage 1.</param>
+            <param name="NumberOfChannels_HS2">Number of analog channels from the Headstage 2.</param>
+            <param name="NumberOfChannels_DSP">Number of data words from the DSP.</param>
+            <param name="NumberOfChannels_IF">Number of analog channels from the Interfaceboard.</param>
+            <param name="VirtualDevice">VirtualDevice to use.</param>
+            <returns>Error Status. 0 on success.</returns>
+        </member>
+        <member name="M:UsbNetDll.CMeaDeviceNet.SetNumberOfChannels(System.Int32)">
+            <summary>
+Sets the number of analog channels in the datastream.
+</summary>
+            <param name="NumberOfChannels">Number of analog channels.</param>
+            <returns>Error Status. 0 on success.</returns>
+        </member>
+        <member name="M:UsbNetDll.CMeaDeviceNet.SetDigitalOut(System.UInt32,System.Int32,System.Int32)">
+            <summary>
+Generate a pulse on the digital output.
+</summary>
+            <param name="digout_value">Bitmask to set on the digital out.</param>
+            <param name="pulselength">Pulselength in ms.</param>
+            <param name="counter_index">Counter to use for MEA2100.</param>
+            <returns>Error Status. 0 on success.</returns>
+        </member>
+        <member name="M:UsbNetDll.CMeaDeviceNet.EnableChecksum(System.Boolean)">
+            <summary>
+Enable the checksum data word in the datastream. The checksum is a 32 bit counter and 2x16 bit magic numbers.
+</summary>
+            <param name="enable">True to enable, False to disable.</param>
+            <returns>Error Status. 0 on success.</returns>
+        </member>
+        <member name="M:UsbNetDll.CMeaDeviceNet.EnableTimestamp(System.Boolean)">
+            <summary>
+Enable the timestamp data word in the datastream. The timestamp is a 64 bit counter.
+</summary>
+            <param name="enable">True to enable, False to disable.</param>
+            <returns>Error Status. 0 on success.</returns>
+        </member>
+        <member name="M:UsbNetDll.CMeaDeviceNet.EnableDigitalIn(System.Boolean)">
+            <summary>
+Enable the digital data word in the datastream.
+</summary>
+            <param name="enable">True to enable, False to disable.</param>
+            <returns>Error Status. 0 on success.</returns>
+        </member>
+        <member name="P:UsbNetDll.CMeaDeviceNet.Gain">
+            <summary>
+The amplifier gain of the device. Value is gain times 1000, a value of 1000 corresponds to a gain of 1.0.
+</summary>
+        </member>
+        <member name="M:UsbNetDll.CMeaDeviceNet.GetGain(System.Int32@)">
+            <summary>
+Gets the amplifier gain of the device.
+</summary>
+            <param name="gain">Gain times 1000, a value of 1000 corresponds to a gain of 1.0.</param>
+            <returns>Error Status. 0 on success.</returns>
+        </member>
+        <member name="M:UsbNetDll.CMeaDeviceNet.#ctor(UsbNetDll.McsBusTypeEnumNet,UsbNetDll.OnChannelData,UsbNetDll.OnError)">
+            <summary>
+Initializes a new instance of CMeaDeviceNet class.
+</summary>
+            <param name="bustype">Type of device to use, either USB or PCI.</param>
+            <param name="channelData">Callback to call when new data is available.</param>
+            <param name="error">Callback to call when an error occurred.</param>
+        </member>
+        <member name="M:UsbNetDll.CMeaDeviceNet.#ctor(UsbNetDll.McsBusTypeEnumNet)">
+            <summary>
+Initializes a new instance of CMeaDeviceNet class.
+</summary>
+            <param name="bustype">Type of device to use, either USB or PCI.</param>
+        </member>
+        <member name="T:UsbNetDll.CMeaDeviceNet">
+            <summary>
+Base class for MEA data acquisition devices.
+</summary>
+            <remarks>
+There are two different device types for MEA data aquistion devices. There are the USB-MEA devices
+and the MC_Card. In .NET both classes can be accessed by the contructor of the base class CMeaDeviceNet,
+which contructs the correct underlying C++ class for the USB-MEA device on the one hand or the MC_Card device 
+on the other hand.
+Through this interface both device types USB-MEA devices and MC_Card devices can be accessed
+</remarks>
+        </member>
+        <member name="M:UsbNetDll.CMcsUsbDacqNet.ChannelBlock_ReadFramesI32(System.Int32,System.Int32,System.Int32,System.Int32@)">
+            <summary>
+Read data from a FIFO queue in int32 data format
+</summary>
+            <param name="handle">Handle of the FIFO queue. Either zero when the SetSelectedData call was used or the channel number.</param>
+            <param name="frames">Number of sample frames to read.</param>
+            <param name="frames_ret">Number of sample frames which were read, might be smaller than frames.</param>
+        </member>
+        <member name="M:UsbNetDll.CMcsUsbDacqNet.ChannelBlock_ReadFramesUI32(System.Int32,System.Int32,System.Int32,System.Int32@)">
+            <summary>
+Read data from a FIFO queue in uint32 data format
+</summary>
+            <param name="handle">Handle of the FIFO queue. Either zero when the SetSelectedData call was used or the channel number.</param>
+            <param name="frames">Number of sample frames to read.</param>
+            <param name="frames_ret">Number of sample frames which were read, might be smaller than frames.</param>
+        </member>
+        <member name="M:UsbNetDll.CMcsUsbDacqNet.ChannelBlock_ReadFramesI16(System.Int32,System.Int32,System.Int32,System.Int32@)">
+            <summary>
+Read data from a FIFO queue in int16 data format
+</summary>
+            <param name="handle">Handle of the FIFO queue. Either zero when the SetSelectedData call was used or the channel number.</param>
+            <param name="queue">Handle of the queue.</param>
+            <param name="frames">Number of sample frames to read.</param>
+            <param name="frames_ret">Number of sample frames which were read, might be smaller than frames.</param>
+        </member>
+        <member name="M:UsbNetDll.CMcsUsbDacqNet.ChannelBlock_ReadFramesUI16(System.Int32,System.Int32,System.Int32,System.Int32@)">
+            <summary>
+Read data from a FIFO queue in uint16 data format
+</summary>
+            <param name="handle">Handle of the FIFO queue. Either zero when the SetSelectedData call was used or the channel number.</param>
+            <param name="frames">Number of sample frames to read.</param>
+            <param name="frames_ret">Number of sample frames which were read, might be smaller than frames.</param>
+            <returns>Array of data from the device.</returns>
+        </member>
+        <member name="M:UsbNetDll.CMcsUsbDacqNet.CHWInfo.IsDigitalChannelDedicated">
+            <summary>
+Query if the digital channel replaces an analog channel when enabled (e.g. on MC_Card) or adds a channel link on USB devices.
+</summary>
+            <returns>false when the digital channel replaces an analog channel when enabled, true when the digital channels is appended to the analog channels when enabled.</returns>
+        </member>
+        <member name="M:UsbNetDll.CMcsUsbDacqNet.CHWInfo.GetNumberOfHWDigitalChannels(System.Int32@)">
+            <summary>
+Get the number of digital channels the device supports.
+</summary>
+            <param name="numberOfChannels">Number of digital channels the device supports.</param>
+            <returns>Error Status. 0 on success.</returns>
+        </member>
+        <member name="M:UsbNetDll.CMcsUsbDacqNet.CHWInfo.GetNumberOfHWADCChannels(System.Int32@)">
+            <summary>
+Get the number of analog channels the device supports.
+</summary>
+            <param name="numberOfChannels">Number of analog channels the device supports.</param>
+            <returns>Error Status. 0 on success.</returns>
+        </member>
+        <member name="T:UsbNetDll.CMcsUsbDacqNet.CHWInfo">
+            <summary>
+Class to provide hardware information about the device.
+</summary>
+        </member>
+        <member name="M:UsbNetDll.CMcsUsbDacqNet.ChannelBlock_ReadFramesI32(System.Int32,System.Int32[],System.Int32,System.Int32,System.Int32@)">
+            <summary>
+Read data from a FIFO queue in int32 data format
+</summary>
+            <param name="handle">Handle of the FIFO queue. Either zero when the SetSelectedData call was used or the channel number.</param>
+            <param name="buffer">Buffer to put the data from the device in.</param>
+            <param name="frames_pos">Position in buffer where to put the data.</param>
+            <param name="frames">Number of sample frames to read.</param>
+            <param name="frames_ret">Number of sample frames which were read, might be smaller than frames.</param>
+            <returns>Error Status. 0 on success.</returns>
+        </member>
+        <member name="M:UsbNetDll.CMcsUsbDacqNet.ChannelBlock_ReadFramesI32(System.Int32,System.Int32,System.Int32@)">
+            <summary>
+Read data from a FIFO queue in int32 data format
+</summary>
+            <param name="handle">Handle of the FIFO queue. Either zero when the SetSelectedData call was used or the channel number.</param>
+            <param name="frames">Number of sample frames to read.</param>
+            <param name="frames_ret">Number of sample frames which were read, might be smaller than frames.</param>
+        </member>
+        <member name="M:UsbNetDll.CMcsUsbDacqNet.ChannelBlock_ReadFramesUI32(System.Int32,System.UInt32[],System.Int32,System.Int32,System.Int32@)">
+            <summary>
+Read data from a FIFO queue in uint32 data format
+</summary>
+            <param name="handle">Handle of the FIFO queue. Either zero when the SetSelectedData call was used or the channel number.</param>
+            <param name="buffer">Buffer to put the data from the device in.</param>
+            <param name="frames_pos">Position in buffer where to put the data.</param>
+            <param name="frames">Number of sample frames to read.</param>
+            <param name="frames_ret">Number of sample frames which were read, might be smaller than frames.</param>
+            <returns>Error Status. 0 on success.</returns>
+        </member>
+        <member name="M:UsbNetDll.CMcsUsbDacqNet.ChannelBlock_ReadFramesUI32(System.Int32,System.Int32,System.Int32@)">
+            <summary>
+Read data from a FIFO queue in uint32 data format
+</summary>
+            <param name="handle">Handle of the FIFO queue. Either zero when the SetSelectedData call was used or the channel number.</param>
+            <param name="frames">Number of sample frames to read.</param>
+            <param name="frames_ret">Number of sample frames which were read, might be smaller than frames.</param>
+        </member>
+        <member name="M:UsbNetDll.CMcsUsbDacqNet.ChannelBlock_ReadFramesI16(System.Int32,System.Int16[],System.Int32,System.Int32,System.Int32@)">
+            <summary>
+Read data from a FIFO queue in int16 data format
+</summary>
+            <param name="handle">Handle of the FIFO queue. Either zero when the SetSelectedData call was used or the channel number.</param>
+            <param name="buffer">Buffer to put the data from the device in.</param>
+            <param name="frames_pos">Position in buffer where to put the data.</param>
+            <param name="frames">Number of sample frames to read.</param>
+            <param name="frames_ret">Number of sample frames which were read, might be smaller than frames.</param>
+            <returns>Error Status. 0 on success.</returns>
+        </member>
+        <member name="M:UsbNetDll.CMcsUsbDacqNet.ChannelBlock_ReadFramesI16(System.Int32,System.Int32,System.Int32@)">
+            <summary>
+Read data from a FIFO queue in int16 data format
+</summary>
+            <param name="handle">Handle of the FIFO queue. Either zero when the SetSelectedData call was used or the channel number.</param>
+            <param name="frames">Number of sample frames to read.</param>
+            <param name="frames_ret">Number of sample frames which were read, might be smaller than frames.</param>
+        </member>
+        <member name="M:UsbNetDll.CMcsUsbDacqNet.ChannelBlock_ReadFramesUI16(System.Int32,System.UInt16[],System.Int32,System.Int32,System.Int32@)">
+            <summary>
+Read data from a FIFO queue in uint16 data format
+</summary>
+            <param name="handle">Handle of the FIFO queue. Either zero when the SetSelectedData call was used or the channel number.</param>
+            <param name="buffer">Buffer to put the data from the device in.</param>
+            <param name="frames_pos">Position in buffer where to put the data.</param>
+            <param name="frames">Number of sample frames to read.</param>
+            <param name="frames_ret">Number of sample frames which were read, might be smaller than frames.</param>
+            <returns>Error Status. 0 on success.</returns>
+        </member>
+        <member name="M:UsbNetDll.CMcsUsbDacqNet.ChannelBlock_ReadFramesUI16(System.Int32,System.Int32,System.Int32@)">
+            <summary>
+Read data from a FIFO queue in uint16 data format
+</summary>
+            <param name="handle">Handle of the FIFO queue. Either zero when the SetSelectedData call was used or the channel number.</param>
+            <param name="frames">Number of sample frames to read.</param>
+            <param name="frames_ret">Number of sample frames which were read, might be smaller than frames.</param>
+            <returns>Array of data from the device.</returns>
+        </member>
+        <member name="M:UsbNetDll.CMcsUsbDacqNet.ChannelBlock_AvailFrames(System.Int32)">
+            <summary>
+Get the number of sample frames already available in the FIFO.
+</summary>
+            <param name="handle">Handle of the FIFO queue. Either zero when the SetSelectedData call was used or the channel number.</param>
+            <returns>Number of sample frames available in the FIFO.</returns>
+        </member>
+        <member name="M:UsbNetDll.CMcsUsbDacqNet.SetSelectedChannelsQueue(System.Boolean[],System.Int32,System.Int32,UsbNetDll.CMcsUsbDacqNet.SampleSize,System.Int32)">
+            <summary>
+Create a common FIFO queue for all channels. Data in callback will be a list per channel. Use ChannelBlock_ReadFramesDict... with handle = 0 to read the data.
+</summary>
+            <remarks>
+When using 32 bit data format, ChannelsInBlock is still the number of 16 bit channels per frame, as obtained 
+from GetChannelsInBlock, while nChannels is the number of 32 bit channels to be read from the device.
+So when all channels from a device are read in 32 bit data format nChannels = ChannelsInBlock/2
+</remarks>
+            <param name="selectedChannels">List of channels to be collected in the FIFO.</param>
+            <param name="queuesize">Size of sample frames the FIFO can hold.</param>
+            <param name="threshold">Number of sample frames the FIFO must acquire before the callback function is called.</param>
+            <param name="samplesize">size of the datawords, either 16 or 32bit.</param>
+            <param name="ChannelsInBlock">value obtained from GetChannelsInBlock.</param>
+        </member>
+        <member name="M:UsbNetDll.CMcsUsbDacqNet.SetSelectedChannelsQueue(System.Int32,System.Int32,System.Int32,UsbNetDll.CMcsUsbDacqNet.SampleSize,System.Int32)">
+            <summary>
+Create a common FIFO queue for all channels. Data in callback will be a list per channel. Use ChannelBlock_ReadFramesDict... with handle = 0 to read the data.
+</summary>
+            <summary>
+Create a common queue for all channels.
+</summary>
+            <remarks>
+When using 32 bit data format, ChannelsInBlock is still the number of 16 bit channels per frame, as obtained 
+from GetChannelsInBlock, while nChannels is the number of 32 bit channels to be read from the device.
+So when all channels from a device are read in 32 bit data format nChannels = ChannelsInBlock/2
+</remarks>
+            <param name="nChannels">Number of channels to be collected in the FIFO.</param>
+            <param name="queuesize">Size of sample frames the FIFO can hold.</param>
+            <param name="threshold">Number of sample frames the FIFO must acquire before the callback function is called.</param>
+            <param name="samplesize">size of the datawords, either 16 or 32bit.</param>
+            <param name="ChannelsInBlock">value obtained from GetChannelsInBlock.</param>
+        </member>
+        <member name="M:UsbNetDll.CMcsUsbDacqNet.SetSelectedData(System.Boolean[],System.Int32,System.Int32,UsbNetDll.CMcsUsbDacqNet.SampleSize,System.Int32)">
+            <summary>
+Create a common FIFO queue for all channels. Use handle = 0 in the ChannelBlock_ReadFrames... functions.
+</summary>
+            <remarks>
+When using 32 bit data format, ChannelsInBlock is still the number of 16 bit channels per frame, as obtained 
+from GetChannelsInBlock, while nChannels is the number of 32 bit channels to be read from the device.
+So when all channels from a device are read in 32 bit data format nChannels = ChannelsInBlock/2
+</remarks>
+            <param name="selectedChannels">List of channels to be collected in the FIFO.</param>
+            <param name="queuesize">Size of sample frames the FIFO can hold.</param>
+            <param name="threshold">Number of sample frames the FIFO must acquire before the callback function is called.</param>
+            <param name="samplesize">size of the datawords, either 16 or 32bit.</param>
+            <param name="ChannelsInBlock">value obtained from GetChannelsInBlock.</param>
+        </member>
+        <member name="M:UsbNetDll.CMcsUsbDacqNet.SetSelectedData(System.Int32,System.Int32,System.Int32,UsbNetDll.CMcsUsbDacqNet.SampleSize,System.Int32)">
+            <summary>
+Create a common FIFO queue for all channels. Use handle = 0 in the ChannelBlock_ReadFrames... functions.
+</summary>
+            <remarks>
+When using 32 bit data format, ChannelsInBlock is still the number of 16 bit channels per frame, as obtained 
+from GetChannelsInBlock, while nChannels is the number of 32 bit channels to be read from the device.
+So when all channels from a device are read in 32 bit data format nChannels = ChannelsInBlock/2
+</remarks>
+            <param name="nChannels">Number of channels to be collected in the FIFO.</param>
+            <param name="queuesize">Size of sample frames the FIFO can hold.</param>
+            <param name="threshold">Number of sample frames the FIFO must acquire before the callback function is called.</param>
+            <param name="samplesize">size of the datawords, either 16 or 32bit.</param>
+            <param name="ChannelsInBlock">value obtained from GetChannelsInBlock.</param>
+        </member>
+        <member name="M:UsbNetDll.CMcsUsbDacqNet.SetSelectedChannels(System.Boolean[],System.Int32,System.Int32,UsbNetDll.CMcsUsbDacqNet.SampleSize,System.Int32)">
+            <summary>
+Create a FIFO queue per channel. Each channel will have its own FIFO and Callback function.
+</summary>
+            <remarks>
+When using a 32bit sample size, the number obtained from GetChannelsInBlock must be devided by 2 to be used here,
+since GetChannelsInBlock returns the number of 16 bit datapoints per sample frame, while this functions uses
+the number of sample frames in its own data format.
+</remarks>
+            <param name="selectedChannels">List of channels to be collected in the FIFO.</param>
+            <param name="queuesize">Size of sample frames the FIFO can hold.</param>
+            <param name="threshold">Number of sample frames the FIFO must acquire before the callback function is called.</param>
+            <param name="samplesize">size of the datawords, either 16 or 32bit.</param>
+            <param name="ChannelsInBlock">value obtained from GetChannelsInBlock.</param>
+        </member>
+        <member name="M:UsbNetDll.CMcsUsbDacqNet.SetSelectedChannels(System.Int32,System.Int32,System.Int32,UsbNetDll.CMcsUsbDacqNet.SampleSize,System.Int32)">
+            <summary>
+Create a FIFO queue per channel. Each channel will have its own FIFO and Callback function.
+</summary>
+            <remarks>
+When using a 32bit sample size, the number obtained from GetChannelsInBlock must be devided by 2 to be used here,
+since GetChannelsInBlock returns the number of 16 bit datapoints per sample frame, while this functions uses
+the number of sample frames in its own data format.
+</remarks>
+            <param name="nChannels">Number of channels to be collected in the FIFO.</param>
+            <param name="queuesize">Size of sample frames the FIFO can hold.</param>
+            <param name="threshold">Number of samples frames the FIFO must acquire before the callback function is called.</param>
+            <param name="samplesize">size of the datawords, either 16 or 32bit.</param>
+            <param name="ChannelsInBlock">value obtained from GetChannelsInBlock.</param>
+        </member>
+        <member name="M:UsbNetDll.CMcsUsbDacqNet.StopDacq">
+            <summary>
+Stop the data acquisition thread.
+</summary>
+        </member>
+        <member name="M:UsbNetDll.CMcsUsbDacqNet.StartDacq(System.UInt32,System.UInt32,System.UInt32,System.UInt32)">
+            <summary>
+Start the data acquisition thread.
+</summary>
+            <param name="samples_per_callback">Obsolete, do not use.</param>
+            <param name="timeout">Timeout in ms.</param>
+            <param name="numUsbBuffers">Number of USB Buffers to use.</param>
+            <param name="packetsInUrb">Packets in each URB.</param>
+        </member>
+        <member name="M:UsbNetDll.CMcsUsbDacqNet.StartDacq(System.UInt32,System.UInt32,System.UInt32)">
+            <summary>
+Start the data acquisition thread.
+</summary>
+            <param name="samples_per_callback">Obsolete, do not use.</param>
+            <param name="timeout">Timeout in ms.</param>
+            <param name="numUsbBuffers">Number of USB Buffers to use.</param>
+        </member>
+        <member name="M:UsbNetDll.CMcsUsbDacqNet.StartDacq(System.UInt32,System.UInt32)">
+            <summary>
+Start the data acquisition thread.
+</summary>
+            <param name="samples_per_callback">Obsolete, do not use.</param>
+            <param name="timeout">Timeout in ms.</param>
+        </member>
+        <member name="M:UsbNetDll.CMcsUsbDacqNet.StartDacq(System.UInt32)">
+            <summary>
+Start the data acquisition thread.
+</summary>
+            <param name="samples_per_callback">Obsolete, do not use.</param>
+        </member>
+        <member name="M:UsbNetDll.CMcsUsbDacqNet.StartDacq">
+            <summary>
+Start the data acquisition thread.
+</summary>
+        </member>
+        <member name="M:UsbNetDll.CMcsUsbDacqNet.GetChannelsInBlock(System.Int32@)">
+            <summary>
+Get the number of 16 bit datawords which will be collected per sample frame, use after the device is configured.
+</summary>
+            <param name="ChannelsInBlock">Number of 16 bit datawords per sample frame.</param>
+            <returns>Error Status. 0 on success.</returns>
+        </member>
+        <member name="M:UsbNetDll.CMcsUsbDacqNet.GetMaxSamplingFrequency">
+            <summary>
+Gets the maximal sampling frequency of the device.
+</summary>
+            <returns>Sampling frequency in Hz.</returns>
+        </member>
+        <member name="M:UsbNetDll.CMcsUsbDacqNet.set_SampleRate(System.Int32)">
+            <summary>
+Sets the sampling frequency of the device.
+</summary>
+            <param name="rate">Sampling frequency in Hz.</param>
+        </member>
+        <member name="M:UsbNetDll.CMcsUsbDacqNet.get_SampleRate">
+            <summary>
+Gets the sampling frequency of the device.
+</summary>
+            <returns>Sampling frequency in Hz.</returns>
+        </member>
+        <member name="P:UsbNetDll.CMcsUsbDacqNet.SampleRate">
+            <summary>
+The sampling frequency of the device in Hz.
+</summary>
+        </member>
+        <member name="M:UsbNetDll.CMcsUsbDacqNet.GetSampleRate(System.Int32@)">
+            <summary>
+Gets the sampling frequency of the device.
+</summary>
+            <returns>Sampling frequency in Hz.</returns>
+        </member>
+        <member name="M:UsbNetDll.CMcsUsbDacqNet.SetSampleRate(System.Int32)">
+            <summary>
+Sets the sampling frequency of the device.
+</summary>
+            <param name="rate">Sampling frequency in Hz.</param>
+        </member>
+        <member name="M:UsbNetDll.CMcsUsbDacqNet.GetAdcDataFormat(System.Int32@)">
+            <summary>
+Gets the ADC data format, 16 means 16 bits, 24 means 24 bits, 32 means 32 bits.
+</summary>
+            <returns>The data format in bits.</returns>
+        </member>
+        <member name="M:UsbNetDll.CMcsUsbDacqNet.GetMeaLayout(UsbNetDll.MeaLayoutEnumNet@)">
+            <summary>
+Gets the MEA layout which is connected to the MEA2100 device.
+</summary>
+            <param name="mea_layout">MeaLayoutEnumNet which enumerates the MEA types.</param>
+            <returns>Error Status. 0 on success.</returns>
+        </member>
+        <member name="M:UsbNetDll.CMcsUsbDacqNet.GetAdapterType(UsbNetDll.AdapterTypeEnumNet@)">
+            <summary>
+Gets the adapter which is connected to the MEA2100 device.
+</summary>
+            <param name="adapter_type">AdapterTypeEnumNet which enumerates the possible adapters.</param>
+            <returns>Error Status. 0 on success.</returns>
+        </member>
+        <member name="M:UsbNetDll.CMcsUsbDacqNet.GetDataMode(UsbNetDll.DataModeEnumNet@,System.UInt32)">
+            <summary>
+Gets the data mode, can be 16, 24 or 32bit, all signed or unsigned on the MEA2100 device.
+</summary>
+            <param name="DataMode">DataModeEnumNet enumerates the possible data modes.</param>
+            <param name="VirtualDevice">Virtual device to use.</param>
+            <returns>Error Status. 0 on success.</returns>
+        </member>
+        <member name="M:UsbNetDll.CMcsUsbDacqNet.SetDataMode(UsbNetDll.DataModeEnumNet,System.UInt32)">
+            <summary>
+Sets the data mode, can be 16, 24 or 32bit, all signed or unsigned on the MEA2100 device.
+</summary>
+            <param name="DataMode">DataModeEnumNet enumerates the possible data modes.</param>
+            <param name="VirtualDevice">Virtual device to use.</param>
+            <returns>Error Status. 0 on success.</returns>
+        </member>
+        <member name="M:UsbNetDll.CMcsUsbDacqNet.GetVoltageRangeAsDouble(System.Double@)">
+            <summary>
+Gets the currently selected voltage range on devices which support multiple voltage ranges.
+</summary>
+            <param name="VoltageRange">Voltage Range in mV.</param>
+            <returns>Error Status. 0 on success.</returns>
+        </member>
+        <member name="M:UsbNetDll.CMcsUsbDacqNet.GetVoltageRange(System.Int32@)">
+            <summary>
+Gets the currently selected voltage range on devices which support multiple voltage ranges.
+</summary>
+            <param name="VoltageRange">Voltage Range in mV.</param>
+            <returns>Error Status. 0 on success.</returns>
+        </member>
+        <member name="M:UsbNetDll.CMcsUsbDacqNet.GetVoltageRangeInMicroVolt(System.Int32@)">
+            <summary>
+Gets the currently selected voltage range on devices which support multiple voltage ranges.
+</summary>
+            <param name="VoltageRange">Voltage Range in uV.</param>
+            <returns>Error Status. 0 on success.</returns>
+        </member>
+        <member name="M:UsbNetDll.CMcsUsbDacqNet.SetVoltageRange(System.Int32)">
+            <summary>
+Sets the voltage range on devices which support multiple voltage ranges.
+</summary>
+            <param name="VoltageRange">Voltage Range to use as in mV.</param>
+            <returns>Error Status. 0 on success.</returns>
+        </member>
+        <member name="M:UsbNetDll.CMcsUsbDacqNet.SetVoltageRangeFromIndex(System.Int32)">
+            <summary>
+Sets the voltage range on devices which support multiple voltage ranges.
+</summary>
+            <param name="voltageRangeIndex">Voltage Range to use as index, smaller values are larger voltage ranges.</param>
+            <returns>Error Status. 0 on success.</returns>
+        </member>
+        <member name="T:UsbNetDll.CMeasureTableDeviceNet">
+            <summary>
+CMeasureTableDeviceNet is the to control the MCS HLA device
+</summary>
+        </member>
+        <member name="T:UsbNetDll.CPPSDeviceNet">
+            <summary>
+CPPS4plus1DeviceNet is the to control the MCS HLA device
+</summary>
+        </member>
+        <member name="T:UsbNetDll.CHLADeviceNet">
+            <summary>
+CHLADeviceNet is the to control the MCS HLA device
+</summary>
+        </member>
+        <member name="T:UsbNetDll.CEncapsulatorDeviceNet">
+            <summary>
+CEncapsulatorDeviceNet is the to control the MCS HiClamp device
+</summary>
+        </member>
+        <member name="T:UsbNetDll.CHiClampDeviceNet">
+            <summary>
+CHiClampDeviceNet is the to control the MCS HiClamp device
+</summary>
+        </member>
+        <member name="T:UsbNetDll.CRoboInjectDeviceNet">
+            <summary>
+CRoboInjectDeviceNet is the to control the MCS RoboInject device
+</summary>
+        </member>
+        <member name="T:UsbNetDll.CRoboocyte2DeviceNet">
+            <summary>
+CRoboocyte2DeviceNet is the class to control the MCS Roboocyte2 device
+</summary>
+        </member>
+        <member name="M:UsbNetDll.CRoboDeviceNet.GetCurrentPosition(System.Byte,System.SByte!System.Runtime.CompilerServices.IsSignUnspecifiedByte,System.Int32@,System.Int32@)">
+            <summary>
+Gets the current position of motors
+</summary>
+            <param name="busaddress"> Address of the McsBus </param>
+            <param name="axes"> Bit pattern of axes to drive </param>
+            <param name="x"> Current position of first axis if pattern in axes is set </param>
+            <param name="y"> Current position of second axis if pattern in axes is set </param>
+        </member>
+        <member name="M:UsbNetDll.CRoboDeviceNet.StopMovement(System.Byte,System.SByte!System.Runtime.CompilerServices.IsSignUnspecifiedByte,System.Int32)">
+            <summary>
+Stops the current movement
+</summary>
+            <param name="busaddress"> Address of the McsBus </param>
+            <param name="axes"> Bit pattern of axes to drive </param>
+            <param name="timeout"> Timeout of maximal waiting for the end of the command (-1 is forever) </param>
+        </member>
+        <member name="M:UsbNetDll.CRoboDeviceNet.MoveAbs(System.Byte,System.SByte!System.Runtime.CompilerServices.IsSignUnspecifiedByte,System.Int32,System.Int32,System.Int32)">
+            <summary>
+Moves the motor to the new absolute position
+</summary>
+            <param name="busaddress"> Address of the McsBus </param>
+            <param name="axes"> Bit pattern of axes to drive </param>
+            <param name="x"> Position of first axis, if pattern in axes is set </param>
+            <param name="y"> Position of second axis if pattern in axes is set </param>
+            <param name="timeout"> Timeout of maximal waiting for the end of the command (-1 is forever) </param>
+        </member>
+        <member name="M:UsbNetDll.CRoboDeviceNet.FindReference(System.Byte,System.SByte!System.Runtime.CompilerServices.IsSignUnspecifiedByte,System.Int32)">
+            <summary>
+Searches the reference position of the motor
+</summary>
+            <param name="busaddress"> Address of the McsBus </param>
+            <param name="axes"> Bit pattern of axes to drive </param>
+            <param name="timeout"> Timeout of maximal waiting for the end of the command (-1 is forever) </param>
+        </member>
+        <member name="M:UsbNetDll.CRoboDeviceNet.GetMovementError">
+            <summary>
+Low level command, gets the error of the last movement end
+</summary>
+        </member>
+        <member name="M:UsbNetDll.CRoboDeviceNet.GetInMovement">
+            <summary>
+Low level command, gets the internal state "In Movement"
+</summary>
+        </member>
+        <member name="M:UsbNetDll.CRoboDeviceNet.SetInMovement">
+            <summary>
+Low level command, sets the internal state to "In Movement" 
+</summary>
+        </member>
+        <member name="F:UsbNetDll.CRoboDeviceNet.Axes_I">
+            <summary> Bit pattern for i axis for axes argument </summary>
+        </member>
+        <member name="F:UsbNetDll.CRoboDeviceNet.Axes_Z">
+            <summary> Bit pattern for z axis for axes argument </summary>
+        </member>
+        <member name="F:UsbNetDll.CRoboDeviceNet.Axes_Y">
+            <summary> Bit pattern for y axis for axes argument </summary>
+        </member>
+        <member name="F:UsbNetDll.CRoboDeviceNet.Axes_X">
+            <summary> Bit pattern for x axis for axes argument </summary>
+        </member>
+        <member name="F:UsbNetDll.CRoboDeviceNet.Axis_I">
+            <summary> Axis number of i for axis argument </summary>
+        </member>
+        <member name="F:UsbNetDll.CRoboDeviceNet.Axis_Z">
+            <summary> Axis number of z for axis argument </summary>
+        </member>
+        <member name="F:UsbNetDll.CRoboDeviceNet.Axis_Y">
+            <summary> Axis number of y for axis argument </summary>
+        </member>
+        <member name="F:UsbNetDll.CRoboDeviceNet.Axis_X">
+            <summary> Axis number of x for axis argument </summary>
+        </member>
+        <member name="F:UsbNetDll.CRoboDeviceNet.McsBus_ZI">
+            <summary> McsBus address for the z and i axes </summary>
+        </member>
+        <member name="F:UsbNetDll.CRoboDeviceNet.McsBus_XY">
+            <summary> McsBus address for the xy-plane </summary>
+        </member>
+        <member name="T:UsbNetDll.CRoboDeviceNet">
+            <summary>
+CRoboDeviceNet is the base class for all Robo platform based devices
+</summary>
+        </member>
+        <member name="M:UsbNetDll.CStg200xDownloadNet.#ctor(UsbNetDll.OnStg200xPollStatus)">
+            <summary>
+Use this constructor if you want to use the status callback
+</summary>
+        </member>
+        <member name="M:UsbNetDll.CMcsUsbNet.GetSerialNumber">
+            <summary>
+  Query the Serial Number of the device.
+</summary>
+            <returns>The Serial Number.</returns>
+        </member>
+        <member name="M:UsbNetDll.CMcsUsbNet.Disconnect">
+            <summary>
+  Disconnect from a device.
+</summary>
+        </member>
+        <member name="M:UsbNetDll.CMcsUsbNet.IsConnected">
+            <summary>
+  Check if a device is Connected.
+</summary>
+            <returns>true if the device is connected.</returns>
+        </member>
+        <member name="M:UsbNetDll.CMcsUsbNet.Connect(System.String,UsbNetDll.DeviceEnumNet,UsbNetDll.DeviceIdNet,System.UInt32)">
+            <summary>
+  Opens a connection to the device.
+</summary>
+            <param name="serNo">The Serial Number of the device to connect.</param>
+            <param name="McsUsbDevice">The Mcs Device type.</param>
+            <param name="myDeviceId">The device ID.</param>
+            <param name="LockMask">The Lock Mask for this connection.</param>
+            <returns>Error Status. 0 on success.</returns>
+        </member>
+        <member name="M:UsbNetDll.CMcsUsbNet.Connect(System.String,UsbNetDll.DeviceEnumNet,UsbNetDll.DeviceIdNet)">
+            <summary>
+  Opens a connection to the device.
+</summary>
+            <param name="serNo">The Serial Number of the device to connect.</param>
+            <param name="McsUsbDevice">The Mcs Device type.</param>
+            <param name="myDeviceId">The device ID.</param>
+            <returns>Error Status. 0 on success.</returns>
+        </member>
+        <member name="M:UsbNetDll.CMcsUsbNet.Connect(System.String,UsbNetDll.DeviceIdNet,System.UInt32)">
+            <summary>
+  Opens a connection to the device.
+</summary>
+            <param name="serNo">The Serial Number of the device to connect.</param>
+            <param name="myDeviceId">The device ID.</param>
+            <param name="LockMask">The Lock Mask for this connection.</param>
+            <returns>Error Status. 0 on success.</returns>
+        </member>
+        <member name="M:UsbNetDll.CMcsUsbNet.Connect(System.String,UsbNetDll.DeviceIdNet)">
+            <summary>
+  Opens a connection to the device.
+</summary>
+            <param name="serNo">The Serial Number of the device to connect.</param>
+            <param name="myDeviceId">The device ID.</param>
+            <returns>Error Status. 0 on success.</returns>
+        </member>
+        <member name="M:UsbNetDll.CMcsUsbNet.Connect(System.String,UsbNetDll.DeviceEnumNet,System.UInt32)">
+            <summary>
+  Opens a connection to the device.
+</summary>
+            <param name="serNo">The Serial Number of the device to connect.</param>
+            <param name="McsUsbDevice">The Mcs Device type.</param>
+            <param name="LockMask">The Lock Mask for this connection.</param>
+            <returns>Error Status. 0 on success.</returns>
+        </member>
+        <member name="M:UsbNetDll.CMcsUsbNet.Connect(System.String,UsbNetDll.DeviceEnumNet)">
+            <summary>
+  Opens a connection to the device.
+</summary>
+            <param name="serNo">The Serial Number of the device to connect.</param>
+            <param name="McsUsbDevice">The Mcs Device type.</param>
+            <returns>Error Status. 0 on success.</returns>
+        </member>
+        <member name="M:UsbNetDll.CMcsUsbNet.Connect(System.String,System.UInt32)">
+            <summary>
+  Opens a connection to the device.
+</summary>
+            <param name="serNo">The Serial Number of the device to connect.</param>
+            <param name="LockMask">The Lock Mask for this connection.</param>
+            <returns>Error Status. 0 on success.</returns>
+        </member>
+        <member name="M:UsbNetDll.CMcsUsbNet.Connect(System.String)">
+            <summary>
+  Opens a connection to the device.
+</summary>
+            <param name="serNo">The Serial Number of the device to connect.</param>
+            <returns>Error Status. 0 on success.</returns>
+        </member>
+        <member name="M:UsbNetDll.CMcsUsbNet.Connect(UsbNetDll.CMcsUsbListEntryNet,System.UInt32)">
+            <summary>
+  Opens a connection to the device.
+</summary>
+            <param name="entry">The Device List Entry for the device to be connected.</param>
+            <param name="LockMask">The Lock Mask for this connection.</param>
+            <returns>Error Status. 0 on success.</returns>
+        </member>
+        <member name="M:UsbNetDll.CMcsUsbNet.Connect(UsbNetDll.CMcsUsbListEntryNet)">
+            <summary>
+  Opens a connection to the device.
+</summary>
+            <param name="entry">The Device List Entry for the device to be connected.</param>
+            <returns>Error Status. 0 on success.</returns>
+        </member>
+        <member name="M:UsbNetDll.CMcsUsbNet.Connect">
+            <summary>
+  Opens a connection to the device.
+</summary>
+            <returns>Error Status. 0 on success.</returns>
+        </member>
+        <member name="M:UsbNetDll.CMcsUsbNet.#ctor(UsbNetDll.McsBusTypeEnumNet)">
+            <summary>
+Initializes a new instance of the base class to handle MCS USB devices.
+</summary>
+            <param name="bustype">Type of device to use, either USB or PCI.</param>
+        </member>
+        <member name="M:UsbNetDll.CMcsUsbNet.#ctor">
+            <summary>
+Initializes a new instance of the base class to handle MCS USB devices.
+</summary>
+        </member>
+        <member name="T:UsbNetDll.CMcsUsbNet">
+            <summary>
+Base class to handle MCS USB devices.
+All device classes are derived from this class. Functionality that is provided by all MCS devices is handled by this class.
+</summary>
+        </member>
+        <member name="M:UsbNetDll.CMcsUsbListNet.GetUsbListEntries">
+            <summary>
+Returns all entries from the list of USB Devices connected to the computer.
+</summary>
+        </member>
+        <member name="M:UsbNetDll.CMcsUsbListNet.GetUsbListEntry(System.UInt32)">
+            <summary>
+Returns one CMcsUsbListEntryNet from the list of USB Devices connected to the computer.
+</summary>
+            <param name="index">number of the entry to use.</param>
+        </member>
+        <member name="P:UsbNetDll.CMcsUsbListNet.Count">
+            <summary>
+Gets the number of devices currently in the list.
+</summary>
+        </member>
+        <member name="M:UsbNetDll.CMcsUsbListNet.GetNumberOfDevices">
+            <summary>
+Gets the number of devices currently in the list.
+</summary>
+        </member>
+        <member name="M:UsbNetDll.CMcsUsbListNet.SetStringFormat(System.String)">
+            <summary>
+Specify the text the CMcsUsbListEntryNet.ToString() function should return. The 
+special code %N expands to the device name and %S expands to the serial number of the device.
+</summary>
+            <param name="format">A String containing the format template. Default is "%N (%S)".</param>
+        </member>
+        <member name="M:UsbNetDll.CMcsUsbListNet.Initialize(UsbNetDll.DeviceEnumNet)">
+            <summary>
+Initialize/Update the list of devices which are currently connected to the computer.
+</summary>
+            <param name="McsUsbDevice">Specifies the type of devices to look for.</param>
+        </member>
+        <member name="M:UsbNetDll.CMcsUsbListNet.Dispose">
+            <summary>
+Destructor.
+</summary>
+        </member>
+        <member name="M:UsbNetDll.CMcsUsbListNet.#ctor(UsbNetDll.OnDeviceArrivalRemoval,UsbNetDll.OnDeviceArrivalRemoval)">
+            <summary>
+Initializes a new instance of CMcsUsbListNet class.
+</summary>
+            <param name="devArrival">Callback to call when a new device is attached to the bus.</param>
+            <param name="devRemoval">Callback to call when a device is removed from the bus.</param>
+        </member>
+        <member name="M:UsbNetDll.CMcsUsbListNet.#ctor">
+            <summary>
+Initializes a new instance of CMcsUsbListNet class.
+</summary>
+        </member>
+        <member name="T:UsbNetDll.CMcsUsbListNet">
+            <summary>
+Class to handle a list of connected MCS USB devices.
+</summary>
+        </member>
+        <member name="T:UsbNetDll.OnDeviceArrivalRemoval">
+            <summary>
+Delegate to show a device arrival or removal.
+</summary>
+        </member>
+        <member name="M:UsbNetDll.CMcsUsbListEntryNet.SetStringFormat(System.String)">
+            <summary>
+Specify the text the CMcsUsbListEntryNet.ToString() function should return. The 
+special code %N expands to the device name and %S expands to the serial number of the device.
+</summary>
+            <param name="format">A String containing the format template. Default is "%N (%S)".</param>
+        </member>
+        <member name="M:UsbNetDll.CMcsUsbListEntryNet.Equals(System.Object)">
+            <summary>
+Checks weather two CMcsUsbListEntryNet represent the same USB device.
+</summary>
+            <param name="obj">The CMcsUsbListEntryNet to compare with.</param>
+        </member>
+        <member name="M:UsbNetDll.CMcsUsbListEntryNet.#ctor">
+            <summary>
+Initializes a new instance of the CMcsUsbListEntryNet class.
+</summary>
+        </member>
+        <member name="P:UsbNetDll.CMcsUsbListEntryNet.DevicePath">
+            <summary>
+The DevicePath of the device represented by this CMcsUsbListEntryNet.
+</summary>
+        </member>
+        <member name="P:UsbNetDll.CMcsUsbListEntryNet.HwVersion">
+            <summary>
+The hardware revision of the device represented by this CMcsUsbListEntryNet.
+</summary>
+        </member>
+        <member name="P:UsbNetDll.CMcsUsbListEntryNet.SerialNumber">
+            <summary>
+The serial number of the device represented by this CMcsUsbListEntryNet.
+</summary>
+        </member>
+        <member name="P:UsbNetDll.CMcsUsbListEntryNet.DeviceName">
+            <summary>
+The device name of the device represented by this CMcsUsbListEntryNet.
+</summary>
+        </member>
+        <member name="P:UsbNetDll.CMcsUsbListEntryNet.Product">
+            <summary>
+The Product ID of the device represented by this CMcsUsbListEntryNet.
+</summary>
+        </member>
+        <member name="P:UsbNetDll.CMcsUsbListEntryNet.Manufacturer">
+            <summary>
+The Manufacturer ID of the device represented by this CMcsUsbListEntryNet.
+</summary>
+        </member>
+        <member name="T:UsbNetDll.DataModeEnumNet">
+            <summary>
+Enumerates the data mode of the device, either 16, 24 or 32 bit, can be signed or unsigned.
+</summary>
+        </member>
+        <member name="T:UsbNetDll.MeaLayoutEnumNet">
+            <summary>
+Enumerates the MEA layout of the MEA2100 device.
+</summary>
+        </member>
+        <member name="T:UsbNetDll.AdapterTypeEnumNet">
+            <summary>
+Enumerates the adapter type of the MEA2100 device.
+</summary>
+        </member>
+        <member name="T:UsbNetDll.TriggerSourceEnumNet">
+            <summary>
+Enumerates the trigger source of the MEA2100 device.
+</summary>
+        </member>
+        <member name="T:UsbNetDll.DigitalSourceEnumNet">
+            <summary>
+Enumerates the digital source of the MEA2100 device.
+</summary>
+        </member>
+        <member name="T:UsbNetDll.CFirmwareDestinationNet">
+            <summary>
+Enumerates the destination processor for the firmware.
+</summary>
+        </member>
+        <member name="T:UsbNetDll.McsBusTypeEnumNet">
+            <summary>
+Enumerates the bus to use, either USB, PCI or any
+</summary>
+        </member>
+        <member name="T:UsbNetDll.DeviceEnumNet">
+            <summary>
+Enumerates the group of MCS devices to connect to.
+</summary>
+        </member>
+    </members>
+</doc>
