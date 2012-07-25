@@ -13,25 +13,31 @@
 int num_tr_cross[HS1_CHANNELS/2];
 int last_tr_cross[HS1_CHANNELS/2];
 
+Uint32 reg_written;
+Uint32 reg_value;
 
-interrupt void interrupt4(void)
+// Mailbox write interrupt
+// use "#define USE_MAILBOX_IRQ" in global.h to enable this interrupt
+interrupt void interrupt8(void)
 {
-//	Uint32 data[128];
-//	volatile Uint32 *dp = (Uint32 *)0xb0000000;
-	static int i = 0;
-	
-	CSL_FINS(gpioRegs->OUT_DATA, GPIO_OUT_DATA_OUT2, i); // LED
-	i = 1 - i;
-	
-//	data[0] = *(dp+0);
-//	data[1] = *(dp+1);
+	reg_written = READ_REGISTER(0x428);
+	reg_value   = READ_REGISTER(0x1000 + reg_written);
+
+	// a write to a mailbox register occurred
 }
 
+// FPGA data available (do not use)
+interrupt void interrupt4(void)
+{
+}
+
+// I2C Interrupt
 interrupt void interrupt5(void)
 {
 	//handle_i2c_commands();
 }
 
+// DMA finished Interrupt
 interrupt void interrupt6(void)
 {
 	static int timestamp = 0; // exists only in this function but is created only once on the first function call (i.e. static)
@@ -219,6 +225,7 @@ interrupt void interrupt6(void)
 // timer irq
 interrupt void interrupt7(void)
 {
-	CSL_FINS(gpioRegs->OUT_DATA, GPIO_OUT_DATA_OUT2, 1); // LED
-	CSL_FINS(gpioRegs->OUT_DATA, GPIO_OUT_DATA_OUT2, 0); // LED
+	static int led = 0;
+	CSL_FINS(gpioRegs->OUT_DATA, GPIO_OUT_DATA_OUT2, led); // LED
+	led = 1 - led;
 }

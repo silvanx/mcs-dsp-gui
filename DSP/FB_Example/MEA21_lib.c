@@ -51,6 +51,7 @@ void MEA21_init()
 	init_emifa();
 
 	WRITE_REGISTER(DSP_INDATA_CTRL, 3);                   // Disable all Data Channels and Clear Fifo
+	WRITE_REGISTER(MAILBOX_CTRL, 0x100);                  // enable DSP Mailbox interrupts
 
 #ifdef INIT_IRQ
 	init_irq();
@@ -115,9 +116,12 @@ void init_gpio()
 
 
 	CSL_FINS(gpioRegs->DIR, GPIO_DIR_DIR4 , CSL_GPIO_DIR_DIR_IN);	// FPGA Data available
+	CSL_FINS(gpioRegs->DIR, GPIO_DIR_DIR6 , CSL_GPIO_DIR_DIR_IN);	// Mailbox IRQ
 	
 	/* Enable Interrupts for GP[4] */
 	CSL_FINS(gpioRegs->SET_RIS_TRIG, GPIO_SET_RIS_TRIG_SETRIS4, CSL_GPIO_SET_RIS_TRIG_SETRIS_ENABLE);
+	/* Enable Interrupts for GP[6] */
+	CSL_FINS(gpioRegs->SET_RIS_TRIG, GPIO_SET_RIS_TRIG_SETRIS6, CSL_GPIO_SET_RIS_TRIG_SETRIS_ENABLE);
 	CSL_FINST(gpioRegs->BINTEN, GPIO_BINTEN_EN, ENABLE);
 }
 
@@ -264,7 +268,7 @@ void init_irq()
 {
 	CSL_IntcRegsOvly intcRegs = (CSL_IntcRegsOvly)CSL_INTC_0_REGS;
 
-	// map GP[4] event (FPGA data available) to cpu int4
+	// map GP[4] event (FPGA data available) to cpu int4; do not use, use DMA interrupt (irq6) instead
 	CSL_FINS(intcRegs->INTMUX1, INTC_INTMUX1_INTSEL4, CSL_INTC_EVENTID_GPINT4); 
 
 	// map I2C event to cpu int5
@@ -273,6 +277,9 @@ void init_irq()
 	// map timer event to cpu int 7
 	CSL_FINS(intcRegs->INTMUX1, INTC_INTMUX1_INTSEL7, CSL_INTC_EVENTID_TINTLO1);
 		
+	// map GP[6] event (Mailbox write) to cpu int 8
+	CSL_FINS(intcRegs->INTMUX2, INTC_INTMUX2_INTSEL8, CSL_INTC_EVENTID_GPINT6);
+
 	// set ISTP to point to the vector table address
 	ISTP = (unsigned int)intcVectorTable;
   
@@ -282,7 +289,10 @@ void init_irq()
 	// enable the bits for non maskable interrupt and CPUINT4 */
 	IER |= 0x02;
 	IER |= 0x40;  // enable CPUINT6 (DMA completion)
-   
+#ifdef USE_MAILBOX_IRQ
+	IER |= 0x100; // enable CPUINT8 (Mailbox write)
+#endif
+
 	// enable interrupts, set GIE bit 
 	_enable_interrupts();
 }

@@ -96,6 +96,7 @@ extern Uint32 MonitorData[MONITOR_ARRAY];
 #define DSP_OUTDATA_CTRL  0x0404
 #define DSP_OUTDATA_THR   0x0414
 #define FEEDBACK_REGISTER 0x0780
+#define MAILBOX_CTRL      0x0424
 
 
 void MEA21_init();

@@ -24,6 +24,7 @@
    .global _interrupt5
    .global _interrupt6
    .global _interrupt7
+   .global _interrupt8
 
 
 ; This is a macro that instantiates one entry in the interrupt service table.
@@ -56,7 +57,7 @@ _vector4:   VEC_ENTRY _interrupt4   ;Interrupt4 ISR
 _vector5:   VEC_ENTRY _interrupt5	;Interrupt5 ISR
 _vector6:   VEC_ENTRY _interrupt6	;Interrupt6 ISR
 _vector7:   VEC_ENTRY _interrupt7	;Interrupt7 ISR
-_vector8:   VEC_ENTRY _vec_dummy
+_vector8:   VEC_ENTRY _interrupt8	;Interrupt8 ISR
 _vector9:   VEC_ENTRY _vec_dummy
 _vector10:  VEC_ENTRY _vec_dummy
 _vector11:  VEC_ENTRY _vec_dummy

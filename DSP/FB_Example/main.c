@@ -24,9 +24,6 @@ extern void intcVectorTable(void);
 
 char dsp_version[] = "(>)"SW_STRING"(<)";
 
-int error = 0;
-
-
 
 CSL_GpioRegsOvly gpioRegs = (CSL_GpioRegsOvly)CSL_GPIO_0_REGS;
 
@@ -81,6 +78,10 @@ void main()
 	timer_setup();
 	timer_setperiod(1000);
 	IER |= 0x80;  // enable CPUINT7 (timer)
+#else
+	timer_setup();
+	timer_setperiod(13653332); // 10 Hz timer frequency, blink LED with 5 Hz
+	IER |= 0x80;  // enable CPUINT7 (timer)
 #endif
 
 	WRITE_REGISTER(0x318, 0x1);  // set AUX 1 as output
@@ -116,34 +117,8 @@ void main()
 
 	while(1)
 	{
-		if (error == 0)
-		{
-			CSL_FINS(gpioRegs->OUT_DATA, GPIO_OUT_DATA_OUT2, value); // LED
-		}
-		else
-		{
-			CSL_FINS(gpioRegs->OUT_DATA, GPIO_OUT_DATA_OUT2, 1); // LED
-		}
-		WRITE_REGISTER(0x002C, 0x700 + 7*value);
-		for (i = 0; i < 100000; i++)
-		{
-			WRITE_REGISTER(0x1000, count);
-			WRITE_REGISTER(0x1004, -count);
-			
-			count_test1 = READ_REGISTER(0x1000);
-			count_test2 = READ_REGISTER(0x1004);
-			
-			if (count != count_test1)
-			{
-				error++;
-			}
-			if (-count != count_test2)
-			{
-				error++;
-			}
-			
-			count++;
-		}
+		WRITE_REGISTER(0x002C, 0x700 + 1*value);
+		for (i = 0; i < 100000; i++);
 		value = 1 - value; // switch on/off
 	}
 }
