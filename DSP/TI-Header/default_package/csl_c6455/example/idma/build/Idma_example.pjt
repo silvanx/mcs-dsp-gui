@@ -1,0 +1,35 @@
+; Code Composer Project File, Version 2.0 (do not modify or remove this line)
+
+[Project Settings]
+ProjectDir="D:\release05\default_package\csl_c6455\example\c64plus\idma\build\"
+ProjectType=Executable
+CPUFamily=TMS320C64XX
+Tool="Compiler"
+Tool="CustomBuilder"
+Tool="DspBiosBuilder"
+Tool="Linker"
+Config="Debug"
+Config="Release"
+
+[Source Files]
+Source="..\src\Idma_example.c"
+Source="c6455.cmd"
+
+["Compiler" Settings: "Debug"]
+Options=-g -k -al -fr"..\obj\Debug" -i"..\..\..\inc" -d"_DEBUG" -mo -ml3 -mv6400+
+
+["Compiler" Settings: "Release"]
+Options=-k -al -o3 -fr"..\obj\release" -i"..\..\..\inc" -mo -ml3 -mv6400+
+
+["Linker" Settings: "Debug"]
+Options=-c -m"..\obj\debug\Idma_example.map" -o"..\obj\debug\Idma_example.out" -w -x -i"..\..\..\lib" -l"rts64plus.lib" -l"csl_c6455.lib"
+
+["Linker" Settings: "Release"]
+Options=-c -m"..\obj\release\Idma_example.map" -o"..\obj\release\Idma_example.out" -w -x -i"..\..\..\lib" -l"rts64plus.lib" -l"csl_c6455.lib"
+
+["c6455.cmd" Settings: "Debug"]
+LinkOrder=1
+
+["c6455.cmd" Settings: "Release"]
+LinkOrder=1
+

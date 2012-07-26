@@ -1,0 +1,35 @@
+; Code Composer Project File, Version 2.0 (do not modify or remove this line)
+
+[Project Settings]
+ProjectDir="D:\Himalaya\Release06\default_package\csl_c6455\example\c64plus\emifa\build\"
+ProjectType=Executable
+CPUFamily=TMS320C64XX
+Tool="Compiler"
+Tool="CustomBuilder"
+Tool="DspBiosBuilder"
+Tool="Linker"
+Config="Debug"
+Config="Release"
+
+[Source Files]
+Source="..\src\Emifa_ReadWrite_example.c"
+Source="c6455.cmd"
+
+["Compiler" Settings: "Debug"]
+Options=-g -k -al -fr"..\obj\Debug" -fs"..\obj\Debug" -ft"..\obj\Debug" -fb"..\obj\Debug" -i"..\..\..\inc" -d"_DEBUG" -mo -ml3 -mv6400+
+
+["Compiler" Settings: "Release"]
+Options=-k -al -o3 -fr"..\obj\Release" -fs"..\obj\Release" -ft"..\obj\Release" -fb"..\obj\Release" -i"..\..\..\inc" -mo -ml3 -mv6400+
+
+["Linker" Settings: "Debug"]
+Options=-c -m"..\obj\Debug\Emifa_ReadWrite_example.map" -o"..\obj\Debug\Emifa_ReadWrite_example.out" -w -x -i".\..\..\..\lib" -l"rts64plus.lib" -l"csl_c6455.lib"
+
+["Linker" Settings: "Release"]
+Options=-c -m"..\obj\Release\Emifa_ReadWrite_example.map" -o"..\obj\Release\Emifa_ReadWrite_example.out" -w -x -i".\..\..\..\lib" -l"rts64plus.lib" -l"csl_c6455.lib"
+
+["c6455.cmd" Settings: "Debug"]
+LinkOrder=1
+
+["c6455.cmd" Settings: "Release"]
+LinkOrder=1
+

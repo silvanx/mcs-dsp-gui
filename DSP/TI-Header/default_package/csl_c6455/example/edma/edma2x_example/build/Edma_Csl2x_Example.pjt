@@ -1,0 +1,36 @@
+; Code Composer Project File, Version 2.0 (do not modify or remove this line)
+
+[Project Settings]
+ProjectDir="C:\Documents and Settings\chandra.CHANDRA1\Desktop\default_package06\csl_c6455\example\c64plus\edma\edma2x_example\build\"
+ProjectType=Executable
+CPUFamily=TMS320C64XX
+Tool="Compiler"
+Tool="CustomBuilder"
+Tool="DspBiosBuilder"
+Tool="Linker"
+Config="Debug"
+Config="Release"
+
+[Source Files]
+Source="..\src\edma_csl2x_example.c"
+Source="..\src\edma_int_dispatcher.c"
+Source="c6455.cmd"
+
+["Compiler" Settings: "Debug"]
+Options=-g -k -al -fr"..\obj\debug" -fs"..\obj\debug" -ft"..\obj\debug" -fb"..\obj\debug" -i"..\..\..\..\..\csl_c64xplus_intc\inc" -i"..\..\..\..\inc" -i"..\inc" -d"_DEBUG" -mo -ml3 -mv6400+
+
+["Compiler" Settings: "Release"]
+Options=-o3 -fr"..\obj\Release" -fs"..\obj\Release" -ft"..\obj\Release" -fb"..\obj\Release" -i"..\..\..\..\..\csl_c64xplus_intc\inc" -i"..\..\..\..\inc" -i"..\inc" -mo -ml3 -mv6400+
+
+["Linker" Settings: "Debug"]
+Options=-c -m"..\obj\Debug\Edma_Csl2x_Example.map" -o"..\obj\Debug\Edma_Csl2x_Example.out" -w -x -i"..\..\..\..\lib" -i"..\..\..\..\..\csl_c64xplus_intc\lib" -l"csl_c64xplus_intc.lib" -l"csl_c6455.lib" -l"rts64plus.lib"
+
+["Linker" Settings: "Release"]
+Options=-c -m"..\obj\Release\Edma_Csl2x_Example.map" -o"..\obj\Release\Edma_Csl2x_Example.out" -w -x -i"..\..\..\..\lib" -i"..\..\..\..\..\csl_c64xplus_intc\lib" -l"csl_c64xplus_intc.lib" -l"csl_c6455.lib" -l"rts64plus.lib"
+
+["c6455.cmd" Settings: "Debug"]
+LinkOrder=1
+
+["c6455.cmd" Settings: "Release"]
+LinkOrder=1
+
