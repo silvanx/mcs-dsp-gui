@@ -7,3 +7,7 @@ DSP/FB_Example/.settings/org.eclipse.cdt.codan.core.prefs
 DSP/FB_Example/.settings/org.eclipse.cdt.debug.core.prefs
 DSP/FB_Example/.settings/org.eclipse.core.resources.prefs
 Windows/FB_Example/FB_Example.suo
+Windows/DSP Dacq Example/bin/
+*.suo
+Windows/DSP Dacq Example/obj/
+Windows/DSP Dacq Example/DSP Dacq Example.csproj.user
