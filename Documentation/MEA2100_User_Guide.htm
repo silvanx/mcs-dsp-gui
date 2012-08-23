@@ -42,7 +42,7 @@
 		var wgUserLanguage = "en";
 		var wgContentLanguage = "en";
 		var wgBreakFrames = false;
-		var wgCurRevisionId = 11149;
+		var wgCurRevisionId = 11235;
 		var wgVersion = "1.15.5-1~bpo50+1";
 		var wgEnableAPI = true;
 		var wgEnableWriteAPI = true;
@@ -128,10 +128,11 @@ div.w2l-debug {
 <li class="toclevel-1"><a href="#Register_Interface"><span class="tocnumber">3</span> <span class="toctext">Register Interface</span></a>
 <ul>
 <li class="toclevel-2"><a href="#Address_Map_.28Address_bits_15-12_determine_the_subcomponet.29"><span class="tocnumber">3.1</span> <span class="toctext">Address Map (Address bits 15-12 determine the subcomponet)</span></a></li>
-<li class="toclevel-2"><a href="#Interface_Board_Address_Map_.28Address_bits_11-0.29:"><span class="tocnumber">3.2</span> <span class="toctext">Interface Board Address Map (Address bits 11-0):</span></a></li>
-<li class="toclevel-2"><a href="#Digital_Signal_Processor_Address_Map_.28Address_bits_11-0.29:"><span class="tocnumber">3.3</span> <span class="toctext">Digital Signal Processor Address Map (Address bits 11-0):</span></a></li>
-<li class="toclevel-2"><a href="#Headstage_Board_Address_Map_.28Address_bits_11-0.29:"><span class="tocnumber">3.4</span> <span class="toctext">Headstage Board Address Map (Address bits 11-0):</span></a></li>
-<li class="toclevel-2"><a href="#Stimulus_Board_Address_Map_.28Address_bits_11-0.29:"><span class="tocnumber">3.5</span> <span class="toctext">Stimulus Board Address Map (Address bits 11-0):</span></a></li>
+<li class="toclevel-2"><a href="#Interface_Board_Address_Map_.28Address_bits_11-0.29.2C_Base_Address:_0x0000:"><span class="tocnumber">3.2</span> <span class="toctext">Interface Board Address Map (Address bits 11-0), Base Address: 0x0000:</span></a></li>
+<li class="toclevel-2"><a href="#Mailbox_Register_Address_Map_.28Address_bits_11-0.29_Base_Address:_0x1000:"><span class="tocnumber">3.3</span> <span class="toctext">Mailbox Register Address Map (Address bits 11-0) Base Address: 0x1000:</span></a></li>
+<li class="toclevel-2"><a href="#RAM_Register_Address_Map_.28Address_bits_11-0.29_Base_Address:_0x2000:"><span class="tocnumber">3.4</span> <span class="toctext">RAM Register Address Map (Address bits 11-0) Base Address: 0x2000:</span></a></li>
+<li class="toclevel-2"><a href="#Headstage_Board_Address_Map_.28Address_bits_11-0.29_Base_Address:_HS1:_0x8000_HS2:_0xC000:"><span class="tocnumber">3.5</span> <span class="toctext">Headstage Board Address Map (Address bits 11-0) Base Address: HS1: 0x8000 HS2: 0xC000:</span></a></li>
+<li class="toclevel-2"><a href="#Stimulus_Board_Address_Map_.28Address_bits_11-0.29_Base_Address:_HS1:_0x9000_and_0xA000_HS2:_0xD000_and_0xE000:"><span class="tocnumber">3.6</span> <span class="toctext">Stimulus Board Address Map (Address bits 11-0) Base Address: HS1: 0x9000 and 0xA000 HS2: 0xD000 and 0xE000:</span></a></li>
 </ul>
 </li>
 <li class="toclevel-1"><a href="#HS_.3C-.3E_STG_interconection_.28bits_32-0.29"><span class="tocnumber">4</span> <span class="toctext">HS &lt;-&gt; STG interconection (bits 32-0)</span></a></li>
@@ -157,7 +158,7 @@ div.w2l-debug {
 signal analyses and programm feedback via the stimulation channels. A 
 debug port is provided at the same connector as the analog inputs.
 </p>
-<div class="center"><div class="floatnone"><a href="http://wiki.mcs.de.com/wiki/index.php/File:MEA2100_Overview.png" class="image" title="System Overview"><img alt="System Overview" src="MEA2100_User_Guide-Dateien/800px-MEA2100_Overview.png" border="0" height="232" width="800"></a></div></div>
+<div class="center"><div class="floatnone"><a href="http://wiki.mcs.de.com/wiki/index.php/File:MEA2100_Overview.png" class="image" title="System Overview"><img alt="System Overview" src="MEA2100_User_Guide-Dateien/800px-MEA2100_Overview.png" width="800" border="0" height="232"></a></div></div>
 <p>The headstage consists of:
 </p>
 <ul><li> Adapters for different MEAs (see options below)
@@ -168,7 +169,7 @@ debug port is provided at the same connector as the analog inputs.
 <p>The headstages connect to an interface board.
 </p><p>The overview about HS options: 
 </p>
-<div class="center"><div class="floatnone"><a href="http://wiki.mcs.de.com/wiki/index.php/File:MEA2100_OverviewDetail.png" class="image" title="Headstage Options"><img alt="Headstage Options" src="MEA2100_User_Guide-Dateien/800px-MEA2100_OverviewDetail.png" border="0" height="318" width="800"></a></div></div>
+<div class="center"><div class="floatnone"><a href="http://wiki.mcs.de.com/wiki/index.php/File:MEA2100_OverviewDetail.png" class="image" title="Headstage Options"><img alt="Headstage Options" src="MEA2100_User_Guide-Dateien/800px-MEA2100_OverviewDetail.png" width="800" border="0" height="318"></a></div></div>
 <a name="Getting_Started" id="Getting_Started"></a><h2> <span class="mw-headline"> Getting Started </span></h2>
 <p>To write code for the DSP, the following tools are needed:
 </p>
@@ -184,7 +185,7 @@ debug port is provided at the same connector as the analog inputs.
 <p>The default setup of the system routes the data without DSP interaction from HS 1 to USB A and from HS2 to USB B Port.
 In this case the DSP is only able to monitor the sweep data.
 </p>
-<div class="center"><div class="floatnone"><a href="http://wiki.mcs.de.com/wiki/index.php/File:MEA2100_DataStream_noDSP.png" class="image" title="MEA2100 DataStream noDSP.png"><img alt="" src="MEA2100_User_Guide-Dateien/800px-MEA2100_DataStream_noDSP.png" border="0" height="277" width="800"></a></div></div>
+<div class="center"><div class="floatnone"><a href="http://wiki.mcs.de.com/wiki/index.php/File:MEA2100_DataStream_noDSP.png" class="image" title="MEA2100 DataStream noDSP.png"><img alt="" src="MEA2100_User_Guide-Dateien/800px-MEA2100_DataStream_noDSP.png" width="800" border="0" height="277"></a></div></div>
 <p>The DSP can be programmed with user code to access the data stream 
 from the headstages and the onboard ADCs of the interface board. The 
 datastream can be send to the USB ports towards the PC. The DSP can also
@@ -192,7 +193,7 @@ datastream can be send to the USB ports towards the PC. The DSP can also
 trigger, exept the USB data stream configuration to the PC. By this a 
 realtime feedback with low latency can be build.
 </p>
-<div class="center"><div class="floatnone"><a href="http://wiki.mcs.de.com/wiki/index.php/File:MEA2100_DataStream_withDSP.png" class="image" title="MEA2100 DataStream withDSP.png"><img alt="" src="MEA2100_User_Guide-Dateien/800px-MEA2100_DataStream_withDSP.png" border="0" height="277" width="800"></a></div></div>
+<div class="center"><div class="floatnone"><a href="http://wiki.mcs.de.com/wiki/index.php/File:MEA2100_DataStream_withDSP.png" class="image" title="MEA2100 DataStream withDSP.png"><img alt="" src="MEA2100_User_Guide-Dateien/800px-MEA2100_DataStream_withDSP.png" width="800" border="0" height="277"></a></div></div>
 <p>The DSP used in the MEA2100 system is a <a href="http://www.ti.com/product/tms320c6454" class="external text" title="http://www.ti.com/product/tms320c6454" rel="nofollow">TMS320C6454</a>
  from Texas Instruments running at 819.2 MHz. He has access to the 
 MEA2100 system via its external memory interface (EMIF).  Access to the 
@@ -274,7 +275,7 @@ remember that <tt>MeaData</tt> will be changed as soon as new sweep data is tran
 Timestamp    3  datawords (Header,  2 Data)
 </pre>
 <a name="Stimulation" id="Stimulation"></a><h3> <span class="mw-headline"> Stimulation </span></h3>
-<div class="center"><div class="floatnone"><a href="http://wiki.mcs.de.com/wiki/index.php/File:MEA2100_StimulationBlanking.png" class="image" title="MEA2100 StimulationBlanking.png"><img alt="" src="MEA2100_User_Guide-Dateien/800px-MEA2100_StimulationBlanking.png" border="0" height="518" width="800"></a></div></div>
+<div class="center"><div class="floatnone"><a href="http://wiki.mcs.de.com/wiki/index.php/File:MEA2100_StimulationBlanking.png" class="image" title="MEA2100 StimulationBlanking.png"><img alt="" src="MEA2100_User_Guide-Dateien/800px-MEA2100_StimulationBlanking.png" width="800" border="0" height="518"></a></div></div>
 <p><br>
 </p>
 <a name="General_Overview_2" id="General_Overview_2"></a><h4> <span class="mw-headline"> General Overview </span></h4>
@@ -355,7 +356,7 @@ then the other registers reflect the corresponding block start pointer
 of the segment.
 </p><p><br>
 </p>
-<div class="center"><div class="floatnone"><a href="http://wiki.mcs.de.com/wiki/index.php/File:Memmory_Layout.png" class="image" title="Memory Layout options"><img alt="Memory Layout options" src="MEA2100_User_Guide-Dateien/400px-Memmory_Layout.png" border="0" height="560" width="400"></a></div></div>
+<div class="center"><div class="floatnone"><a href="http://wiki.mcs.de.com/wiki/index.php/File:Memmory_Layout.png" class="image" title="Memory Layout options"><img alt="Memory Layout options" src="MEA2100_User_Guide-Dateien/400px-Memmory_Layout.png" width="400" border="0" height="560"></a></div></div>
 <p><br>
 After the intendet memory layout is set up, each of the DAC and sideband
  memory blocks can be filled with data. Data is written to the blocks in
@@ -427,7 +428,7 @@ bits
 digital outputs on the Interfaceboard which are synchronous to the 
 running stimulation.
 </li></ul>
-<div class="center"><div class="floatnone"><a href="http://wiki.mcs.de.com/wiki/index.php/File:MEA2100_Blanking.png" class="image" title="Stimulus Example"><img alt="Stimulus Example" src="MEA2100_User_Guide-Dateien/600px-MEA2100_Blanking.png" border="0" height="416" width="600"></a></div></div>
+<div class="center"><div class="floatnone"><a href="http://wiki.mcs.de.com/wiki/index.php/File:MEA2100_Blanking.png" class="image" title="Stimulus Example"><img alt="Stimulus Example" src="MEA2100_User_Guide-Dateien/600px-MEA2100_Blanking.png" width="600" border="0" height="416"></a></div></div>
 <p>The diagram shows an example stimulus pattern together with the 
 sideband datastream. As shown in the drawing, the Stimulation Switch can
  open with the end of the Stimulus. The Blanking signal should stay 
@@ -495,7 +496,7 @@ Selector.
 <td> Control:
 </td></tr>
 <tr>
-<td><div class="center"><div class="floatnone"><a href="http://wiki.mcs.de.com/wiki/index.php/File:STG_Mux_Stimswtich_control.png" class="image" title="Sideband Singnal Control for electrode n"><img alt="Sideband Singnal Control for electrode n" src="MEA2100_User_Guide-Dateien/800px-STG_Mux_Stimswtich_control.png" border="0" height="605" width="800"></a></div></div>
+<td><div class="center"><div class="floatnone"><a href="http://wiki.mcs.de.com/wiki/index.php/File:STG_Mux_Stimswtich_control.png" class="image" title="Sideband Singnal Control for electrode n"><img alt="Sideband Singnal Control for electrode n" src="MEA2100_User_Guide-Dateien/800px-STG_Mux_Stimswtich_control.png" width="800" border="0" height="605"></a></div></div>
 </td><td>
 </td></tr></tbody></table>
 </td><td>
@@ -533,7 +534,7 @@ Selector.
 </td><td>
 </td></tr>
 </tbody></table>
-<div class="center"><div class="floatnone"><a href="http://wiki.mcs.de.com/wiki/index.php/File:STG_Config_Overview.png" class="image" title="STG Data Path and configuration dependencies"><img alt="Sideband Singnal Control for electrode n" src="MEA2100_User_Guide-Dateien/800px-STG_Config_Overview.png" border="0" height="286" width="800"></a></div></div>
+<div class="center"><div class="floatnone"><a href="http://wiki.mcs.de.com/wiki/index.php/File:STG_Config_Overview.png" class="image" title="STG Data Path and configuration dependencies"><img alt="Sideband Singnal Control for electrode n" src="MEA2100_User_Guide-Dateien/800px-STG_Config_Overview.png" width="800" border="0" height="286"></a></div></div>
 <p><br>
 </p>
 <a name="List_mode_for_advanced_stimulation" id="List_mode_for_advanced_stimulation"></a><h5> <span class="mw-headline"> List mode for advanced stimulation </span></h5>
@@ -592,7 +593,7 @@ which corresponds the trigger number in the Trigger Event Status
 register <a href="#Trigger_CTRL_Register" title="">0x214</a>. For example to manually start trigger 1, write a value of 0x00000001 to register <a href="#Trigger_CTRL_Register" title="">0x214</a>.
 </p><p>To start a trigger with external signals or other sources a Digital Multiplexer for source select is implemented <a href="#Trigger_CTRL_Register" title="">(0x280-0x2AC)</a>.
 </p>
-<div class="center"><div class="floatnone"><a href="http://wiki.mcs.de.com/wiki/index.php/File:MEA2100_Interface_Board_HS1_1.png" class="image" title="Standard Trigger behavior"><img alt="Standard Trigger behavior" src="MEA2100_User_Guide-Dateien/800px-MEA2100_Interface_Board_HS1_1.png" border="0" height="380" width="800"></a></div></div>
+<div class="center"><div class="floatnone"><a href="http://wiki.mcs.de.com/wiki/index.php/File:MEA2100_Interface_Board_HS1_1.png" class="image" title="Standard Trigger behavior"><img alt="Standard Trigger behavior" src="MEA2100_User_Guide-Dateien/800px-MEA2100_Interface_Board_HS1_1.png" width="800" border="0" height="380"></a></div></div>
 <a name="Direct_Streaming_Mode_triggered_by_SW" id="Direct_Streaming_Mode_triggered_by_SW"></a><h4> <span class="mw-headline"> Direct Streaming Mode triggered by SW </span></h4>
 <div id="Direct_Streaming_Trigger_by_SW"></div>
 <p>A further advanced mode for Stimulation is the DSP generated stimulus
@@ -632,7 +633,7 @@ For this write 36 DWords to the address 0xC0000000 from the DSP.
 streaming mode, because the FIFO read logic expects 36 Data in the 
 predefined order.
 </p>
-<div class="center"><div class="floatnone"><a href="http://wiki.mcs.de.com/wiki/index.php/File:MEA2100_Interface_Board_direct_streaming_mode.png" class="image" title="Direct streaming mode"><img alt="Direct streaming mode" src="MEA2100_User_Guide-Dateien/800px-MEA2100_Interface_Board_direct_streaming_mode.png" border="0" height="378" width="800"></a></div></div>
+<div class="center"><div class="floatnone"><a href="http://wiki.mcs.de.com/wiki/index.php/File:MEA2100_Interface_Board_direct_streaming_mode.png" class="image" title="Direct streaming mode"><img alt="Direct streaming mode" src="MEA2100_User_Guide-Dateien/800px-MEA2100_Interface_Board_direct_streaming_mode.png" width="800" border="0" height="378"></a></div></div>
 <a name="Digital_Multiplexer" id="Digital_Multiplexer"></a><h3> <span class="mw-headline"> Digital Multiplexer </span></h3>
 <p>There are multiple digital signals within the MEA2100 system, which 
 represent internal states of the systems. These digital signals can be 
@@ -687,9 +688,9 @@ With this program all relevant registers are reflected and according to the use 
 </tbody></table><table align="center" border="0" cellpadding="20" cellspacing="0">
 
 <tbody><tr>
-<td><div class="center"><div class="floatnone"><a href="http://wiki.mcs.de.com/wiki/index.php/File:MCS_USB_Update_MEA2100_initial_screen.png" class="image" title="McsUsbUpdate"><img alt="Direct streaming mode" src="MEA2100_User_Guide-Dateien/400px-MCS_USB_Update_MEA2100_initial_screen.png" border="0" height="538" width="400"></a></div></div>
+<td><div class="center"><div class="floatnone"><a href="http://wiki.mcs.de.com/wiki/index.php/File:MCS_USB_Update_MEA2100_initial_screen.png" class="image" title="McsUsbUpdate"><img alt="Direct streaming mode" src="MEA2100_User_Guide-Dateien/400px-MCS_USB_Update_MEA2100_initial_screen.png" width="400" border="0" height="538"></a></div></div>
 </td><td>
-</td><td><div class="center"><div class="floatnone"><a href="http://wiki.mcs.de.com/wiki/index.php/File:MCS_USB_Update_MEA2100_Interfaceboard_screen.png" class="image" title="McsUsbUpdate Interface Board screen"><img alt="Direct streaming mode" src="MEA2100_User_Guide-Dateien/600px-MCS_USB_Update_MEA2100_Interfaceboard_screen.png" border="0" height="587" width="600"></a></div></div>
+</td><td><div class="center"><div class="floatnone"><a href="http://wiki.mcs.de.com/wiki/index.php/File:MCS_USB_Update_MEA2100_Interfaceboard_screen.png" class="image" title="McsUsbUpdate Interface Board screen"><img alt="Direct streaming mode" src="MEA2100_User_Guide-Dateien/600px-MCS_USB_Update_MEA2100_Interfaceboard_screen.png" width="600" border="0" height="587"></a></div></div>
 </td></tr></tbody></table>
 
 
@@ -699,25 +700,25 @@ With this program all relevant registers are reflected and according to the use 
 <td>
 </td></tr>
 <tr>
-<td><div class="center"><div class="floatnone"><a href="http://wiki.mcs.de.com/wiki/index.php/File:MCS_USB_Update_MEA2100_Headstage_screen.png" class="image" title="McsUsbUpdate Headstage screen"><img alt="Direct streaming mode" src="MEA2100_User_Guide-Dateien/600px-MCS_USB_Update_MEA2100_Headstage_screen.png" border="0" height="502" width="600"></a></div></div>
+<td><div class="center"><div class="floatnone"><a href="http://wiki.mcs.de.com/wiki/index.php/File:MCS_USB_Update_MEA2100_Headstage_screen.png" class="image" title="McsUsbUpdate Headstage screen"><img alt="Direct streaming mode" src="MEA2100_User_Guide-Dateien/600px-MCS_USB_Update_MEA2100_Headstage_screen.png" width="600" border="0" height="502"></a></div></div>
 </td></tr>
 <tr>
 <td>
 </td></tr></tbody></table>
 <table align="center">
 <tbody><tr>
-<td><div class="center"><div class="floatnone"><a href="http://wiki.mcs.de.com/wiki/index.php/File:MCS_USB_Update_MEA2100_STG_screen.png" class="image" title="McsUsbUpdate STG configuration screen"><img alt="Direct streaming mode" src="MEA2100_User_Guide-Dateien/800px-MCS_USB_Update_MEA2100_STG_screen.png" border="0" height="544" width="800"></a></div></div>
+<td><div class="center"><div class="floatnone"><a href="http://wiki.mcs.de.com/wiki/index.php/File:MCS_USB_Update_MEA2100_STG_screen.png" class="image" title="McsUsbUpdate STG configuration screen"><img alt="Direct streaming mode" src="MEA2100_User_Guide-Dateien/800px-MCS_USB_Update_MEA2100_STG_screen.png" width="800" border="0" height="544"></a></div></div>
 </td><td>
-</td><td><div class="center"><div class="floatnone"><a href="http://wiki.mcs.de.com/wiki/index.php/File:MCS_USB_Update_MEA2100_STGMEM_screen.png" class="image" title="McsUsbUpdate STG Memory readout pane screen"><img alt="Direct streaming mode" src="MEA2100_User_Guide-Dateien/650px-MCS_USB_Update_MEA2100_STGMEM_screen.png" border="0" height="543" width="650"></a></div></div>
+</td><td><div class="center"><div class="floatnone"><a href="http://wiki.mcs.de.com/wiki/index.php/File:MCS_USB_Update_MEA2100_STGMEM_screen.png" class="image" title="McsUsbUpdate STG Memory readout pane screen"><img alt="Direct streaming mode" src="MEA2100_User_Guide-Dateien/650px-MCS_USB_Update_MEA2100_STGMEM_screen.png" width="650" border="0" height="543"></a></div></div>
 </td><td>
 </td></tr></tbody></table>
 
 
 <table align="center">
 <tbody><tr>
-<td><div class="center"><div class="floatnone"><a href="http://wiki.mcs.de.com/wiki/index.php/File:MCS_USB_Update_MEA2100_Digital_screen.png" class="image" title="McsUsbUpdate Digital signal configuration screen"><img alt="Direct streaming mode" src="MEA2100_User_Guide-Dateien/800px-MCS_USB_Update_MEA2100_Digital_screen.png" border="0" height="613" width="800"></a></div></div>
+<td><div class="center"><div class="floatnone"><a href="http://wiki.mcs.de.com/wiki/index.php/File:MCS_USB_Update_MEA2100_Digital_screen.png" class="image" title="McsUsbUpdate Digital signal configuration screen"><img alt="Direct streaming mode" src="MEA2100_User_Guide-Dateien/800px-MCS_USB_Update_MEA2100_Digital_screen.png" width="800" border="0" height="613"></a></div></div>
 </td><td>
-</td><td><div class="center"><div class="floatnone"><a href="http://wiki.mcs.de.com/wiki/index.php/File:MCS_USB_Update_MEA2100_Filter_screen.png" class="image" title="McsUsbUpdate filter settings screen"><img alt="Direct streaming mode" src="MEA2100_User_Guide-Dateien/700px-MCS_USB_Update_MEA2100_Filter_screen.png" border="0" height="687" width="700"></a></div></div>
+</td><td><div class="center"><div class="floatnone"><a href="http://wiki.mcs.de.com/wiki/index.php/File:MCS_USB_Update_MEA2100_Filter_screen.png" class="image" title="McsUsbUpdate filter settings screen"><img alt="Direct streaming mode" src="MEA2100_User_Guide-Dateien/700px-MCS_USB_Update_MEA2100_Filter_screen.png" width="700" border="0" height="687"></a></div></div>
 </td><td>
 </td></tr></tbody></table>
 
@@ -777,8 +778,8 @@ With this program all relevant registers are reflected and according to the use 
 <p>When accessed from the DSP, all FPGA Registers are memory mapped to the address region from <tt>0xA0000000</tt> to <tt>0xA000FFFF</tt>.
 </p>
 <pre>0x0000 to 0x0FFF: Interfaceboard
-0x1000 to 0x1FFF: DS Processor Mailbox on Interfaceboard
-0x2000 to 0x2FFF: RAM
+0x1000 to 0x1FFF: Mailbox Registers on Interfaceboard
+0x2000 to 0x2FFF: RAM Registers on Interfaceboard
 0x8000 to 0x8FFF: Headstage 0
 0x9000 to 0x9FFF: STG1 on HS 0
 0xA000 to 0xAFFF: STG2 on HS 0
@@ -786,7 +787,7 @@ With this program all relevant registers are reflected and according to the use 
 0xD000 to 0xDFFF: STG1 on HS 1
 0xE000 to 0xEFFF: STG2 on HS 1
 </pre>
-<a name="Interface_Board_Address_Map_.28Address_bits_11-0.29:" id="Interface_Board_Address_Map_.28Address_bits_11-0.29:"></a><h2> <span class="mw-headline"> Interface Board Address Map (Address bits 11-0): </span></h2>
+<a name="Interface_Board_Address_Map_.28Address_bits_11-0.29.2C_Base_Address:_0x0000:" id="Interface_Board_Address_Map_.28Address_bits_11-0.29.2C_Base_Address:_0x0000:"></a><h2> <span class="mw-headline"> Interface Board Address Map (Address bits 11-0), Base Address: 0x0000: </span></h2>
 <table class="wikitable" border="0" cellpadding="10" cellspacing="1">
 
 <tbody><tr>
@@ -912,28 +913,28 @@ With this program all relevant registers are reflected and according to the use 
 <td>0x04A: (W1Clear) FIFO Interface CTRL Dev2</td><td colspan="26"> Reserved </td><td colspan="1"> incl. EOF<sup>*</sup> </td><td colspan="1"> incl. CTRL Com.<sup>*</sup> </td><td colspan="1"> incl. Timestamp </td><td colspan="1"> incl. Packet cnt. </td><td colspan="1"> Reserved  </td><td colspan="1"> incl. SOF<sup>*</sup>
 </td></tr>
 <tr>
-<td>0x04C: (RO)Enabled Annalog Channels Dev0</td><td colspan="29"> Reserved </td><td colspan="1"> IF </td><td colspan="1"> HS1 </td><td colspan="1"> HS0
+<td>0x04C: (RO)Enabled Annalog Channels Dev0</td><td colspan="29"> Reserved </td><td colspan="1"> IF </td><td colspan="1"> HS2 </td><td colspan="1"> HS1
 </td></tr>
 <tr>
-<td>0x04E: (RO)Enabled Annalog Channels Dev2</td><td colspan="29"> Reserved </td><td colspan="1"> IF </td><td colspan="1"> HS1 </td><td colspan="1"> HS0
+<td>0x04E: (RO)Enabled Annalog Channels Dev2</td><td colspan="29"> Reserved </td><td colspan="1"> IF </td><td colspan="1"> HS2 </td><td colspan="1"> HS1
 </td></tr>
 <tr>
-<td>0x050: (RO)Enabled Digital Channels Dev0</td><td colspan="29"> Reserved </td><td colspan="1"> IF </td><td colspan="1"> HS1 </td><td colspan="1"> HS0
+<td>0x050: (RO)Enabled Digital Channels Dev0</td><td colspan="29"> Reserved </td><td colspan="1"> IF </td><td colspan="1"> HS2 </td><td colspan="1"> HS1
 </td></tr>
 <tr>
-<td>0x052: (RO)Enabled Digital Channels Dev2</td><td colspan="29"> Reserved </td><td colspan="1"> IF </td><td colspan="1"> HS1 </td><td colspan="1"> HS0
+<td>0x052: (RO)Enabled Digital Channels Dev2</td><td colspan="29"> Reserved </td><td colspan="1"> IF </td><td colspan="1"> HS2 </td><td colspan="1"> HS1
 </td></tr>
 <tr>
-<td>0x054: Channel config. HS0 Dev0</td><td colspan="8"> Reserved </td><td colspan="8"> Channeloffset </td><td colspan="8"> Reserved </td><td colspan="8"> # of Channels
+<td>0x054: Channel config. HS1 Dev0</td><td colspan="8"> Reserved </td><td colspan="8"> Channeloffset </td><td colspan="8"> Reserved </td><td colspan="8"> # of Channels
 </td></tr>
 <tr>
-<td>0x056: Channel config. HS0 Dev2</td><td colspan="8"> Reserved </td><td colspan="8"> Channeloffset </td><td colspan="8"> Reserved </td><td colspan="8"> # of Channels
+<td>0x056: Channel config. HS1 Dev2</td><td colspan="8"> Reserved </td><td colspan="8"> Channeloffset </td><td colspan="8"> Reserved </td><td colspan="8"> # of Channels
 </td></tr>
 <tr>
-<td>0x058: Channel config. HS1 Dev0</td><td colspan="8"> Reserved </td><td colspan="8"> Channeloffset </td><td colspan="8"> Reserved </td><td colspan="8"> # of Channels
+<td>0x058: Channel config. HS2 Dev0</td><td colspan="8"> Reserved </td><td colspan="8"> Channeloffset </td><td colspan="8"> Reserved </td><td colspan="8"> # of Channels
 </td></tr>
 <tr>
-<td>0x05A: Channel config. HS1 Dev2</td><td colspan="8"> Reserved </td><td colspan="8"> Channeloffset </td><td colspan="8"> Reserved </td><td colspan="8"> # of Channels
+<td>0x05A: Channel config. HS2 Dev2</td><td colspan="8"> Reserved </td><td colspan="8"> Channeloffset </td><td colspan="8"> Reserved </td><td colspan="8"> # of Channels
 </td></tr>
 <tr>
 <td>0x05C: Channel config. DSP Dev0</td><td colspan="8"> Reserved </td><td colspan="8"> Channeloffset </td><td colspan="8"> Reserved </td><td colspan="8"> # of Channels
@@ -1348,10 +1349,10 @@ Timestamp       3 Datawords (Header, 2x Counter == 64 bit Counter)
 <th>Register</th><th> 31 </th><th> 30 </th><th> 29 </th><th> 28 </th><th> 27 </th><th> 26 </th><th> 25 </th><th> 24 </th><th> 23 </th><th> 22 </th><th> 21 </th><th> 20 </th><th>19 </th><th> 18 </th><th> 17 </th><th> 16 </th><th> 15 </th><th> 14 </th><th> 13 </th><th> 12 </th><th> 11 </th><th> 10 </th><th> 9 </th><th> 8 </th><th> 7 </th><th> 6 </th><th> 5 </th><th> 4 </th><th> 3 </th><th> 2 </th><th> 1 </th><th> 0
 </th></tr>
 <tr>
-<td>0x500: Right Audio Channel</td><td colspan="12"> Reserved </td><td colspan="4"> Source (DSP, IF, HS1, HS0) </td><td colspan="8"> Reserved </td><td colspan="8"> Channel
+<td>0x500: Right Audio Channel</td><td colspan="12"> Reserved </td><td colspan="4"> Source (DSP, IF, HS2, HS1) </td><td colspan="8"> Reserved </td><td colspan="8"> Channel
 </td></tr>
 <tr>
-<td>0x504: Left Audio Channel</td><td colspan="12"> Reserved </td><td colspan="4"> Source (DSP, IF, HS1, HS0) </td><td colspan="8"> Reserved </td><td colspan="8"> Channel
+<td>0x504: Left Audio Channel</td><td colspan="12"> Reserved </td><td colspan="4"> Source (DSP, IF, HS2, HS1) </td><td colspan="8"> Reserved </td><td colspan="8"> Channel
 </td></tr>
 <tr>
 <td>0x510: Right Audio Attenuation</td><td colspan="26"> Reserved </td><td colspan="6"> Attenuation
@@ -1366,8 +1367,8 @@ Timestamp       3 Datawords (Header, 2x Counter == 64 bit Counter)
 <td>
 <pre> Source decoding:
   0: No source
-  1: HS0
-  2: HS1
+  1: HS1
+  2: HS2
   3: IF
   4: DSP(bits 23 - 0)
 </pre>
@@ -1590,7 +1591,7 @@ Timestamp       3 Datawords (Header, 2x Counter == 64 bit Counter)
 315 - 300&nbsp;: Sideband signals HS2 STG X2 Trigger 3
 </pre>
 </td></tr></tbody></table>
-<a name="Digital_Signal_Processor_Address_Map_.28Address_bits_11-0.29:" id="Digital_Signal_Processor_Address_Map_.28Address_bits_11-0.29:"></a><h2> <span class="mw-headline"> Digital Signal Processor Address Map (Address bits 11-0): </span></h2>
+<a name="Mailbox_Register_Address_Map_.28Address_bits_11-0.29_Base_Address:_0x1000:" id="Mailbox_Register_Address_Map_.28Address_bits_11-0.29_Base_Address:_0x1000:"></a><h2> <span class="mw-headline"> Mailbox Register Address Map (Address bits 11-0) Base Address: 0x1000: </span></h2>
 <table class="wikitable" border="0" cellpadding="10" cellspacing="1">
 
 <tbody><tr>
@@ -1614,9 +1615,31 @@ Timestamp       3 Datawords (Header, 2x Counter == 64 bit Counter)
 <tr>
 <td>
 </td></tr></tbody></table>
-<p><br>
-</p>
-<a name="Headstage_Board_Address_Map_.28Address_bits_11-0.29:" id="Headstage_Board_Address_Map_.28Address_bits_11-0.29:"></a><h2> <span class="mw-headline"> Headstage Board Address Map (Address bits 11-0): </span></h2>
+<a name="RAM_Register_Address_Map_.28Address_bits_11-0.29_Base_Address:_0x2000:" id="RAM_Register_Address_Map_.28Address_bits_11-0.29_Base_Address:_0x2000:"></a><h2> <span class="mw-headline"> RAM Register Address Map (Address bits 11-0) Base Address: 0x2000: </span></h2>
+<table class="wikitable" border="0" cellpadding="10" cellspacing="1">
+
+<tbody><tr>
+<td>
+</td></tr>
+<tr>
+<td>
+<p></p><table align="left" border="1" cellpadding="5" cellspacing="0">
+<caption> <div align="left"><b>Mailbox to DSP</b></div>
+<p></p></caption>
+
+<tbody><tr>
+<th>Register</th><th> 31 </th><th> 30 </th><th> 29 </th><th> 28 </th><th> 27 </th><th> 26 </th><th> 25 </th><th> 24 </th><th> 23 </th><th> 22 </th><th> 21 </th><th> 20 </th><th>19 </th><th> 18 </th><th> 17 </th><th> 16 </th><th> 15 </th><th> 14 </th><th> 13 </th><th> 12 </th><th> 11 </th><th> 10 </th><th> 9 </th><th> 8 </th><th> 7 </th><th> 6 </th><th> 5 </th><th> 4 </th><th> 3 </th><th> 2 </th><th> 1 </th><th> 0
+</th></tr>
+<tr>
+<td>0x000 - 0xFFC: RAM Registers</td><td colspan="32">
+</td></tr>
+</tbody></table>
+</td><td>
+</td></tr>
+<tr>
+<td>
+</td></tr></tbody></table>
+<a name="Headstage_Board_Address_Map_.28Address_bits_11-0.29_Base_Address:_HS1:_0x8000_HS2:_0xC000:" id="Headstage_Board_Address_Map_.28Address_bits_11-0.29_Base_Address:_HS1:_0x8000_HS2:_0xC000:"></a><h2> <span class="mw-headline"> Headstage Board Address Map (Address bits 11-0) Base Address: HS1: 0x8000 HS2: 0xC000: </span></h2>
 <table class="wikitable" border="0" cellpadding="10" cellspacing="1">
 
 <tbody><tr>
@@ -1997,7 +2020,7 @@ Timestamp       3 Datawords (Header, 2x Counter == 64 bit Counter)
 <tr>
 <td>
 </td></tr></tbody></table>
-<a name="Stimulus_Board_Address_Map_.28Address_bits_11-0.29:" id="Stimulus_Board_Address_Map_.28Address_bits_11-0.29:"></a><h2> <span class="mw-headline"> Stimulus Board Address Map (Address bits 11-0): </span></h2>
+<a name="Stimulus_Board_Address_Map_.28Address_bits_11-0.29_Base_Address:_HS1:_0x9000_and_0xA000_HS2:_0xD000_and_0xE000:" id="Stimulus_Board_Address_Map_.28Address_bits_11-0.29_Base_Address:_HS1:_0x9000_and_0xA000_HS2:_0xD000_and_0xE000:"></a><h2> <span class="mw-headline"> Stimulus Board Address Map (Address bits 11-0) Base Address: HS1: 0x9000 and 0xA000 HS2: 0xD000 and 0xE000: </span></h2>
 <table class="wikitable" border="0" cellpadding="10" cellspacing="1">
 
 <tbody><tr>
@@ -2823,13 +2846,13 @@ Bit 4: Stimulus Selector
 
 <!-- 
 NewPP limit report
-Preprocessor node count: 98/1000000
+Preprocessor node count: 103/1000000
 Post-expand include size: 0/2097152 bytes
 Template argument size: 0/2097152 bytes
 Expensive parser function count: 0/100
 -->
 
-<!-- Saved in parser cache with key wikidb:pcache:idhash:2046-0!1!0!!en!2!printable=1 and timestamp 20120725165038 -->
+<!-- Saved in parser cache with key wikidb:pcache:idhash:2046-0!1!0!!en!2!printable=1 and timestamp 20120823124624 -->
 <div class="printfooter">
 Retrieved from "<a href="http://wiki.mcs.de.com/wiki/index.php/MEA2100_User_Guide">http://wiki.mcs.de.com/wiki/index.php/MEA2100_User_Guide</a>"</div>
 						<!-- end content -->
@@ -2853,9 +2876,7 @@ Retrieved from "<a href="http://wiki.mcs.de.com/wiki/index.php/MEA2100_User_Guid
 		<h5>Personal tools</h5>
 		<div class="pBody">
 			<ul>
-				<li id="pt-anonuserpage"><a href="http://wiki.mcs.de.com/wiki/index.php/User:192.168.10.14" title="The user page for the IP address you are editing as [alt-.]" accesskey="." class="new">192.168.10.14</a></li>
-				<li id="pt-anontalk"><a href="http://wiki.mcs.de.com/wiki/index.php/User_talk:192.168.10.14" title="Discussion about edits from this IP address [alt-n]" accesskey="n" class="new">Talk for this IP</a></li>
-				<li id="pt-anonlogin"><a href="http://wiki.mcs.de.com/wiki/index.php?title=Special:UserLogin&amp;returnto=MEA2100_User_Guide" title="You are encouraged to log in; however, it is not mandatory [alt-o]" accesskey="o">Log in / create account</a></li>
+				<li id="pt-login"><a href="http://wiki.mcs.de.com/wiki/index.php?title=Special:UserLogin&amp;returnto=MEA2100_User_Guide" title="You are encouraged to log in; however, it is not mandatory [alt-o]" accesskey="o">Log in / create account</a></li>
 			</ul>
 		</div>
 	</div>
@@ -2901,7 +2922,7 @@ Retrieved from "<a href="http://wiki.mcs.de.com/wiki/index.php/MEA2100_User_Guid
 				<li id="t-whatlinkshere"><a href="http://wiki.mcs.de.com/wiki/index.php/Special:WhatLinksHere/MEA2100_User_Guide" title="List of all wiki pages that link here [alt-j]" accesskey="j">What links here</a></li>
 				<li id="t-recentchangeslinked"><a href="http://wiki.mcs.de.com/wiki/index.php/Special:RecentChangesLinked/MEA2100_User_Guide" title="Recent changes in pages linked from this page [alt-k]" accesskey="k">Related changes</a></li>
 <li id="t-specialpages"><a href="http://wiki.mcs.de.com/wiki/index.php/Special:SpecialPages" title="List of all special pages [alt-q]" accesskey="q">Special pages</a></li>
-				<li id="t-print"><a href="http://wiki.mcs.de.com/wiki/index.php?title=MEA2100_User_Guide&amp;printable=yes&amp;printable=yes" rel="alternate" title="Printable version of this page [alt-p]" accesskey="p">Printable version</a></li>				<li id="t-permalink"><a href="http://wiki.mcs.de.com/wiki/index.php?title=MEA2100_User_Guide&amp;oldid=11149" title="Permanent link to this revision of the page">Permanent link</a></li>			</ul>
+				<li id="t-print"><a href="http://wiki.mcs.de.com/wiki/index.php?title=MEA2100_User_Guide&amp;printable=yes&amp;printable=yes" rel="alternate" title="Printable version of this page [alt-p]" accesskey="p">Printable version</a></li>				<li id="t-permalink"><a href="http://wiki.mcs.de.com/wiki/index.php?title=MEA2100_User_Guide&amp;oldid=11235" title="Permanent link to this revision of the page">Permanent link</a></li>			</ul>
 		</div>
 	</div>
 		</div><!-- end of the left (by default at least) column -->
@@ -2909,8 +2930,8 @@ Retrieved from "<a href="http://wiki.mcs.de.com/wiki/index.php/MEA2100_User_Guid
 			<div id="footer">
 				<div id="f-poweredbyico"><a href="http://www.mediawiki.org/"><img src="MEA2100_User_Guide-Dateien/poweredby_mediawiki_88x31.png" alt="Powered by MediaWiki"></a></div>
 			<ul id="f-list">
-					<li id="lastmod"> This page was last modified on 23 July 2012, at 07:34.</li>
-					<li id="viewcount">This page has been accessed 810 times.</li>
+					<li id="lastmod"> This page was last modified on 7 August 2012, at 12:46.</li>
+					<li id="viewcount">This page has been accessed 827 times.</li>
 					<li id="privacy"><a href="http://wiki.mcs.de.com/wiki/index.php/McsWiki:Privacy_policy" title="McsWiki:Privacy policy">Privacy policy</a></li>
 					<li id="about"><a href="http://wiki.mcs.de.com/wiki/index.php/McsWiki:About" title="McsWiki:About">About McsWiki</a></li>
 					<li id="disclaimer"><a href="http://wiki.mcs.de.com/wiki/index.php/McsWiki:General_disclaimer" title="McsWiki:General disclaimer">Disclaimers</a></li>
@@ -2919,5 +2940,5 @@ Retrieved from "<a href="http://wiki.mcs.de.com/wiki/index.php/MEA2100_User_Guid
 </div>
 
 		<script type="text/javascript">if (window.runOnloadHook) runOnloadHook();</script>
-<!-- Served in 0.791 secs. -->
+<!-- Served in 1.028 secs. -->
 </body></html>
