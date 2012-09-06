@@ -4,7 +4,7 @@
 
 #define MEA21_REGISTER(reg)          (*(volatile Uint32 *)(0xa0000000+reg))                   
 #define READ_REGISTER(reg)           MEA21_REGISTER(reg)
-#define WRITE_REGISTER(reg, value)   MEA21_REGISTER(reg) = value
+#define WRITE_REGISTER(reg, value)   {MEA21_REGISTER(reg) = value; (*(volatile Uint32 *)(0x70000000)) = 0; (*(volatile Uint32 *)(0x70000000));}
 
 
 #ifdef INCLUDE_HS1_DATA
