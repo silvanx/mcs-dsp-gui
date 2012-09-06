@@ -11,6 +11,7 @@
 #include <cslr_intc.h>
 #include <cslr_chip.h>
 #include <cslr_edma3cc.h>
+#include <cslr_cache.h>
 #include <soc.h>
 
 #include <c6x.h>
@@ -24,6 +25,7 @@ typedef volatile CSL_DevRegs             *CSL_DevRegsOvly;
 extern void intcVectorTable(void);  
 #endif
 
+void init_cache();
 void init_gpio();
 void init_pll1();
 void init_pll2();
@@ -48,19 +50,20 @@ void MEA21_init()
     init_gpio();
    	init_pll1();
     init_ddr2();
-	init_emifa();
+    init_emifa();
+    init_cache();
 
-	WRITE_REGISTER(DSP_INDATA_CTRL, 3);                   // Disable all Data Channels and Clear Fifo
-	WRITE_REGISTER(MAILBOX_CTRL, 0x100);                  // enable DSP Mailbox interrupts
+    WRITE_REGISTER(DSP_INDATA_CTRL, 3);                   // Disable all Data Channels and Clear Fifo
+    WRITE_REGISTER(MAILBOX_CTRL, 0x100);                  // enable DSP Mailbox interrupts
 
 #ifdef INIT_IRQ
-	init_irq();
+    init_irq();
 #endif
     init_timer();
-	init_dma();
-	init_qdma();
+    init_dma();
+    init_qdma();
 	
-	SetMonitorSize(0);
+    SetMonitorSize(0);
 }
 
 void init_timer()
@@ -123,6 +126,12 @@ void init_gpio()
 	/* Enable Interrupts for GP[6] */
 	CSL_FINS(gpioRegs->SET_RIS_TRIG, GPIO_SET_RIS_TRIG_SETRIS6, CSL_GPIO_SET_RIS_TRIG_SETRIS_ENABLE);
 	CSL_FINST(gpioRegs->BINTEN, GPIO_BINTEN_EN, ENABLE);
+}
+
+void init_cache()
+{
+    ((CSL_CacheRegsOvly)CSL_CACHE_0_REGS)->L1PCFG = CSL_CACHE_L1PCFG_MODE_32K;
+    ((CSL_CacheRegsOvly)CSL_CACHE_0_REGS)->L1DCFG = CSL_CACHE_L1DCFG_MODE_32K;
 }
 
 void init_pll1()
