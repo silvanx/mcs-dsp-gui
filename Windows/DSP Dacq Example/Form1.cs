@@ -6,9 +6,9 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
-using UsbNetDll;
 using System.Threading;
 using System.Diagnostics;
+using Mcs.Usb;
 
 namespace MCS_USB_Windows_Forms_Application1
 {

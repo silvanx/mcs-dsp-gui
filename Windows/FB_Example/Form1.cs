@@ -7,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 
-using UsbNetDll; // saves you from having to add UsbNetDll in front of all class names in the MCS provided dll
+using Mcs.Usb; // saves you from having to add UsbNetDll in front of all class names in the MCS provided dll
 
 namespace my_interface
 {
