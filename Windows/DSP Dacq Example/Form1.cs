@@ -146,7 +146,7 @@ namespace MCS_USB_Windows_Forms_Application1
             if (numFrames >= Samplerate)
             {
                 data = mea.ChannelBlock_ReadFramesI32(0, Samplerate, out frames_read);
-                Invoke(new Action(DisplayData));
+                BeginInvoke(new Action(DisplayData));
             }
             else
             {
