@@ -11,3 +11,4 @@ Windows/DSP Dacq Example/bin/
 *.suo
 Windows/DSP Dacq Example/obj/
 Windows/DSP Dacq Example/DSP Dacq Example.csproj.user
+.metadata/
