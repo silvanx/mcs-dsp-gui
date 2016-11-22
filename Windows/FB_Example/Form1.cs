@@ -20,6 +20,8 @@ namespace my_interface
 
         int Fs = 50000; // sampling rate
 
+        const uint LockMask = 64;
+
         public Form1()
         {
             InitializeComponent();
@@ -80,24 +82,61 @@ namespace my_interface
 
             // Set Filters
             CMcsUsbFactoryNet factorydev = new CMcsUsbFactoryNet(); // Create object of class CMcsUsbFactoryNet (provides firmware upgrade and register access capabilities)
-            if (DspPort != null && factorydev.Connect(DspPort) == 0)  // if connect call returns zero, connect has been successful
+            if (DspPort != null && factorydev.Connect(DspPort, LockMask) == 0)  // if connect call returns zero, connect has been successful
             {
-                //factorydev.Mea21WriteRegister(0x8620, 0x0000FE67); // set b[0] fpr 100 Hz HP
-                //factorydev.Mea21WriteRegister(0x8628, 0x00030199); // set b[1] fpr 100 Hz HP
-                //factorydev.Mea21WriteRegister(0x862C, 0x00030332); // set a[1] fpr 100 Hz HP
-                //factorydev.Mea21WriteRegister(0x8630, 0x00000000); // set b[2] fpr 100 Hz HP
-                //factorydev.Mea21WriteRegister(0x8634, 0x00000000); // set a[2] fpr 100 Hz HP
+#if false
+                double[] xcoeffs;
+                double[] ycoeffs;
+                mkfilterNet.mkfilter("Bu", 0, "Lp", 2, 1000.0 / 50000.0, 0, out xcoeffs, out ycoeffs);
+                factorydev.WriteRegister(0x600, DoubleToFixedInt(1, 16, 30, xcoeffs[0])); // set b[0] fpr 100 Hz HP
+                factorydev.WriteRegister(0x608, DoubleToFixedInt(1, 15, 30, xcoeffs[1])); // set b[1] fpr 100 Hz HP
+                factorydev.WriteRegister(0x60C, DoubleToFixedInt(1, 30, 30, ycoeffs[1])); // set a[1] fpr 100 Hz HP
+                factorydev.WriteRegister(0x610, DoubleToFixedInt(1, 16, 30, xcoeffs[2])); // set b[2] fpr 100 Hz HP
+                factorydev.WriteRegister(0x614, DoubleToFixedInt(1, 30, 30, ycoeffs[2])); // set a[2] fpr 100 Hz HP
+                factorydev.WriteRegister(0x61C, 0x00000001); // enable
+                mkfilterNet.mkfilter("Bu", 0, "Hp", 2, 100.0 / 50000.0, 0, out xcoeffs, out ycoeffs);
+                factorydev.WriteRegister(0x620, DoubleToFixedInt(1, 16, 30, xcoeffs[0])); // set b[0] fpr 100 Hz HP
+                factorydev.WriteRegister(0x628, DoubleToFixedInt(1, 15, 30, xcoeffs[1])); // set b[1] fpr 100 Hz HP
+                factorydev.WriteRegister(0x62C, DoubleToFixedInt(1, 30, 30, ycoeffs[1])); // set a[1] fpr 100 Hz HP
+                factorydev.WriteRegister(0x630, DoubleToFixedInt(1, 16, 30, xcoeffs[2])); // set b[2] fpr 100 Hz HP
+                factorydev.WriteRegister(0x634, DoubleToFixedInt(1, 30, 30, ycoeffs[2])); // set a[2] fpr 100 Hz HP
+                factorydev.WriteRegister(0x63C, 0x00000001); // enable
+#endif
                 factorydev.Disconnect();
             }
         }
+
+        static uint DoubleToFixedInt(int vk, int nk, int commaPos, double valF)
+        {
+            valF *= 1 << nk;
+            if (valF > 0)
+            {
+                valF += 0.5;
+            }
+            else
+            {
+                valF -= 0.5;
+            }
+            ulong mask = ((ulong)1 << (vk + nk + 1)) -1;
+            ulong val = (ulong)valF;
+            uint value = (uint)(val & mask);
+            if (commaPos > nk)
+            {
+                value = value << (commaPos - nk);
+            }
+
+            return value;
+        }
+
 
         private void ConnectMEA_Click(object sender, EventArgs e)
         {
             CMcsUsbFactoryNet factorydev = new CMcsUsbFactoryNet(); // Create object of class CMcsUsbFactoryNet (provides firmware upgrade and register access capabilities)
 
-            if (factorydev.Connect(DspPort) == 0)  // if connect call returns zero, connect has been successful
+            if (factorydev.Connect(DspPort, LockMask) == 0)  // if connect call returns zero, connect has been successful
             {
-                int Thresh = (int)(Convert.ToDouble(SpikeThresh.Text) / (5000000 / Math.Pow(2, 24) / 10)); // 5 V input range ADC, 24bit ADC, 10 volt hardware gain
+                //int Thresh = (int)(Convert.ToDouble(SpikeThresh.Text) / (5000000 / Math.Pow(2, 24) / 10)); // 5 V input range ADC, 24bit ADC, 10 volt hardware gain
+                int Thresh = Convert.ToInt32(SpikeThresh.Text);
                 int DeadTime = Convert.ToInt32(Deadtime.Text) * Fs / 1000;
 
                 int StimAmplitude = 2 * Convert.ToInt32(BoxStimAmplitude.Text); // resolution is 500 uV / bit, thus factor allows user to specify stim amplitude in mV
@@ -132,7 +171,7 @@ namespace my_interface
         {
             CMcsUsbFactoryNet factorydev = new CMcsUsbFactoryNet(); // Create object of class CMcsUsbFactoryNet (provides firmware upgrade and register access capabilities)
 
-            if (factorydev.Connect(DspPort) == 0)  // if connect call returns zero, connect has been successful
+            if (factorydev.Connect(DspPort, LockMask) == 0)  // if connect call returns zero, connect has been successful
             {
                 factorydev.Coldstart(CFirmwareDestinationNet.MCU1);
                 factorydev.Disconnect();
