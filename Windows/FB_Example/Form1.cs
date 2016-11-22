@@ -82,11 +82,11 @@ namespace my_interface
             CMcsUsbFactoryNet factorydev = new CMcsUsbFactoryNet(); // Create object of class CMcsUsbFactoryNet (provides firmware upgrade and register access capabilities)
             if (DspPort != null && factorydev.Connect(DspPort) == 0)  // if connect call returns zero, connect has been successful
             {
-                factorydev.Mea21WriteRegister(0x8620, 0x0000FE67); // set b[0] fpr 100 Hz HP
-                factorydev.Mea21WriteRegister(0x8628, 0x00030199); // set b[1] fpr 100 Hz HP
-                factorydev.Mea21WriteRegister(0x862C, 0x00030332); // set a[1] fpr 100 Hz HP
-                factorydev.Mea21WriteRegister(0x8630, 0x00000000); // set b[2] fpr 100 Hz HP
-                factorydev.Mea21WriteRegister(0x8634, 0x00000000); // set a[2] fpr 100 Hz HP
+                //factorydev.Mea21WriteRegister(0x8620, 0x0000FE67); // set b[0] fpr 100 Hz HP
+                //factorydev.Mea21WriteRegister(0x8628, 0x00030199); // set b[1] fpr 100 Hz HP
+                //factorydev.Mea21WriteRegister(0x862C, 0x00030332); // set a[1] fpr 100 Hz HP
+                //factorydev.Mea21WriteRegister(0x8630, 0x00000000); // set b[2] fpr 100 Hz HP
+                //factorydev.Mea21WriteRegister(0x8634, 0x00000000); // set a[2] fpr 100 Hz HP
                 factorydev.Disconnect();
             }
         }
@@ -105,12 +105,12 @@ namespace my_interface
                 int StimRepeats = Convert.ToInt32(BoxStimRepeats.Text);
                 int StimStepsize = 2 * Convert.ToInt32(BoxStimStepsize.Text); // resolution is 500 uV / bit, thus factor allows user to specify stim amplitude in mV
 
-                factorydev.Mea21WriteRegister(0x1000, (uint)Thresh);
-                factorydev.Mea21WriteRegister(0x1004, (uint)DeadTime);
-                factorydev.Mea21WriteRegister(0x1008, (uint)StimAmplitude);
-                factorydev.Mea21WriteRegister(0x100c, (uint)StimPeriod);
-                factorydev.Mea21WriteRegister(0x1010, (uint)StimRepeats);
-                factorydev.Mea21WriteRegister(0x1014, (uint)StimStepsize);
+                factorydev.WriteRegister(0x1000, (uint)Thresh);
+                factorydev.WriteRegister(0x1004, (uint)DeadTime);
+                factorydev.WriteRegister(0x1008, (uint)StimAmplitude);
+                factorydev.WriteRegister(0x100c, (uint)StimPeriod);
+                factorydev.WriteRegister(0x1010, (uint)StimRepeats);
+                factorydev.WriteRegister(0x1014, (uint)StimStepsize);
 
                 factorydev.Disconnect();
             }
@@ -122,7 +122,7 @@ namespace my_interface
 
             string FirmwareFile;
             FirmwareFile = System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location);
-            FirmwareFile += @"\..\..\..\..\TMS320C6454\FB_Example\Release\";
+            FirmwareFile += @"\..\..\..\..\DSP\FB_Example\Release\";
             FirmwareFile += "FB_Example.bin";
 
             factorydev.LoadUserFirmware(FirmwareFile, DspPort);           // Code for uploading compiled binary

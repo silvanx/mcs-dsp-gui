@@ -112,7 +112,7 @@ namespace MCS_USB_Windows_Forms_Application1
             {
                 int ChannelsInBlock;
 
-                mea.SetSampleRate(Samplerate);
+                mea.SetSampleRate(Samplerate, 1, 0);
                 if (dataSource.SelectedIndex == 0)
                 {
                     mea.SetNumberOfAnalogChannels(Channels, 0, 0, 0, 0); // Read raw data
@@ -121,11 +121,11 @@ namespace MCS_USB_Windows_Forms_Application1
                 {
                     mea.SetNumberOfAnalogChannels(0, 0, Channels, 0, 0); // Read Data from DSP
                 }
-                mea.EnableChecksum(true);
+                mea.EnableChecksum(true, 0);
                 mea.SetDataMode(DataModeEnumNet.dmSigned32bit, 0);
-                mea.GetChannelsInBlock(out ChannelsInBlock);
+                ChannelsInBlock = mea.GetChannelsInBlock();
 
-                mea.SetSelectedData(TotalChannels, Samplerate * 10, Samplerate, CMcsUsbDacqNet.SampleSize.Size32, ChannelsInBlock);
+                mea.SetSelectedData(TotalChannels, Samplerate * 10, Samplerate, SampleSizeNet.SampleSize32Signed, ChannelsInBlock);
                 mea.StartDacq();
             }
         }
