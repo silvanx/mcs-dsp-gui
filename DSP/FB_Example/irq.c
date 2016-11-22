@@ -57,7 +57,8 @@ interrupt void interrupt6(void)
     
 	// Write to AUX register to see how long interrupt takes (set output to high, at the end set output to low)
 	WRITE_REGISTER(0x0310, 0x1); // set AUX 1 to value one
-      
+
+#if 0
 	// inititial setup      
     if (timestamp == 0) {
     	
@@ -184,9 +185,21 @@ interrupt void interrupt6(void)
 	    timestamp =-1;
     }
  
+#endif
  
     
-    MonitorData[0] = timestamp;
+    //MonitorData[0] = timestamp;
+    if ((int)MeaData[HS1_DATA_OFFSET + 0] > 10000)
+    {
+    	MonitorData[0] = 60000;
+        WRITE_REGISTER(FEEDBACK_REGISTER, 1);
+    }
+    else
+    {
+        MonitorData[0] = 0; //timestamp;
+        WRITE_REGISTER(FEEDBACK_REGISTER, 0);
+    }
+    MonitorData[1] = MeaData[HS1_DATA_OFFSET + 0];
     CSL_FINST(edma3ccRegs->ESRH, EDMA3CC_ESRH_E53, SET);  // Trigger DMA event 53
     	
 	

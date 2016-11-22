@@ -63,7 +63,7 @@ void MEA21_init()
     init_dma();
     init_qdma();
 	
-    SetMonitorSize(0);
+    SetMonitorSize(3);
 }
 
 void init_timer()
