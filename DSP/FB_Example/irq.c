@@ -23,6 +23,9 @@ interrupt void interrupt8(void)
 	reg_written = READ_REGISTER(0x428);
 	reg_value   = READ_REGISTER(0x1000 + reg_written);
 
+	threshold = READ_REGISTER(0x1000);
+	deadtime  = READ_REGISTER(0x1004);
+
 	// a write to a mailbox register occurred
 }
 
@@ -189,9 +192,9 @@ interrupt void interrupt6(void)
  
     
     //MonitorData[0] = timestamp;
-    if ((int)MeaData[HS1_DATA_OFFSET + 0] > 10000)
+    if ((int)MeaData[HS1_DATA_OFFSET + 0] > (int)threshold)
     {
-    	MonitorData[0] = 60000;
+    	MonitorData[0] = MeaData[HS1_DATA_OFFSET + 0];
         WRITE_REGISTER(FEEDBACK_REGISTER, 1);
     }
     else
