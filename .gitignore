@@ -12,3 +12,5 @@ Windows/DSP Dacq Example/bin/
 Windows/DSP Dacq Example/obj/
 Windows/DSP Dacq Example/DSP Dacq Example.csproj.user
 .metadata/
+/DSP/.jxbrowser-data/
+/DSP/v8_workspace/.jxbrowser-data/
