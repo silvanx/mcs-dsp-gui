@@ -22,9 +22,7 @@
 typedef volatile CSL_DevRegs             *CSL_DevRegsOvly;
 
 
-#ifdef INIT_IRQ
 extern void intcVectorTable(void);  
-#endif
 
 void init_cache();
 void init_gpio();
@@ -58,9 +56,7 @@ void MEA21_init()
 	WRITE_REGISTER(DSP_INDATA_CTRL0, DSPINDATACTRL0_CLEAR_FIFO | DSPINDATACTRL0_RESET_FIFO);    // Disable all Data Channels and Clear Fifo
 	WRITE_REGISTER(MAILBOX_CTRL, 0x100);                  // enable DSP Mailbox interrupts
 
-#ifdef INIT_IRQ
     init_irq();
-#endif
 }
 
 void MEA21_enableData()
@@ -311,7 +307,6 @@ void init_ddr2()
 	CSL_FINST(ddr2Regs->SDCFG, DDR2_SDCFG_TIMUNLOCK, CLEAR);
 }
 
-#ifdef INIT_IRQ
 void init_irq()
 {
 	CSL_IntcRegsOvly intcRegs = (CSL_IntcRegsOvly)CSL_INTC_0_REGS;
@@ -334,17 +329,14 @@ void init_irq()
 	// clear all interrupts, bits 4 thru 15
 	ICR = 0xFFF0; 
 
-	// enable the bits for non maskable interrupt and CPUINT4 */
+	// enable the bits for non maskable interrupt and CPUINT6 and CPUINT8 */
 	IER |= 0x02;
 	IER |= 0x40;  // enable CPUINT6 (DMA completion)
-#ifdef USE_MAILBOX_IRQ
 	IER |= 0x100; // enable CPUINT8 (Mailbox write)
-#endif
    
 	// enable interrupts, set GIE bit 
 	_enable_interrupts();
 }
-#endif
 
 void init_dma(int indata_channels)
 {
