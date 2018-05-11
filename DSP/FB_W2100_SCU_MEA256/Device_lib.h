@@ -50,5 +50,7 @@ void MEA21_init();
 void MEA21_enableData();
 
 void SetMonitorSize(int datapoints);
+void timer_setperiod(int period);
+
 
 #endif

@@ -12,6 +12,7 @@
 #include <cslr_chip.h>
 #include <cslr_edma3cc.h>
 #include <cslr_cache.h>
+#include <cslr_tmr.h>
 #include <soc.h>
 
 #include <c6x.h>
@@ -35,6 +36,9 @@ void init_timer();
 void init_dma(int indata_channels);
 void init_qdma(int indata_channels);
 
+typedef volatile CSL_DevRegs             *CSL_DevRegsOvly;
+
+
 Uint32 MeaData[MAX_DATAPOINTS_PER_FRAME];
 #pragma DATA_ALIGN(MeaData, 8);
 Uint32 MonitorData[MONITOR_ARRAY];
@@ -56,12 +60,11 @@ void MEA21_init()
 	WRITE_REGISTER(DSP_INDATA_CTRL0, DSPINDATACTRL0_CLEAR_FIFO | DSPINDATACTRL0_RESET_FIFO);    // Disable all Data Channels and Clear Fifo
 	WRITE_REGISTER(MAILBOX_CTRL, 0x100);                  // enable DSP Mailbox interrupts
 
-    init_irq();
+	init_irq();
 }
 
 void MEA21_enableData()
 {
-    int indata_channels = 0;
     int i;
 
     WRITE_REGISTER(DSP_INDATA_CONFIG0, INDATA_CONFIG0_VALUE); // Enable Data Sources
@@ -83,14 +86,13 @@ void MEA21_enableData()
 
     for (i = 0; i < 5000; i++)
     {
-        indata_channels = READ_REGISTER(DSP_INDATA_CHANNELS);  // should be the same number as CHANNELS_PER_FRAME
-        if (indata_channels) break;                            // a non-zero value indicated the FPGA has finished configuration
+        ChannelsPerSweepConfigured = READ_REGISTER(DSP_INDATA_CHANNELS);  // should be the same number as CHANNELS_PER_FRAME
+        if (ChannelsPerSweepConfigured) break;                            // a non-zero value indicated the FPGA has finished configuration
     }
 
-	ChannelsPerSweepConfigured = indata_channels;
     init_timer();
-    init_dma(indata_channels);
-    init_qdma(indata_channels);
+    init_dma(ChannelsPerSweepConfigured);
+    init_qdma(ChannelsPerSweepConfigured);
 
     WRITE_REGISTER(DSP_INDATA_CTRL0, DSPINDATACTRL0_INT_ENABLE | DSPINDATACTRL0_CLEAR_FIFO | DSPINDATACTRL0_RESET_FIFO);    // Enable Irq
 
@@ -120,6 +122,18 @@ void init_timer()
     do {
         timerRdy = (Bool) CSL_FEXT(((CSL_DevRegs *)CSL_DEV_REGS)->PERSTAT0, DEV_PERSTAT0_TIMER1STAT);
     } while (!timerRdy);
+
+
+    CSL_TmrRegsOvly tmr1Regs = (CSL_TmrRegsOvly)CSL_TMR_1_REGS;
+
+    // clear TIM12 register
+    CSL_FINST(tmr1Regs->TIMLO,TMR_TIMLO_TIMLO,RESETVAL);
+
+    CSL_FINS(tmr1Regs->TCR, TMR_TCR_CLKSRC_LO, 0);
+
+    // select 32 bit unchained mode and take the timer out of reset
+    CSL_FINS(tmr1Regs->TGCR, TMR_TGCR_TIMMODE, 1);  // 32bit unchained
+    CSL_FINST(tmr1Regs->TGCR, TMR_TGCR_TIMLORS, RESET_OFF);
 }
 
 void init_gpio()
@@ -452,6 +466,17 @@ void init_qdma(int indata_channels)
 //	CSL_FINST(edma3ccRegs->ICR,  EDMA3CC_ICR_I10, CLEAR);	  // clear pending interrupts
 }
 
+void timer_setperiod(int period)
+{
+    CSL_TmrRegsOvly tmr1Regs = (CSL_TmrRegsOvly)CSL_TMR_1_REGS;
+
+    CSL_FINST(tmr1Regs->TCR, TMR_TCR_ENAMODE_LO, DISABLE);
+    CSL_FINS(tmr1Regs->PRDLO,TMR_PRDLO_PRDLO, period);
+    CSL_FINST(tmr1Regs->TIMLO,TMR_TIMLO_TIMLO,RESETVAL);
+    CSL_FINS(tmr1Regs->TCR, TMR_TCR_ENAMODE_LO, 2);  // continous mode
+}
+
+
 
 void SetMonitorSize(int datapoints)
 {
@@ -460,7 +485,6 @@ void SetMonitorSize(int datapoints)
 
 	CSL_FINS(ParmsetGPINT5->A_B_CNT, EDMA3CC_A_B_CNT_ACNT, 0);
 	WRITE_REGISTER(DSP_OUTDATA_THR, datapoints);
-	WRITE_REGISTER(DSP_INDATA_CTRL0, DSPINDATACTRL0_CLEAR_FIFO | DSPINDATACTRL0_RESET_FIFO);    // Disable all Data Channels and Clear Fifo
 	WRITE_REGISTER(DSP_OUTDATA_CTRL, 3);				  // Disable all Data Channels and Clear Fifo
 	CSL_FINS(ParmsetGPINT5->A_B_CNT, EDMA3CC_A_B_CNT_ACNT, 4*datapoints);
 }

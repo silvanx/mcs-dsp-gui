@@ -31,16 +31,6 @@ interrupt void interrupt8(void)
 	// a write to a mailbox register occurred
 }
 
-// FPGA data available (do not use)
-interrupt void interrupt4(void)
-{
-}
-
-// I2C Interrupt
-interrupt void interrupt5(void)
-{
-	//handle_i2c_commands();
-}
 
 // DMA finished Interrupt
 interrupt void interrupt6(void)
@@ -54,8 +44,7 @@ interrupt void interrupt6(void)
 	Int32* restrict adc_i_p = &adc_intern[0]; // we create here a pointer for compiler optimization reasons
 	Int32* restrict HS1_Data_p = (Int32 *)&MeaData[DATA_HEADER_SIZE];
 //	Int32* restrict IF_Data_p  = (Int32 *)&MeaData[DATA_HEADER_SIZE+HS1_CHANNELS+DATA_HEADER_SIZE];
-	
-	
+
 	// Prepare DMA for next data transfer DO NOT CHANGE THE FOLLOWING LINE
 	CSL_FINST(edma3ccRegs->ICRH, EDMA3CC_ICRH_I52, CLEAR);	// Clear pending interrupt for event 52
     // 
@@ -244,6 +233,8 @@ interrupt void interrupt6(void)
 interrupt void interrupt7(void)
 {
 	static int led = 0;
+	CSL_GpioRegsOvly gpioRegs = (CSL_GpioRegsOvly)CSL_GPIO_0_REGS;
+
 	CSL_FINS(gpioRegs->OUT_DATA, GPIO_OUT_DATA_OUT2, led); // LED
 	led = 1 - led;
 }
