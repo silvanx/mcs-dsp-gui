@@ -153,11 +153,7 @@ void init_gpio()
         gpioEn = (Bool) CSL_FEXT(((CSL_DevRegs*)CSL_DEV_REGS)->PERSTAT0, 
                                    DEV_PERSTAT0_GPIOSTAT);
     } 
-#ifdef USE_SIMULATOR
-	while (0);
-#else
     while (gpioEn != CSL_DEV_PERSTAT0_GPIOSTAT_ENABLE);
-#endif
 
 
 	CSL_FINS(gpioRegs->DIR, GPIO_DIR_DIR2 , CSL_GPIO_DIR_DIR_OUT);	// LED
@@ -352,13 +348,8 @@ void init_dma(int indata_channels)
 	volatile CSL_Edma3ccParamsetRegs *ParmsetGPINT4 = &edma3ccRegs->PARAMSET[CSL_EDMA3_CHA_GPINT4]; // inbound data
 	volatile CSL_Edma3ccParamsetRegs *ParmsetGPINT5 = &edma3ccRegs->PARAMSET[CSL_EDMA3_CHA_GPINT5]; // outbound data
 
-#ifndef USE_SIMULATOR
 	CSL_FINS(edma3ccRegs->DCHMAP[52], EDMA3CC_DCHMAP_PAENTRY, 52); // Map event 52 to parameter set 52
 	CSL_FINS(edma3ccRegs->DMAQNUM[6], EDMA3CC_DMAQNUM_E4, 0);      // Use Q0 for event 52
-#else
-	CSL_FINS(edma3ccRegs->DCHMAP[16], EDMA3CC_DCHMAP_PAENTRY, 52); // Map event 16 (TEVLO1) to parameter set 52
-	CSL_FINS(edma3ccRegs->DMAQNUM[2], EDMA3CC_DMAQNUM_E0, 0);      // Use Q0 for event 16
-#endif
 
 	CSL_FINS(edma3ccRegs->DCHMAP[53], EDMA3CC_DCHMAP_PAENTRY, 53); // Map event 53 to parameter set 53
 	CSL_FINS(edma3ccRegs->DMAQNUM[6], EDMA3CC_DMAQNUM_E5, 0);      // Use Q0 for event 53
@@ -369,11 +360,7 @@ void init_dma(int indata_channels)
 	CSL_FINST(ParmsetGPINT4RLD->OPT, EDMA3CC_OPT_TCINTEN, ENABLE);
 	CSL_FINST(ParmsetGPINT4RLD->OPT, EDMA3CC_OPT_STATIC, NORMAL);
 	CSL_FINS(ParmsetGPINT4RLD->OPT, EDMA3CC_OPT_TCC, 52);			  // Use a TCC of 52 for event 52
-#ifndef USE_SIMULATOR
 	CSL_FINS(ParmsetGPINT4RLD->SRC, EDMA3CC_SRC_SRC, 0xb0000000);
-#else
-	CSL_FINS(ParmsetGPINT4RLD->SRC, EDMA3CC_SRC_SRC, 0x30000000);
-#endif
 	CSL_FINS(ParmsetGPINT4RLD->OPT, EDMA3CC_OPT_FWID, 2);
 	CSL_FINST(ParmsetGPINT4RLD->OPT, EDMA3CC_OPT_SAM, CONST);
 	CSL_FINS(ParmsetGPINT4RLD->A_B_CNT, EDMA3CC_A_B_CNT_ACNT, 4*indata_channels);
@@ -396,24 +383,14 @@ void init_dma(int indata_channels)
 	CSL_FINS(ParmsetGPINT5->LINK_BCNTRLD, EDMA3CC_LINK_BCNTRLD_LINK, 0xffff);
 	CSL_FINS(ParmsetGPINT5->CCNT, EDMA3CC_CCNT_CCNT, 1);
 
-#ifdef USE_SIMULATOR
-  	CSL_FINST(edma3ccRegs->EMCR,  EDMA3CC_EMCR_E16,  CLEAR);	// clear missed events)
-#endif
   	CSL_FINST(edma3ccRegs->EMCRH, EDMA3CC_EMCRH_E52, CLEAR);	// clear missed events)
   	CSL_FINST(edma3ccRegs->EMCRH, EDMA3CC_EMCRH_E53, CLEAR);	// clear missed events)
 
-#ifdef USE_SIMULATOR
-  	CSL_FINST(edma3ccRegs->SECR,  EDMA3CC_SECR_E16,  CLEAR);	// clear secondary events)
-#endif
   	CSL_FINST(edma3ccRegs->SECRH, EDMA3CC_SECRH_E52, CLEAR);	// clear secondary events)
   	CSL_FINST(edma3ccRegs->SECRH, EDMA3CC_SECRH_E53, CLEAR);	// clear secondary events)
 
 //	CSL_FINST(edma3ccRegs->ESRH, EDMA3CC_ESRH_E52, SET);	// Manual Trigger
-#ifndef USE_SIMULATOR
 	CSL_FINST(edma3ccRegs->EESRH, EDMA3CC_EESRH_E52, SET);	// enable event
-#else
-	CSL_FINST(edma3ccRegs->EESR, EDMA3CC_EESR_E16, SET);	// enable event
-#endif
 	CSL_FINST(edma3ccRegs->ICRH,  EDMA3CC_ICRH_I52, CLEAR);	// clear pending interrupts
 	CSL_FINST(edma3ccRegs->IESRH, EDMA3CC_IESRH_I52, SET);	// Enable interrupt for event 52
 	

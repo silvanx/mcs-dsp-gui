@@ -51,9 +51,7 @@ void main()
 	
 //	WRITE_REGISTER(0x9200, 0x10000000; // Inititialze STG Memory, use only one segment
 	WRITE_REGISTER(0x9200, 0x20000000); // Inititialze STG Memory, use 256 segments
-#ifndef USE_SIMULATOR
 	while (READ_REGISTER(0x9200) & 0x30000000); // wait for segment initialization to finish
-#endif
 	
 	WRITE_REGISTER(0x0310, 0x0); // set AUX 1 to value 0
 	WRITE_REGISTER(0x0310, 0x1); // set AUX 1 to value one
