@@ -56,7 +56,7 @@ _vector3:   VEC_ENTRY _vec_dummy    ;RSVD
 _vector4:   VEC_ENTRY _vec_dummy 	;not used
 _vector5:   VEC_ENTRY _vec_dummy	;not used
 _vector6:   VEC_ENTRY _interrupt6	;Interrupt6 ISR
-_vector7:   VEC_ENTRY _interrupt7	;Interrupt7 ISR
+_vector7:   VEC_ENTRY _vec_dummy	;not used
 _vector8:   VEC_ENTRY _interrupt8	;Interrupt8 ISR
 _vector9:   VEC_ENTRY _vec_dummy
 _vector10:  VEC_ENTRY _vec_dummy

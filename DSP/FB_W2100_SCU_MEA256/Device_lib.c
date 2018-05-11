@@ -325,15 +325,6 @@ void init_irq()
 {
 	CSL_IntcRegsOvly intcRegs = (CSL_IntcRegsOvly)CSL_INTC_0_REGS;
 
-	// map GP[4] event (FPGA data available) to cpu int4; do not use, use DMA interrupt (irq6) instead
-	CSL_FINS(intcRegs->INTMUX1, INTC_INTMUX1_INTSEL4, CSL_INTC_EVENTID_GPINT4); 
-
-	// map I2C event to cpu int5
-	CSL_FINS(intcRegs->INTMUX1, INTC_INTMUX1_INTSEL5, CSL_INTC_EVENTID_I2CINT);
-	
-	// map timer event to cpu int 7
-	CSL_FINS(intcRegs->INTMUX1, INTC_INTMUX1_INTSEL7, CSL_INTC_EVENTID_TINTLO1);
-		
 	// map GP[6] event (Mailbox write) to cpu int 8
 	CSL_FINS(intcRegs->INTMUX2, INTC_INTMUX2_INTSEL8, CSL_INTC_EVENTID_GPINT6);
 

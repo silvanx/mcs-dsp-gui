@@ -37,13 +37,6 @@ void main()
 
 	MEA21_init();
 
-#ifdef USE_SIMULATOR
-	timer_setperiod(1000);
-#else
-	timer_setperiod(4*13653332); // 10 Hz timer frequency, blink LED with 5 Hz
-#endif
-    IER |= 0x80;  // enable CPUINT7 (timer)
-
 	WRITE_REGISTER(0x318, 0x1);  // set AUX 1 as output
 
 	MEA21_enableData();

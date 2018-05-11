@@ -18,6 +18,15 @@ Uint32 reg_value;
 
 #define DATA_HEADER_SIZE 1
 
+void toggleLED()
+{
+    static int led = 0;
+    CSL_GpioRegsOvly gpioRegs = (CSL_GpioRegsOvly)CSL_GPIO_0_REGS;
+
+    CSL_FINS(gpioRegs->OUT_DATA, GPIO_OUT_DATA_OUT2, led); // LED
+    led = 1 - led;
+}
+
 // Mailbox write interrupt
 // use "#define USE_MAILBOX_IRQ" in global.h to enable this interrupt
 interrupt void interrupt8(void)
@@ -152,7 +161,8 @@ interrupt void interrupt6(void)
     	// analyze data
     	// configure stim signal
     }
-	// Wait for stimulation to finish
+
+    // Wait for stimulation to finish
     else if (timestamp < 100000) 
     {    	
     	// analyze data
@@ -174,11 +184,6 @@ interrupt void interrupt6(void)
 	{
 		WRITE_REGISTER(0x002C, 0x400); //switch off HS2 LED
     }
-    else if (timestamp == 100000) 
-    {
-	    timestamp =-1;
-    }
- 
 #endif
  
     
@@ -224,17 +229,12 @@ interrupt void interrupt6(void)
         
         // MONITOR EXECUTION TIME WITH DIGITAL PULSE`
 
-
-	timestamp++;
+    timestamp++;
+	if (timestamp == 50000)
+	{
+	    timestamp = 0;
+	    toggleLED();
+	}
 }
 
 
-// timer irq
-interrupt void interrupt7(void)
-{
-	static int led = 0;
-	CSL_GpioRegsOvly gpioRegs = (CSL_GpioRegsOvly)CSL_GPIO_0_REGS;
-
-	CSL_FINS(gpioRegs->OUT_DATA, GPIO_OUT_DATA_OUT2, led); // LED
-	led = 1 - led;
-}
