@@ -47,6 +47,8 @@ interrupt void interrupt6(void)
 	static int timestamp = 0; // exists only in this function but is created only once on the first function call (i.e. static)
 	static int segment = 0;
 	
+	static stg_electrode = 0;
+
 	int i;
 	CSL_Edma3ccRegsOvly edma3ccRegs = (CSL_Edma3ccRegsOvly)CSL_EDMA3CC_0_REGS;
 	
@@ -73,9 +75,6 @@ interrupt void interrupt6(void)
 		}
     	
     } 
-
-
-
     
     // collect data
     else if (timestamp < 5000)
@@ -95,7 +94,7 @@ interrupt void interrupt6(void)
 		}
     }
 	// analyze, might take longer
-    else if (timestamp == 5000) 
+    else if (timestamp == 49999)
     {    	
     	int enable;
     	int mux;
@@ -121,7 +120,8 @@ interrupt void interrupt6(void)
         for (i = 0; i < HS1_CHANNELS; i++)
     	{
     		// if (num_tr_cross[i] <= iMeanActivity) {
-    		if (num_tr_cross[i] > 0) 
+    		// if (num_tr_cross[i] > 0)
+            if (i == stg_electrode)
 			{
     			enable = 1;
     			mux = 1; // Stimulation Source is DAC 1
@@ -155,8 +155,8 @@ interrupt void interrupt6(void)
        	}
 
 		WRITE_REGISTER(TRIGGER_ID_HS1,        segment << 16);  // select segment for trigger 1
-		WRITE_REGISTER(TRIGGER_SET_EVENT_HS1, 0x00010001);     // Start Trigger 1
-		segment = 1 - segment; // alternate between segment 0 and 1
+		WRITE_REGISTER(TRIGGER_SET_EVENT_HS1, 0x01);     // Start Trigger 1
+//		segment = 1 - segment; // alternate between segment 0 and 1
        	
     	// analyze data
     	// configure stim signal
@@ -176,11 +176,11 @@ interrupt void interrupt6(void)
 //    	timestamp = -1;
     }
  
-    if (timestamp == 0) 
+    if (timestamp == 0)
     {
 		WRITE_REGISTER(0x002C, 0x404); //switch on HS2 LED
     }
-	else if (timestamp == 50000) 
+	else if (timestamp == 25000)
 	{
 		WRITE_REGISTER(0x002C, 0x400); //switch off HS2 LED
     }
@@ -229,11 +229,20 @@ interrupt void interrupt6(void)
         
         // MONITOR EXECUTION TIME WITH DIGITAL PULSE`
 
-    timestamp++;
-	if (timestamp == 50000)
+	if (++timestamp == 50000)
 	{
 	    timestamp = 0;
 	    toggleLED();
+
+	    if (stg_electrode < 256)
+	    {
+	        stg_electrode++;
+        }
+	    else
+	    {
+	        stg_electrode = 0;
+	    }
+
 	}
 }
 
