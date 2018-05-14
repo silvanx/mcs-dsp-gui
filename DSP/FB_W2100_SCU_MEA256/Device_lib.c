@@ -36,8 +36,6 @@ void init_timer();
 void init_dma(int indata_channels);
 void init_qdma(int indata_channels);
 
-typedef volatile CSL_DevRegs             *CSL_DevRegsOvly;
-
 
 Uint32 MeaData[MAX_DATAPOINTS_PER_FRAME];
 #pragma DATA_ALIGN(MeaData, 8);

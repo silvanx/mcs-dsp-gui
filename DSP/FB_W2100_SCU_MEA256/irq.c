@@ -61,7 +61,7 @@ interrupt void interrupt6(void)
 	// Write to AUX register to see how long interrupt takes (set output to high, at the end set output to low)
 	WRITE_REGISTER(0x0310, 0x1); // set AUX 1 to value one
 
-#if 0
+#if 1
 	// inititial setup      
     if (timestamp == 0) {
     	
@@ -101,30 +101,27 @@ interrupt void interrupt6(void)
     	int mux;
     	int config;
     	int iMeanActivity = 0;
-    	for (i = 0; i < HS1_CHANNELS/2; i++)
+    	for (i = 0; i < HS1_CHANNELS; i++)
     	{
     		iMeanActivity = iMeanActivity + num_tr_cross[i];
     	}
-    	iMeanActivity = iMeanActivity /(HS1_CHANNELS/2);
+    	iMeanActivity = iMeanActivity /(HS1_CHANNELS);
 
-		StimulusEnable[0] = 0;
-		StimulusEnable[1] = 0;
+    	for (i = 0; i < HS1_CHANNELS / ELECTRODES_PER_REGISTER; i++)
+    	{
+    	    StimulusEnable[i] = 0;
+            elec_config[i] = 0;
+    	}
 
-		DAC_select[0] = 0;
-		DAC_select[1] = 0;
-		DAC_select[2] = 0;
-		DAC_select[3] = 0;
+        for (i = 0; i < HS1_CHANNELS / (ELECTRODES_PER_REGISTER/2); i++)
+        {
+            DAC_select[i] = 0;
+        }
 
-		elec_config[0] = 0;
-		elec_config[1] = 0;
-		elec_config[2] = 0;
-		elec_config[3] = 0;
-
-    	for (i = 0; i < HS1_CHANNELS/2; i++)
+        for (i = 0; i < HS1_CHANNELS; i++)
     	{
     		// if (num_tr_cross[i] <= iMeanActivity) {
     		if (num_tr_cross[i] > 0) 
-//			if (i == 8 || i == 17)
 			{
     			enable = 1;
     			mux = 1; // Stimulation Source is DAC 1
@@ -134,28 +131,31 @@ interrupt void interrupt6(void)
     		{
     			enable = 0;
     			mux = 0; // Keep MUX at ground
-    			config = 3; // Keep Switches static
+    			config = 1; // Keep Switches static, manual mode
     		}
     		
-    		StimulusEnable[i/30] |= (enable << i%30);
-    		DAC_select[i/15] |= (mux << 2*(i%15));
-    		elec_config[i/15] |= (config << 2*(i%15));
+    		// 1 bit per channel
+    		StimulusEnable[i/ELECTRODES_PER_REGISTER] |= (enable << (i % ELECTRODES_PER_REGISTER));
+            elec_config[i/ELECTRODES_PER_REGISTER]    |= (config << (i % ELECTRODES_PER_REGISTER));
+
+            // 2 bit per channel
+            DAC_select[i/(ELECTRODES_PER_REGISTER/2)] |= (mux << 2 * (i % (ELECTRODES_PER_REGISTER/2)));
        	}
        	
-       	for (i = 0; i < 2; i++)
+       	for (i = 0; i < HS1_CHANNELS / ELECTRODES_PER_REGISTER; i++)
        	{
-       		WRITE_REGISTER(0x9158+i*4, StimulusEnable[i]); // Enable Stimulation on STG
-//			WRITE_REGISTER(0x8140+i*4, StimulusEnable[i]); // Enable hard blanking for Stimulation Electrodes	
+       		WRITE_REGISTER(STG_ELECTRODE_ENABLE + i*REGISTER_OFFSET, StimulusEnable[i]); // Enable Stimulation on STG
+//			WRITE_REGISTER(0x8140+i*REGISTER_OFFSET, StimulusEnable[i]); // Enable hard blanking for Stimulation Electrodes
+            WRITE_REGISTER(STG_ELECTRODE_MODE + (i*REGISTER_OFFSET), elec_config[i]); // Configure Stimulation Electrodes to Listen to Sideband 1
        	}
 
-       	for (i = 0; i < 4; i++)
+       	for (i = 0; i < HS1_CHANNELS / (ELECTRODES_PER_REGISTER/2); i++)
        	{
-       		WRITE_REGISTER(0x9160+i*4, DAC_select[i]);  // Select DAC 1 for Stimulation Electrodes
-       		WRITE_REGISTER(0x9120+i*4, elec_config[i]); // Configure Stimulation Electrodes to Listen to Sideband 1
+       		WRITE_REGISTER(STG_ELECTRODE_MUX + (i*REGISTER_OFFSET), DAC_select[i]);  // Select DAC 1 for Stimulation Electrodes
        	}
 
-		WRITE_REGISTER(0x0218, segment << 16);  // select segment for trigger 1
-		WRITE_REGISTER(0x0214, 0x00010001);     // Start Trigger 1
+		WRITE_REGISTER(TRIGGER_ID_HS1,        segment << 16);  // select segment for trigger 1
+		WRITE_REGISTER(TRIGGER_SET_EVENT_HS1, 0x00010001);     // Start Trigger 1
 		segment = 1 - segment; // alternate between segment 0 and 1
        	
     	// analyze data

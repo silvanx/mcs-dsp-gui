@@ -6,7 +6,7 @@
 #include "global.h"
 
 #define READ_REGISTER(reg)           DEVICE_REGISTER(reg)
-#define WRITE_REGISTER(reg, value)   {DEVICE_REGISTER(reg) = value; (*(volatile Uint32 *)(0x70000000)) = 0; (*(volatile Uint32 *)(0x70000000));}
+#define WRITE_REGISTER(reg, value)   {DEVICE_REGISTER(reg) = value; (*(volatile Uint32 *)(0x70000000)) = 0;  (*(volatile Uint32 *)(0x70000000)); }
 
 extern Uint32 MeaData[MAX_DATAPOINTS_PER_FRAME];
 extern Uint32 MonitorData[MONITOR_ARRAY];

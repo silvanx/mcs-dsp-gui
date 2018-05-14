@@ -7,6 +7,8 @@
 #include <csl.h>
 
 #include "Device_config.h"
+#include "Stimulation.h"
+
 #define I2C_BUFFER_SIZE 512
 
 #define MONITOR_ARRAY   		256
@@ -23,11 +25,8 @@ extern Int32 adc_intern[HS1_CHANNELS + IF_CHANNELS];
 extern int threshold;
 extern int deadtime;
 
-
-extern Uint32 StimulusEnable[2];
-extern Uint32 DAC_select[4];
-extern Uint32 elec_config[4];
-
-
+extern Uint32 StimulusEnable[HS1_CHANNELS / ELECTRODES_PER_REGISTER];
+extern Uint32 elec_config[HS1_CHANNELS / ELECTRODES_PER_REGISTER];
+extern Uint32 DAC_select[HS1_CHANNELS / (ELECTRODES_PER_REGISTER/2)];
 
 #endif /*GLOBAL_H_*/
