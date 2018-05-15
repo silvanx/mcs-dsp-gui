@@ -88,16 +88,16 @@
             this.SpikeThresh.Name = "SpikeThresh";
             this.SpikeThresh.Size = new System.Drawing.Size(88, 20);
             this.SpikeThresh.TabIndex = 3;
-            this.SpikeThresh.Text = "-30";
+            this.SpikeThresh.Text = "100";
             // 
             // label1
             // 
             this.label1.AutoSize = true;
             this.label1.Location = new System.Drawing.Point(40, 191);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(141, 13);
+            this.label1.Size = new System.Drawing.Size(127, 13);
             this.label1.TabIndex = 4;
-            this.label1.Text = "Spike Detection Thresh [uV]";
+            this.label1.Text = "Analog Input Thresh [mV]";
             // 
             // label2
             // 

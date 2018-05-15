@@ -136,7 +136,7 @@ namespace my_interface
             if (factorydev.Connect(DspPort, LockMask) == 0)  // if connect call returns zero, connect has been successful
             {
                 //int Thresh = (int)(Convert.ToDouble(SpikeThresh.Text) / (5000000 / Math.Pow(2, 24) / 10)); // 5 V input range ADC, 24bit ADC, 10 volt hardware gain
-                int Thresh = Convert.ToInt32(SpikeThresh.Text);
+                int Thresh = (int)(Convert.ToInt64(SpikeThresh.Text) * 8388608 / 2500);
                 int DeadTime = Convert.ToInt32(Deadtime.Text) * Fs / 1000;
 
                 int StimAmplitude = 2 * Convert.ToInt32(BoxStimAmplitude.Text); // resolution is 500 uV / bit, thus factor allows user to specify stim amplitude in mV
