@@ -140,14 +140,14 @@ namespace my_interface
                 int DeadTime = Convert.ToInt32(Deadtime.Text) * Fs / 1000;
 
                 int StimAmplitude = 2 * Convert.ToInt32(BoxStimAmplitude.Text); // resolution is 500 uV / bit, thus factor allows user to specify stim amplitude in mV
-                int StimPeriod = Fs / Convert.ToInt32(BoxStimPeriod.Text);
+                int StimDuration = Convert.ToInt32(BoxStimDuration.Text) / (1000000 / Fs);
                 int StimRepeats = Convert.ToInt32(BoxStimRepeats.Text);
                 int StimStepsize = 2 * Convert.ToInt32(BoxStimStepsize.Text); // resolution is 500 uV / bit, thus factor allows user to specify stim amplitude in mV
 
                 factorydev.WriteRegister(0x1000, (uint)Thresh);
                 factorydev.WriteRegister(0x1004, (uint)DeadTime);
                 factorydev.WriteRegister(0x1008, (uint)StimAmplitude);
-                factorydev.WriteRegister(0x100c, (uint)StimPeriod);
+                factorydev.WriteRegister(0x100c, (uint)StimDuration);
                 factorydev.WriteRegister(0x1010, (uint)StimRepeats);
                 factorydev.WriteRegister(0x1014, (uint)StimStepsize);
 

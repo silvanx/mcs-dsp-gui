@@ -40,7 +40,7 @@
             this.label5 = new System.Windows.Forms.Label();
             this.label6 = new System.Windows.Forms.Label();
             this.BoxStimAmplitude = new System.Windows.Forms.TextBox();
-            this.BoxStimPeriod = new System.Windows.Forms.TextBox();
+            this.BoxStimDuration = new System.Windows.Forms.TextBox();
             this.BoxStimStepsize = new System.Windows.Forms.TextBox();
             this.BoxStimRepeats = new System.Windows.Forms.TextBox();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
@@ -130,9 +130,9 @@
             this.label4.AutoSize = true;
             this.label4.Location = new System.Drawing.Point(6, 44);
             this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(79, 13);
+            this.label4.Size = new System.Drawing.Size(67, 13);
             this.label4.TabIndex = 8;
-            this.label4.Text = "Frequency [Hz]";
+            this.label4.Text = "Duration [µs]";
             // 
             // label5
             // 
@@ -162,11 +162,11 @@
             // 
             // BoxStimPeriod
             // 
-            this.BoxStimPeriod.Location = new System.Drawing.Point(122, 41);
-            this.BoxStimPeriod.Name = "BoxStimPeriod";
-            this.BoxStimPeriod.Size = new System.Drawing.Size(88, 20);
-            this.BoxStimPeriod.TabIndex = 12;
-            this.BoxStimPeriod.Text = "100";
+            this.BoxStimDuration.Location = new System.Drawing.Point(122, 41);
+            this.BoxStimDuration.Name = "BoxStimPeriod";
+            this.BoxStimDuration.Size = new System.Drawing.Size(88, 20);
+            this.BoxStimDuration.TabIndex = 12;
+            this.BoxStimDuration.Text = "100";
             // 
             // BoxStimStepsize
             // 
@@ -191,7 +191,7 @@
             this.groupBox1.Controls.Add(this.label4);
             this.groupBox1.Controls.Add(this.BoxStimRepeats);
             this.groupBox1.Controls.Add(this.label5);
-            this.groupBox1.Controls.Add(this.BoxStimPeriod);
+            this.groupBox1.Controls.Add(this.BoxStimDuration);
             this.groupBox1.Controls.Add(this.label6);
             this.groupBox1.Controls.Add(this.BoxStimAmplitude);
             this.groupBox1.Location = new System.Drawing.Point(45, 260);
@@ -282,7 +282,7 @@
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.Label label6;
         private System.Windows.Forms.TextBox BoxStimAmplitude;
-        private System.Windows.Forms.TextBox BoxStimPeriod;
+        private System.Windows.Forms.TextBox BoxStimDuration;
         private System.Windows.Forms.TextBox BoxStimStepsize;
         private System.Windows.Forms.TextBox BoxStimRepeats;
         private System.Windows.Forms.GroupBox groupBox1;
