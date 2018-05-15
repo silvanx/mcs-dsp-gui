@@ -47,54 +47,34 @@ interrupt void interrupt6(void)
 	static int timestamp = 0; // exists only in this function but is created only once on the first function call (i.e. static)
 	static int segment = 0;
 	
-	static stg_electrode = 0;
+	static int stg_electrode = 0;
 
 	int i;
 	CSL_Edma3ccRegsOvly edma3ccRegs = (CSL_Edma3ccRegsOvly)CSL_EDMA3CC_0_REGS;
 	
 	Int32* restrict adc_i_p = &adc_intern[0]; // we create here a pointer for compiler optimization reasons
 	Int32* restrict HS1_Data_p = (Int32 *)&MeaData[DATA_HEADER_SIZE];
-//	Int32* restrict IF_Data_p  = (Int32 *)&MeaData[DATA_HEADER_SIZE+HS1_CHANNELS+DATA_HEADER_SIZE];
+	Int32* restrict IF_Data_p  = (Int32 *)&MeaData[DATA_HEADER_SIZE+HS1_CHANNELS+DATA_HEADER_SIZE];
 
 	// Prepare DMA for next data transfer DO NOT CHANGE THE FOLLOWING LINE
 	CSL_FINST(edma3ccRegs->ICRH, EDMA3CC_ICRH_I52, CLEAR);	// Clear pending interrupt for event 52
     // 
     
 	// Write to AUX register to see how long interrupt takes (set output to high, at the end set output to low)
-	WRITE_REGISTER(0x0310, 0x1); // set AUX 1 to value one
+	WRITE_REGISTER(IFB_AUX_OUT, 0x1); // set AUX 1 to value one
 
-#if 1
-	// inititial setup      
-    if (timestamp == 0) {
-    	
-    	timestamp = 0;
-    	for (i = 0; i < HS1_CHANNELS/2; i++)
-		{
-			num_tr_cross[i]=0;
-			last_tr_cross[i]=-deadtime;
-		}
-    	
-    } 
-    
-    // collect data
-    else if (timestamp < 5000)
+	// Monitor Analog in
+    if (IF_Data_p[0] > threshold)
     {
-		for (i = 0; i < HS1_CHANNELS/2; i++)
-		{
-			*adc_i_p++ = *HS1_Data_p++;
-		}
-	
-		for (i = 0; i < HS1_CHANNELS/2; i++)
-		{
-			if(adc_intern[i] < threshold && ((timestamp-last_tr_cross[i]) > deadtime) )
-			{
-				num_tr_cross[i]++;
-				last_tr_cross[i] = timestamp;	
-			}
-		}
+        WRITE_REGISTER(0x002C, 0x404); //switch on HS2 LED
     }
-	// analyze, might take longer
-    else if (timestamp == 49999)
+    else
+    {
+        WRITE_REGISTER(0x002C, 0x400); //switch on HS2 LED
+    }
+
+	// once per second
+    if (timestamp == 49999)
     {    	
     	int enable;
     	int mux;
@@ -162,72 +142,7 @@ interrupt void interrupt6(void)
     	// configure stim signal
     }
 
-    // Wait for stimulation to finish
-    else if (timestamp < 100000) 
-    {    	
-    	// analyze data
-    	// configure stim signal
-    }
-    else
-    {
-    	// write result to mailbox
-
-    	
-//    	timestamp = -1;
-    }
- 
-    if (timestamp == 0)
-    {
-		WRITE_REGISTER(0x002C, 0x404); //switch on HS2 LED
-    }
-	else if (timestamp == 25000)
-	{
-		WRITE_REGISTER(0x002C, 0x400); //switch off HS2 LED
-    }
-#endif
- 
-    
-    //MonitorData[0] = timestamp;
-    if ((int)MeaData[1 + 0] > (int)threshold)
-    {
-    	MonitorData[0] = MeaData[DATA_HEADER_SIZE + 0];
-        WRITE_REGISTER(FEEDBACK_REGISTER, 1);
-    }
-    else
-    {
-        MonitorData[0] = 0; //timestamp;
-        WRITE_REGISTER(FEEDBACK_REGISTER, 0);
-    }
-    MonitorData[1] = MeaData[DATA_HEADER_SIZE + 0];
-    CSL_FINST(edma3ccRegs->ESRH, EDMA3CC_ESRH_E53, SET);  // Trigger DMA event 53
-    	
-	
-	/*for (i = 0; i < HS2_CHANNELS; i++)
-	{
-		*adc_i_p++ = *HS2_Data_p++;
-	}
-	*/
-	/*for (i = 0; i < IF_CHANNELS; i++)
-	{
-		*adc_i_p++ = *IF_Data_p++;
-	}*/
-
-   
-	WRITE_REGISTER(0x0310, 0x0); // set AUX 1 to value zero
-
-   
-    // loop through electrode
-        // check for threshold crossing if passed deadtime (compare to timestamp that indicates last detected spike)
-        // if yes then add 1 to rate counter and save timestamp
-        
-        // check static counter if 1 second in samples reached
-        
-        // decide which electrodes to stimulate
-        
-        // write stimulation to DACs
-        
-        
-        // MONITOR EXECUTION TIME WITH DIGITAL PULSE`
+	WRITE_REGISTER(IFB_AUX_OUT, 0x0); // set AUX 1 to value zero
 
 	if (++timestamp == 50000)
 	{

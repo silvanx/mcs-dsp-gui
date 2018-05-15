@@ -17,6 +17,7 @@ extern Uint32 ChannelsPerSweepConfigured;
 #define IFB_AUX_IN        0x04b4
 #define IFB_AUX_DIR       0x04b8
 
+
 #define DSP_INDATA_CTRL0    0x0b00
 
 #define DSPINDATACTRL0_INT_ENABLE 0x0100   // Enable IRQ

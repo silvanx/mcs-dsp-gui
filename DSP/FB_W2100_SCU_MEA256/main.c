@@ -35,7 +35,7 @@ void main()
 
 	MEA21_init();
 
-	WRITE_REGISTER(0x318, 0x1);  // set AUX 1 as output
+	WRITE_REGISTER(IFB_AUX_DIR, 0x1);  // set AUX 1 as output
 
 	MEA21_enableData();
 
@@ -49,8 +49,8 @@ void main()
 	
 	InitializeStgMemory();
 	
-	WRITE_REGISTER(0x0310, 0x0); // set AUX 1 to value 0
-	WRITE_REGISTER(0x0310, 0x1); // set AUX 1 to value one
+	WRITE_REGISTER(IFB_AUX_OUT, 0x0); // set AUX 1 to value 0
+	WRITE_REGISTER(IFB_AUX_OUT, 0x1); // set AUX 1 to value one
 
     UploadBiphaseRect(0, 0, 100, 5, StimRepeats);
 //	UploadBiphaseRect(0, 0, StimAmplitude, StimPeriod, StimRepeats);
@@ -60,7 +60,7 @@ void main()
 //  UploadBiphaseRect(0, 1, StimAmplitude, StimPeriod, StimRepeats);
 //	UploadSine(0, StimAmplitude/2, StimPeriod, StimRepeats, StimStepsize);
 		
-	WRITE_REGISTER(0x0310, 0x0); // set AUX 1 to value 0
+	WRITE_REGISTER(IFB_AUX_OUT, 0x0); // set AUX 1 to value 0
 	
 	SetupTrigger();
 
