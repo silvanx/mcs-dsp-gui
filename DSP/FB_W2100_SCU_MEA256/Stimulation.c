@@ -31,7 +31,7 @@ void UploadBiphaseRect(int channel, int segment, int amplitude, int duration, in
     vectors_used = 0;
     ClearChannel(channel+1, segment);
     vectors_used += AddDataPoint(channel+1, 2*duration, 0x0019);
-    AddLoop(channel, vectors_used, repeats);
+    AddLoop(channel+1, vectors_used, repeats);
 }
 
 void UploadSine(int channel, int segment, int amplitude, int period, int repeats, int stepsize)
