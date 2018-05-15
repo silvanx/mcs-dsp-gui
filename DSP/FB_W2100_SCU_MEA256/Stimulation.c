@@ -132,6 +132,7 @@ void SetupTrigger()
     for (i = 0; i < TIGGER_PER_HS; i++)
     {
         WRITE_REGISTER(TRIGGER_ID_HS1+i, 0x0);    // Setup Trigger
+        WRITE_REGISTER(STG_TRIGGER_CONFIG+i, (4 << 1) | 1);
         WRITE_REGISTER(STG_TRIGGER_REPEAT+i, 1);  // Trigger Repeat: only once
     }
 

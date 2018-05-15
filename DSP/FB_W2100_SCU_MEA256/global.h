@@ -25,6 +25,11 @@ extern Int32 adc_intern[HS1_CHANNELS + IF_CHANNELS];
 extern int threshold;
 extern int deadtime;
 
+extern int StimAmplitude;
+extern int StimDuration;
+extern int StimRepeats;
+extern int StimStepsize;
+
 extern Uint32 StimulusEnable[HS1_CHANNELS / ELECTRODES_PER_REGISTER];
 extern Uint32 elec_config[HS1_CHANNELS / ELECTRODES_PER_REGISTER];
 extern Uint32 DAC_select[HS1_CHANNELS / (ELECTRODES_PER_REGISTER/2)];

@@ -30,6 +30,8 @@ extern Uint32 ChannelsPerSweepConfigured;
 #define FEEDBACK_REGISTER   0x0480
 #define MAILBOX_CTRL        0x0b24
 
+#define DIGITAL_MUX  0x0540 // Digital MUX
+
 #define DSP_INDATA_CONFIG0 0xb80
 #define DSP_INDATA_CONFIG1 0xb81
 #define DSP_INDATA_CONFIG2 0xb82
@@ -46,6 +48,17 @@ extern Uint32 ChannelsPerSweepConfigured;
 #define DSP_INDATA_CONFIGd 0xb8d
 #define DSP_INDATA_CONFIGe 0xb8e
 #define DSP_INDATA_CONFIGf 0xb8f
+
+#define MAILBOX_LASTWRITTEN 0xb28 /// was 0x428 MEA2100
+#define MAILBOX_BASE 0x1000
+#define MAILBOX_THRSHOLD  0x00
+#define MAILBOX_DEADTIME  0x04
+#define MAILBOX_AMPLITUDE 0x08
+#define MAILBOX_DURATION  0x0c
+#define MAILBOX_REPEATS   0x10
+#define MAILBOX_STEPSIZE  0x14
+
+
 
 void MEA21_init();
 void MEA21_enableData();

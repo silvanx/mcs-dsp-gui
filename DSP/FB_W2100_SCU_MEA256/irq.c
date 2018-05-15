@@ -13,8 +13,7 @@
 int num_tr_cross[HS1_CHANNELS/2];
 int last_tr_cross[HS1_CHANNELS/2];
 
-Uint32 reg_written;
-Uint32 reg_value;
+Uint32 aux_value = 0;
 
 #define DATA_HEADER_SIZE 1
 
@@ -31,13 +30,61 @@ void toggleLED()
 // use "#define USE_MAILBOX_IRQ" in global.h to enable this interrupt
 interrupt void interrupt8(void)
 {
-	reg_written = READ_REGISTER(0x428);
-	reg_value   = READ_REGISTER(0x1000 + reg_written);
+    int update_waveform = 0;
+    Uint32 reg_written;
+    Uint32 reg_value;
 
-	threshold = READ_REGISTER(0x1000);
-	deadtime  = READ_REGISTER(0x1004);
+    // a write to a mailbox register occurred
+	reg_written = READ_REGISTER(MAILBOX_LASTWRITTEN);
+	reg_value   = READ_REGISTER(MAILBOX_BASE + reg_written);
 
-	// a write to a mailbox register occurred
+	switch(reg_written)
+	{
+	case MAILBOX_THRSHOLD:
+	    threshold = reg_value;
+	    break;
+
+	case MAILBOX_DEADTIME:
+	    deadtime = reg_value;
+	    break;
+
+    case MAILBOX_AMPLITUDE:
+        if (StimAmplitude != reg_value)
+        {
+            StimAmplitude = reg_value;
+            update_waveform = 1;
+        }
+        break;
+
+    case MAILBOX_DURATION:
+        if (StimDuration != reg_value)
+        {
+            StimDuration    = reg_value;
+            update_waveform = 1;
+        }
+        break;
+
+    case MAILBOX_REPEATS:
+        if (StimRepeats != reg_value)
+        {
+            StimRepeats   = reg_value;
+            update_waveform = 1;
+        }
+        break;
+
+    case MAILBOX_STEPSIZE:
+        if (StimStepsize != reg_value)
+        {
+            StimStepsize  = reg_value;
+            update_waveform = 1;
+        }
+        break;
+	}
+
+	if (update_waveform)
+	{
+	    UploadBiphaseRect(0, 0, StimAmplitude, StimDuration, StimRepeats);
+	}
 }
 
 
@@ -46,6 +93,7 @@ interrupt void interrupt6(void)
 {
 	static int timestamp = 0; // exists only in this function but is created only once on the first function call (i.e. static)
 	static int segment = 0;
+	static int crossing_detected = 0;
 	
 	static int stg_electrode = 0;
 
@@ -61,15 +109,27 @@ interrupt void interrupt6(void)
     // 
     
 	// Write to AUX register to see how long interrupt takes (set output to high, at the end set output to low)
-	WRITE_REGISTER(IFB_AUX_OUT, 0x1); // set AUX 1 to value one
+
+	aux_value |= 1;
+	WRITE_REGISTER(IFB_AUX_OUT, aux_value); // set  AUX 1 to value one
 
 	// Monitor Analog in
     if (IF_Data_p[0] > threshold)
     {
+        aux_value |= 2;
         WRITE_REGISTER(0x002C, 0x404); //switch on HS2 LED
+
+        if (crossing_detected == 0)
+        {
+            crossing_detected = 1;
+            WRITE_REGISTER(TRIGGER_ID_HS1,        segment << 16);  // select segment for trigger 1
+            WRITE_REGISTER(TRIGGER_SET_EVENT_HS1, 0x01);     // Start Trigger 1
+        }
     }
     else
     {
+        crossing_detected = 0;
+        aux_value &= ~2;
         WRITE_REGISTER(0x002C, 0x400); //switch on HS2 LED
     }
 
@@ -142,7 +202,6 @@ interrupt void interrupt6(void)
     	// configure stim signal
     }
 
-	WRITE_REGISTER(IFB_AUX_OUT, 0x0); // set AUX 1 to value zero
 
 	if (++timestamp == 50000)
 	{
@@ -159,6 +218,9 @@ interrupt void interrupt6(void)
 	    }
 
 	}
+
+	aux_value &= ~1;
+	WRITE_REGISTER(IFB_AUX_OUT, aux_value); // set AUX 1 to value zero
 }
 
 
