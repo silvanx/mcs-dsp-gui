@@ -93,7 +93,7 @@
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(40, 191);
+            this.label1.Location = new System.Drawing.Point(40, 192);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(127, 13);
             this.label1.TabIndex = 4;
@@ -102,11 +102,12 @@
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(40, 218);
+            this.label2.Location = new System.Drawing.Point(40, 215);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(74, 13);
             this.label2.TabIndex = 5;
             this.label2.Text = "Deadtime [ms]";
+            this.label2.Visible = false;
             // 
             // Deadtime
             // 
@@ -115,6 +116,7 @@
             this.Deadtime.Size = new System.Drawing.Size(88, 20);
             this.Deadtime.TabIndex = 6;
             this.Deadtime.Text = "1";
+            this.Deadtime.Visible = false;
             // 
             // label3
             // 
@@ -137,7 +139,7 @@
             // label5
             // 
             this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(6, 68);
+            this.label5.Location = new System.Drawing.Point(6, 66);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(47, 13);
             this.label5.TabIndex = 9;
@@ -146,11 +148,12 @@
             // label6
             // 
             this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(6, 90);
+            this.label6.Location = new System.Drawing.Point(6, 88);
             this.label6.Name = "label6";
             this.label6.Size = new System.Drawing.Size(71, 13);
             this.label6.TabIndex = 10;
             this.label6.Text = "Stepsize [mV]";
+            this.label6.Visible = false;
             // 
             // BoxStimAmplitude
             // 
@@ -160,25 +163,26 @@
             this.BoxStimAmplitude.TabIndex = 11;
             this.BoxStimAmplitude.Text = "300";
             // 
-            // BoxStimPeriod
+            // BoxStimDuration
             // 
-            this.BoxStimDuration.Location = new System.Drawing.Point(122, 41);
-            this.BoxStimDuration.Name = "BoxStimPeriod";
+            this.BoxStimDuration.Location = new System.Drawing.Point(122, 40);
+            this.BoxStimDuration.Name = "BoxStimDuration";
             this.BoxStimDuration.Size = new System.Drawing.Size(88, 20);
             this.BoxStimDuration.TabIndex = 12;
             this.BoxStimDuration.Text = "100";
             // 
             // BoxStimStepsize
             // 
-            this.BoxStimStepsize.Location = new System.Drawing.Point(122, 87);
+            this.BoxStimStepsize.Location = new System.Drawing.Point(122, 84);
             this.BoxStimStepsize.Name = "BoxStimStepsize";
             this.BoxStimStepsize.Size = new System.Drawing.Size(88, 20);
             this.BoxStimStepsize.TabIndex = 14;
             this.BoxStimStepsize.Text = "10";
+            this.BoxStimStepsize.Visible = false;
             // 
             // BoxStimRepeats
             // 
-            this.BoxStimRepeats.Location = new System.Drawing.Point(122, 61);
+            this.BoxStimRepeats.Location = new System.Drawing.Point(122, 62);
             this.BoxStimRepeats.Name = "BoxStimRepeats";
             this.BoxStimRepeats.Size = new System.Drawing.Size(88, 20);
             this.BoxStimRepeats.TabIndex = 13;
