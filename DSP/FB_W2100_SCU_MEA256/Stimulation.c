@@ -30,7 +30,8 @@ void UploadBiphaseRect(int channel, int segment, int amplitude, int duration, in
 
     vectors_used = 0;
     ClearChannel(channel+1, segment);
-    vectors_used += AddDataPoint(channel+1, 2*duration, 0x0019);
+    vectors_used += AddDataPoint(channel+1, duration, 0x0119); // bit 1,3,4 and 8
+    vectors_used += AddDataPoint(channel+1, duration, 0x0019); // bit 1,3,4
     AddLoop(channel+1, vectors_used, repeats);
 }
 

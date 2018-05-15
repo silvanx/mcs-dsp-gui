@@ -68,7 +68,7 @@ void main()
 	
 	SetupTrigger();
 
-	WRITE_REGISTER(DIGITAL_MUX, 0x42000200);   // Sideband data 0 HS 1 bit 0  to Digital Out bit 0
+	WRITE_REGISTER(DIGITAL_MUX, 0x42080200);   // Sideband data 0 HS 1 (0x42)  bit 8  to Digital Out (0x02) bit 0
 
 	while(1);
 }
