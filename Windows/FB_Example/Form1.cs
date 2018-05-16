@@ -177,5 +177,25 @@ namespace my_interface
                 factorydev.Disconnect();
             }
         }
+
+        private void DigOutSignal_Click(object sender, EventArgs e)
+        {
+            CMeaUSBDeviceNet mea = new CMeaUSBDeviceNet(); // Create object of class CMcsUsbFactoryNet (provides firmware upgrade and register access capabilities)
+
+            if (mea.Connect(DspPort, LockMask) == 0)
+            {
+                CDigOutStimulatorFunctionNet dig = new CDigOutStimulatorFunctionNet(mea);
+                int[] ampl = new int[] { 1, 0 };
+                ulong[] dur = new ulong[] { 200000, 1000000 };
+                CStimulusFunctionNet.StimulusDeviceDataAndUnrolledData data = dig.PrepareChannelData(ampl, dur);
+                dig.SendChannelData(0, data);
+                dig.SetGlobalRepeat(0, true);
+                mea.SetDigitalSource<ME2100DigitalSourceEnumNet>(DigitalTargetEnumNet.DigOutStimulatorStartTrigger, 0, new DigitalSource<ME2100DigitalSourceEnumNet>(ME2100DigitalSourceEnumNet.DigitalData), 0);
+                mea.SetDigitalSource<ME2100DigitalSourceEnumNet>(DigitalTargetEnumNet.Digout, 3, new DigitalSource<ME2100DigitalSourceEnumNet>(ME2100DigitalSourceEnumNet.DigitalOutStimulator), 0);
+                mea.SetDigitalData(0, false);
+                mea.SetDigitalData(0, true);
+                mea.Disconnect();
+            }
+        }
     }
 }
