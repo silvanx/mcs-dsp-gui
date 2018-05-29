@@ -11,7 +11,7 @@
 
 #define I2C_BUFFER_SIZE 512
 
-#define MONITOR_ARRAY   		256
+#define MONITOR_ARRAY   		8
 
 
 #define STIMULUS_VECTOR_SIZE 	10

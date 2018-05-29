@@ -219,6 +219,11 @@ interrupt void interrupt6(void)
 
 	}
 
+
+	MonitorData[0] = timestamp*100;
+	MonitorData[1] = HS1_Data_p[4];
+    CSL_FINST(edma3ccRegs->ESRH, EDMA3CC_ESRH_E53, SET);    // Manual Trigger Event 53
+
 	aux_value &= ~1;
 	WRITE_REGISTER(IFB_AUX_OUT, aux_value); // set AUX 1 to value zero
 }

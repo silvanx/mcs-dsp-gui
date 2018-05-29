@@ -94,11 +94,7 @@ void MEA21_enableData()
 
     WRITE_REGISTER(DSP_INDATA_CTRL0, DSPINDATACTRL0_INT_ENABLE | DSPINDATACTRL0_CLEAR_FIFO | DSPINDATACTRL0_RESET_FIFO);    // Enable Irq
 
-#ifdef MONITOR_ARRAY
     SetMonitorSize(MONITOR_ARRAY);
-#else
-    SetMonitorSize(0);
-#endif
 }
 
 void init_timer()
