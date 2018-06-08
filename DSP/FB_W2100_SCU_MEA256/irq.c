@@ -132,7 +132,7 @@ interrupt void interrupt6(void)
         aux_value &= ~2;
         WRITE_REGISTER(0x002C, 0x400); //switch on HS2 LED
     }
-
+#if 0
 	// once per second
     if (timestamp == 49999)
     {    	
@@ -218,6 +218,9 @@ interrupt void interrupt6(void)
 	    }
 
 	}
+#else
+	++timestamp;
+#endif
 
 
 	MonitorData[0] = timestamp*100;

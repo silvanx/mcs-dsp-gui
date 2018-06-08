@@ -59,7 +59,8 @@ void main()
 	WRITE_REGISTER(IFB_AUX_OUT, 0x0); // set AUX 1 to value 0
 	WRITE_REGISTER(IFB_AUX_OUT, 0x1); // set AUX 1 to value one
 
-    UploadBiphaseRect(0, 0, StimAmplitude, StimDuration, StimRepeats);
+	// Do not use for W2100: STG there works differently
+    //UploadBiphaseRect(0, 0, StimAmplitude, StimDuration, StimRepeats);
 
 // other segments not implemented yet
 //  UploadBiphaseRect(0, 1, StimAmplitude, StimPeriod, StimRepeats);
