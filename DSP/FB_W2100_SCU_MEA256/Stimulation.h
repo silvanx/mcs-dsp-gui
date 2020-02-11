@@ -28,8 +28,6 @@
 #define STG_MEMPOINT_WP_BASE 0x9203   // write to this address clears the stg data
 #define STG_DATA_MEMORY      0x9f80
 
-void InitializeStgMemory();
-
 void UploadBiphaseRect(int channel, int segment, int amplitude, int duration, int repeats);
 void UploadSine(int channel, int segment, int amplitude, int period, int repeats, int threshold);
 

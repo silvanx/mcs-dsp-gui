@@ -11,13 +11,6 @@
 
 #include <math.h>
 
-void InitializeStgMemory()
-{
-    WRITE_REGISTER(STG_MEMPOINT_CC_BASE, 0x10000000); // Inititialze STG Memory, use only one segment
-//    WRITE_REGISTER(STG_MEMPOINT_CC_BASE, 0x20000000); // Inititialze STG Memory, use 256 segments
-    while (READ_REGISTER(STG_MEMPOINT_CC_BASE) & 0x30000000); // wait for segment initialization to finish
-}
-
 void UploadBiphaseRect(int channel, int segment, int amplitude, int duration, int repeats)
 {
     int vectors_used;
