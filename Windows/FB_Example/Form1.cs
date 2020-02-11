@@ -159,12 +159,25 @@ namespace my_interface
         {
             CMcsUsbFactoryNet factorydev = new CMcsUsbFactoryNet();
 
-            string FirmwareFile;
-            FirmwareFile = System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location);
-            FirmwareFile += @"\..\..\..\..\DSP\FB_Example\Release\";
-            FirmwareFile += "FB_Example.bin";
+            if (factorydev.Connect(DspPort, LockMask) == 0)
+            {
+                string FirmwareFile;
+                FirmwareFile = System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location);
+                if (factorydev.GetDeviceId().IdProduct == ProductIdEnumNet.MEA2100)
+                {
+                    FirmwareFile += @"\..\..\..\..\DSP\FB_Example\Release\";
+                    FirmwareFile += "FB_Example.bin";
+                }
+                else
+                {
+                    FirmwareFile += @"\..\..\..\..\DSP\Open_Loop_mini\Release\";
+                    FirmwareFile += "Open_Loop_mini.bin";
+                }
 
-            factorydev.LoadUserFirmware(FirmwareFile, DspPort);           // Code for uploading compiled binary
+                factorydev.Disconnect();
+
+                factorydev.LoadUserFirmware(FirmwareFile, DspPort); // Code for uploading compiled binary
+            }
         }
 
         private void StopDSP_Click(object sender, EventArgs e)
