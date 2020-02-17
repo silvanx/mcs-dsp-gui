@@ -128,8 +128,9 @@ namespace MCS_USB_Windows_Forms_Application1
                 mea.EnableChecksum(true, 0);
                 ChannelsInBlock = mea.GetChannelsInBlock();
 
-                mea.GetChannelLayout(out int ana, out int digi, out int checksum, out int tim, out int cheb, 0);
+                mea.GetChannelLayout(out int analogChannels, out int digitalChannels, out int checksumChannels, out int timestampChannels, out int channelsInBlock, 0);
                 mea.SetSelectedData(TotalChannels, Samplerate * 10, Samplerate, SampleSizeNet.SampleSize32Signed, ChannelsInBlock);
+                mea.ChannelBlock_SetCheckChecksum((uint)checksumChannels, (uint)timestampChannels);
                 mea.StartDacq();
                 if (mea.GetDeviceId().IdProduct == ProductIdEnumNet.W2100)
                 {
