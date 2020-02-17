@@ -129,7 +129,14 @@ interrupt void interrupt6(void)
     
 	// Write to AUX register to see how long interrupt takes (set output to high, at the end set output to low)
 
-	aux_value |= 1;
+	//if (timestamp == 9999)
+	{
+		aux_value |= 1;
+	}
+	//else
+	{
+	//	aux_value &= ~1;
+	}
 	WRITE_REGISTER(IFB_AUX_OUT, aux_value); // set  AUX 1 to value one
 
 	// Monitor Analog in
@@ -245,8 +252,8 @@ interrupt void interrupt6(void)
 	if (timestamp == 5100)
 	{
 		//                           sync        channel     index
-//		W2100Usb(0, COMMAND_HARDWARE_TEST, COMMAND_WRITE_REGISTER_TS_0, 0x93F1, 0xfc00 + (15 << 28) + (0 << 24) + (1 << 16), 4);
-//		W2100Usb(0, COMMAND_HARDWARE_TEST, COMMAND_WRITE_REGISTER_TS_0, 0x93F1, 0x0400 + (15 << 28) + (0 << 24) + (2 << 16), 4);
+//		W2100Usb(0, COMMAND_HARDWARE_TEST, COMMAND_WRITE_REGISTER_TS_0 + 4, 0x93F1, 0xfc00 + (15 << 28) + (0 << 24) + (1 << 16), 4);
+//		W2100Usb(0, COMMAND_HARDWARE_TEST, COMMAND_WRITE_REGISTER_TS_0 + 4, 0x93F1, 0x0400 + (15 << 28) + (0 << 24) + (2 << 16), 4);
 	}
 	if (timestamp == 5200)
 	{
