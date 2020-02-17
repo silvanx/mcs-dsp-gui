@@ -9,6 +9,7 @@
 #include "main.h"
 #include "irq.h"
 #include "Device_lib.h"
+#include "Common/MCS_USB_commands.h"
 
 int num_tr_cross[HS1_CHANNELS/2];
 int last_tr_cross[HS1_CHANNELS/2];
@@ -24,6 +25,24 @@ void toggleLED()
 
     CSL_FINS(gpioRegs->OUT_DATA, GPIO_OUT_DATA_OUT2, led); // LED
     led = 1 - led;
+}
+
+
+void W2100Usb(Uint32 direction, Uint32 request, Uint32 value, Uint32 index, Uint32 data, Uint32 length)
+{
+	Uint32 setup0 = direction + (request << 8) + (value << 16);
+	Uint32 setup1 = index + (length << 16);
+	WRITE_REGISTER(0x0c10, setup0);
+	WRITE_REGISTER(0x0c11, setup1);
+	WRITE_REGISTER(0x0c12, data);
+	WRITE_REGISTER(0x0c13, 0);
+	Uint32 ready = 0;
+	Uint32 repeat = 50000; // 2.5s
+	while (!ready && repeat > 0)
+	{
+		repeat--;
+		ready = READ_REGISTER(0x0c13);
+	}
 }
 
 // Mailbox write interrupt
@@ -219,7 +238,28 @@ interrupt void interrupt6(void)
 
 	}
 #else
-	++timestamp;
+	if (timestamp == 5000)
+	{
+//		W2100Usb(0, MEA_COMMAND, MEA_W2100_SAMPLING_ACTIVE, 4, 0, 4);
+	}
+	if (timestamp == 5100)
+	{
+		//                           sync        channel     index
+//		W2100Usb(0, COMMAND_HARDWARE_TEST, COMMAND_WRITE_REGISTER_TS_0, 0x93F1, 0xfc00 + (15 << 28) + (0 << 24) + (1 << 16), 4);
+//		W2100Usb(0, COMMAND_HARDWARE_TEST, COMMAND_WRITE_REGISTER_TS_0, 0x93F1, 0x0400 + (15 << 28) + (0 << 24) + (2 << 16), 4);
+	}
+	if (timestamp == 5200)
+	{
+//		W2100Usb(0, MEA_COMMAND, MEA_W2100_SAMPLING_ACTIVE, 4, 1, 4);
+	}
+	if (++timestamp == 10000)
+	{
+		timestamp = 0;
+	    toggleLED();
+
+
+	    WRITE_REGISTER(0x9A80, 0x100); // Trigger Channel 1
+	}
 #endif
 
 
