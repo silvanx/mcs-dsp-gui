@@ -170,8 +170,8 @@ namespace my_interface
                 }
                 else
                 {
-                    FirmwareFile += @"\..\..\..\..\DSP\Open_Loop_mini\Release\";
-                    FirmwareFile += "Open_Loop_mini.bin";
+                    FirmwareFile += @"\..\..\..\..\DSP\FB_W2100_SCU_MEA256\Release\";
+                    FirmwareFile += "FB_W2100_SCU_MEA256.bin";
                 }
 
                 factorydev.Disconnect();
