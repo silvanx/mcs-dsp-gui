@@ -176,7 +176,11 @@ namespace my_interface
 
                 factorydev.Disconnect();
 
-                factorydev.LoadUserFirmware(FirmwareFile, DspPort); // Code for uploading compiled binary
+                bool success = factorydev.LoadUserFirmware(FirmwareFile, DspPort); // Code for uploading compiled binary
+                if (!success)
+                {
+                    MessageBox.Show("Firmware upload failed!");
+                }
             }
         }
 
