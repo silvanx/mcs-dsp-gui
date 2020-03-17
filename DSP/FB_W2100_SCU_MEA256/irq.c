@@ -247,6 +247,7 @@ interrupt void interrupt6(void)
 #else
 	if (timestamp == 5000)
 	{
+	    //WRITE_REGISTER(0x0480, 0); // Feedback
 //		W2100Usb(0, MEA_COMMAND, MEA_W2100_SAMPLING_ACTIVE, 4, 0, 4);
 	}
 	if (timestamp == 5100)
@@ -264,14 +265,21 @@ interrupt void interrupt6(void)
 		timestamp = 0;
 	    toggleLED();
 
-
-	    WRITE_REGISTER(0x9A80, 0x100); // Trigger Channel 1
+	    //WRITE_REGISTER(0x0480, 1); // Feedback
+	    //WRITE_REGISTER(0x9A80, 0x100); // Trigger Channel 1
 	}
 #endif
 
+	int f = HS1_Data_p[0] > 0;
+	WRITE_REGISTER(0x0480, f);
 
-	MonitorData[0] = timestamp*100;
-	MonitorData[1] = HS1_Data_p[4];
+	MonitorData[0] = timestamp*100 & 0xFFFF;
+	MonitorData[1] = HS1_Data_p[4] + 30;
+	MonitorData[2] = HS1_Data_p[5] + 30;
+	MonitorData[3] = HS1_Data_p[6] + 30;
+	MonitorData[4] = HS1_Data_p[7] + 30;
+	MonitorData[5] = HS1_Data_p[8] + 30;
+	MonitorData[6] = HS1_Data_p[9] + 30;
     CSL_FINST(edma3ccRegs->ESRH, EDMA3CC_ESRH_E53, SET);    // Manual Trigger Event 53
 
 	aux_value &= ~1;

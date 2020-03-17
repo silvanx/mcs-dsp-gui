@@ -18,7 +18,9 @@ namespace MCS_USB_Windows_Forms_Application1
         const int Channels = 64;
         const int Checksum = 2;
 
-        const int TotalChannels = Channels + Checksum;
+        private bool use_digital_in = true;
+
+        private int TotalChannels = 0;
 
         int Samplerate = 50000;
 
@@ -39,21 +41,41 @@ namespace MCS_USB_Windows_Forms_Application1
 
         void InitDialog()
         {
+            string text;
             for (int i = 0; i < Channels; i++)
             {
-                Text = "Channel "+(i+1).ToString();
-                series0Channel.Items.Add(Text);
-                series1Channel.Items.Add(Text);
-                series2Channel.Items.Add(Text);
-                series3Channel.Items.Add(Text);
+                text = "Channel " + (i + 1).ToString();
+                series0Channel.Items.Add(text);
+                series1Channel.Items.Add(text);
+                series2Channel.Items.Add(text);
+                series3Channel.Items.Add(text);
             }
+
+            for (int i = 0; i < Channels; i++)
+            {
+                text = "DSP " + (i + 1).ToString();
+                series0Channel.Items.Add(text);
+                series1Channel.Items.Add(text);
+                series2Channel.Items.Add(text);
+                series3Channel.Items.Add(text);
+            }
+
+            if (use_digital_in)
+            {
+                text = "Digital In";
+                series0Channel.Items.Add(text);
+                series1Channel.Items.Add(text);
+                series2Channel.Items.Add(text);
+                series3Channel.Items.Add(text);
+            }
+
             for (int i = 0; i < Checksum; i++)
             {
-                Text = "Checksum " + (i+1).ToString();
-                series0Channel.Items.Add(Text);
-                series1Channel.Items.Add(Text);
-                series2Channel.Items.Add(Text);
-                series3Channel.Items.Add(Text);
+                text = "Checksum " + (i+1).ToString();
+                series0Channel.Items.Add(text);
+                series1Channel.Items.Add(text);
+                series2Channel.Items.Add(text);
+                series3Channel.Items.Add(text);
             }
             series0Channel.SelectedIndex = 0;
             series1Channel.SelectedIndex = 1;
@@ -105,15 +127,21 @@ namespace MCS_USB_Windows_Forms_Application1
             startDacq.Enabled = false;
             stopDacq.Enabled = true;
 
-            if (mea.Connect((CMcsUsbListEntryNet)cbDeviceList.SelectedItem) == 0)
+            if (mea.Connect((CMcsUsbListEntryNet) cbDeviceList.SelectedItem) == 0)
             {
                 int ChannelsInBlock;
 
                 mea.SetDataMode(DataModeEnumNet.dmSigned32bit, 0);
                 if (mea.GetDeviceId().IdProduct == ProductIdEnumNet.W2100)
                 {
+                    mea.SetDataMode(DataModeEnumNet.dmSigned16bit, 0);
                     Samplerate = 10000;
                 }
+                else
+                {
+                    mea.SetDataMode(DataModeEnumNet.dmSigned32bit, 0);
+                }
+#if false
                 if (dataSource.SelectedIndex == 0)
                 {
                     mea.SetNumberOfAnalogChannels(Channels, 0, 0, 0, 0); // Read raw data
@@ -122,23 +150,43 @@ namespace MCS_USB_Windows_Forms_Application1
                 {
                     mea.SetNumberOfAnalogChannels(0, 0, Channels, 0, 0); // Read Data from DSP
                 }
+#endif
+                mea.SetNumberOfAnalogChannels(Channels, 0, Channels, 0, 0); // Read raw data
+
                 mea.SetSampleRate(Samplerate, 1, 0);
 
-                mea.EnableDigitalIn(false, 0);
+                mea.EnableDigitalIn(use_digital_in, 0);
+
+                // map feedback bit 0 to digital(in) stream bit 4
+                mea.SetDigitalSource(DigitalTargetEnumNet.Digstream, 4, W2100DigitalSourceEnumNet.Feedback, 0);
+
                 mea.EnableChecksum(true, 0);
                 ChannelsInBlock = mea.GetChannelsInBlock();
 
                 mea.GetChannelLayout(out int analogChannels, out int digitalChannels, out int checksumChannels, out int timestampChannels, out int channelsInBlock, 0);
-                mea.SetSelectedData(TotalChannels, Samplerate * 10, Samplerate, SampleSizeNet.SampleSize32Signed, ChannelsInBlock);
+                if (mea.GetDeviceId().IdProduct == ProductIdEnumNet.W2100)
+                {
+                    TotalChannels = channelsInBlock;
+                    mea.SetSelectedData(TotalChannels, Samplerate * 10, Samplerate, SampleSizeNet.SampleSize16Signed, SampleDstSizeNet.SampleDstSize32, ChannelsInBlock);
+                }
+                else
+                {
+                    TotalChannels = channelsInBlock / 2;
+                    mea.SetSelectedData(TotalChannels, Samplerate * 10, Samplerate, SampleSizeNet.SampleSize32Signed, ChannelsInBlock);
+                }
+
                 mea.ChannelBlock_SetCheckChecksum((uint)checksumChannels, (uint)timestampChannels);
                 mea.StartDacq();
                 if (mea.GetDeviceId().IdProduct == ProductIdEnumNet.W2100)
                 {
+#if true
+                    // Send Stimulation pattern
                     CW2100_StimulatorFunctionNet stim = new CW2100_StimulatorFunctionNet(mea);
                     int[] ampl = new[] {0, -100000, 100000, 0, 3};
                     ulong[] dur = new ulong[] {0, 1000, 1000, 2000, 0};
                     CStimulusFunctionNet.StimulusDeviceDataAndUnrolledData prep = stim.PrepareData(0, ampl, dur, STG_DestinationEnumNet.channeldata_current, 0);
                     stim.SendPreparedData(0, prep, STG_DestinationEnumNet.channeldata_current);
+#endif
                     CW2100_FunctionNet func = new CW2100_FunctionNet(mea);
                     func.SetHeadstageSamplingActive(true, 0);
                 }
@@ -186,7 +234,8 @@ namespace MCS_USB_Windows_Forms_Application1
 
 
             // the chart can not handle every datapoint
-            for (int i = 0; i < Samplerate; i += 10)
+            for (int i = 0; i < Samplerate / 100; i += 1) // show only 1/10 data points
+            //for (int i = 0; i < Samplerate; i += 10) // show only each 10th data points
             {
                 dspData.Series[0].Points.AddXY((double)i / Samplerate, data[i * TotalChannels + series0Channel.SelectedIndex]);
                 dspData.Series[1].Points.AddXY((double)i / Samplerate, data[i * TotalChannels + series1Channel.SelectedIndex]);

@@ -71,12 +71,12 @@
             this.cbDeviceList.FormattingEnabled = true;
             this.cbDeviceList.Location = new System.Drawing.Point(93, 13);
             this.cbDeviceList.Name = "cbDeviceList";
-            this.cbDeviceList.Size = new System.Drawing.Size(121, 21);
+            this.cbDeviceList.Size = new System.Drawing.Size(190, 21);
             this.cbDeviceList.TabIndex = 1;
             // 
             // btnRefresh
             // 
-            this.btnRefresh.Location = new System.Drawing.Point(229, 13);
+            this.btnRefresh.Location = new System.Drawing.Point(289, 12);
             this.btnRefresh.Name = "btnRefresh";
             this.btnRefresh.Size = new System.Drawing.Size(75, 23);
             this.btnRefresh.TabIndex = 2;
@@ -86,7 +86,7 @@
             // 
             // btnConnect
             // 
-            this.btnConnect.Location = new System.Drawing.Point(319, 13);
+            this.btnConnect.Location = new System.Drawing.Point(370, 12);
             this.btnConnect.Name = "btnConnect";
             this.btnConnect.Size = new System.Drawing.Size(93, 23);
             this.btnConnect.TabIndex = 3;
@@ -106,7 +106,7 @@
             // 
             // serialNumber
             // 
-            this.serialNumber.Location = new System.Drawing.Point(497, 15);
+            this.serialNumber.Location = new System.Drawing.Point(548, 14);
             this.serialNumber.Name = "serialNumber";
             this.serialNumber.Size = new System.Drawing.Size(100, 20);
             this.serialNumber.TabIndex = 5;
@@ -146,7 +146,7 @@
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(418, 18);
+            this.label1.Location = new System.Drawing.Point(469, 17);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(73, 13);
             this.label1.TabIndex = 7;
@@ -257,7 +257,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(660, 528);
+            this.ClientSize = new System.Drawing.Size(658, 528);
             this.Controls.Add(this.btTrigger);
             this.Controls.Add(this.dataSource);
             this.Controls.Add(this.stopDacq);
