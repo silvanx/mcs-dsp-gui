@@ -1,4 +1,4 @@
-# McsDspRealtimeFeedback: 
+# McsDspRealtimeFeedback
 
 Code and Documentation for MCS DSP Realtime Feedback on the MCS-Interfaceboard
 
@@ -6,8 +6,8 @@ Code and Documentation for MCS DSP Realtime Feedback on the MCS-Interfaceboard
 
 ### Prerequisites
 
-*Texas Instruments Code Composer Studio 6.2.0
-*Microsoft Visual Studio 2019
+* Texas Instruments Code Composer Studio 6.2.0
+* Microsoft Visual Studio 2019
 
 ### Authors
 See the [AUTHORS.md](https://github.com/multichannelsystems/McsDspRealtimeFeedback/blob/master/AUTHORS.md) for a list of contributors.
