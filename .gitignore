@@ -24,3 +24,4 @@ Windows/DSP Dacq Example/DSP Dacq Example.csproj.user
 /workspace_v8/
 Windows/DSP Dacq Example/.vs
 Windows/FB_Example/.vs
+*.bak
