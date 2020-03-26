@@ -16,7 +16,7 @@ namespace my_interface
         CMcsUsbListEntryNet RawPort;
         CMcsUsbListEntryNet DspPort;
 
-        CMcsUsbListNet devices = new CMcsUsbListNet(); // Create object of CMscUsbListNet Class
+        CMcsUsbListNet devices = new CMcsUsbListNet(DeviceEnumNet.MCS_MEAUSB_DEVICE); // Create object of CMscUsbListNet Class
 
         int Fs = 50000; // sampling rate
 
@@ -44,8 +44,6 @@ namespace my_interface
 
         private void SearchDevice()
         {
-            devices.Initialize(DeviceEnumNet.MCS_MEAUSB_DEVICE); // Get list of MEA devices connect by USB
-
             RawPort = null;
             DspPort = null;
 
@@ -207,10 +205,10 @@ namespace my_interface
                 CStimulusFunctionNet.StimulusDeviceDataAndUnrolledData data = dig.PrepareChannelData(ampl, dur);
                 dig.SendChannelData(0, data);
                 dig.SetGlobalRepeat(0, true);
-                mea.SetDigitalSource<ME2100DigitalSourceEnumNet>(DigitalTargetEnumNet.DigOutStimulatorStartTrigger, 0, new DigitalSource<ME2100DigitalSourceEnumNet>(ME2100DigitalSourceEnumNet.DigitalData), 0);
-                mea.SetDigitalSource<ME2100DigitalSourceEnumNet>(DigitalTargetEnumNet.Digout, 3, new DigitalSource<ME2100DigitalSourceEnumNet>(ME2100DigitalSourceEnumNet.DigitalOutStimulator), 0);
-                mea.SetDigitalData(0, false);
-                mea.SetDigitalData(0, true);
+                mea.SetDigitalSource<SCUDigitalSourceEnumNet>(DigitalTargetEnumNet.DigOutStimulatorStartTrigger, 0, new DigitalSource<SCUDigitalSourceEnumNet>(SCUDigitalSourceEnumNet.DigitalData), 0);
+                mea.SetDigitalSource<SCUDigitalSourceEnumNet>(DigitalTargetEnumNet.Digout, 3, new DigitalSource<SCUDigitalSourceEnumNet>(SCUDigitalSourceEnumNet.DigitalOutStimulator), 0);
+                mea.MeaDigitalDataFunctionNet.SetDigitalData(0, false);
+                mea.MeaDigitalDataFunctionNet.SetDigitalData(0, true);
                 mea.Disconnect();
             }
         }

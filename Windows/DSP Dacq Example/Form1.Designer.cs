@@ -53,6 +53,7 @@
             this.stopDacq = new System.Windows.Forms.Button();
             this.dataSource = new System.Windows.Forms.ComboBox();
             this.btTrigger = new System.Windows.Forms.Button();
+            this.cbTriggerSegment = new System.Windows.Forms.ComboBox();
             ((System.ComponentModel.ISupportInitialize)(this.dspData)).BeginInit();
             this.SuspendLayout();
             // 
@@ -253,11 +254,21 @@
             this.btTrigger.UseVisualStyleBackColor = true;
             this.btTrigger.Click += new System.EventHandler(this.btTrigger_Click);
             // 
+            // cbTriggerSegment
+            // 
+            this.cbTriggerSegment.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cbTriggerSegment.FormattingEnabled = true;
+            this.cbTriggerSegment.Location = new System.Drawing.Point(491, 107);
+            this.cbTriggerSegment.Name = "cbTriggerSegment";
+            this.cbTriggerSegment.Size = new System.Drawing.Size(51, 21);
+            this.cbTriggerSegment.TabIndex = 19;
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(658, 528);
+            this.Controls.Add(this.cbTriggerSegment);
             this.Controls.Add(this.btTrigger);
             this.Controls.Add(this.dataSource);
             this.Controls.Add(this.stopDacq);
@@ -306,6 +317,7 @@
         private System.Windows.Forms.Button stopDacq;
         private System.Windows.Forms.ComboBox dataSource;
         private System.Windows.Forms.Button btTrigger;
+        private System.Windows.Forms.ComboBox cbTriggerSegment;
     }
 }
 

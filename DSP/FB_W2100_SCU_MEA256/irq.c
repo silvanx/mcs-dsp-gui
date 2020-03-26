@@ -116,6 +116,8 @@ interrupt void interrupt6(void)
 	
 	static int stg_electrode = 0;
 
+	static int seg = 0;
+
 	int i;
 	CSL_Edma3ccRegsOvly edma3ccRegs = (CSL_Edma3ccRegsOvly)CSL_EDMA3CC_0_REGS;
 	
@@ -248,25 +250,19 @@ interrupt void interrupt6(void)
 	if (timestamp == 5000)
 	{
 	    //WRITE_REGISTER(0x0480, 0); // Feedback
-//		W2100Usb(0, MEA_COMMAND, MEA_W2100_SAMPLING_ACTIVE, 4, 0, 4);
 	}
-	if (timestamp == 5100)
-	{
-		//                           sync        channel     index
-//		W2100Usb(0, COMMAND_HARDWARE_TEST, COMMAND_WRITE_REGISTER_TS_0 + 4, 0x93F1, 0xfc00 + (15 << 28) + (0 << 24) + (1 << 16), 4);
-//		W2100Usb(0, COMMAND_HARDWARE_TEST, COMMAND_WRITE_REGISTER_TS_0 + 4, 0x93F1, 0x0400 + (15 << 28) + (0 << 24) + (2 << 16), 4);
-	}
-	if (timestamp == 5200)
-	{
-//		W2100Usb(0, MEA_COMMAND, MEA_W2100_SAMPLING_ACTIVE, 4, 1, 4);
-	}
-	if (++timestamp == 10000)
+	if (++timestamp == 20000)
 	{
 		timestamp = 0;
 	    toggleLED();
 
 	    //WRITE_REGISTER(0x0480, 1); // Feedback
-	    //WRITE_REGISTER(0x9A80, 0x100); // Trigger Channel 1
+	    seg++;
+	    if (seg >= 16)
+	    {
+	    	seg = 0;
+	    }
+	    WRITE_REGISTER(0x9A80, 0x1000 * seg +  0x100); // Trigger Channel 1
 	}
 #endif
 

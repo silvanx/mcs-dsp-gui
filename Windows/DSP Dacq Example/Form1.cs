@@ -24,7 +24,7 @@ namespace MCS_USB_Windows_Forms_Application1
 
         int Samplerate = 50000;
 
-        CMcsUsbListNet UsbDeviceList = new CMcsUsbListNet();
+        CMcsUsbListNet UsbDeviceList = new CMcsUsbListNet(DeviceEnumNet.MCS_DEVICE_USB);
         CMeaUSBDeviceNet mea = new CMeaUSBDeviceNet();
 
         public Form1()
@@ -86,11 +86,17 @@ namespace MCS_USB_Windows_Forms_Application1
             dataSource.Items.Add("DSP Data");
             dataSource.SelectedIndex = 0;
 
+            for (int i = 0; i < 16; i++)
+            {
+                cbTriggerSegment.Items.Add(i);
+            }
+
+            cbTriggerSegment.SelectedIndex = 0;
+
         }
 
         private void RefreshDeviceList()
         {
-            UsbDeviceList.Initialize(DeviceEnumNet.MCS_DEVICE_USB);
             cbDeviceList.Items.Clear();
             for (uint i = 0; i < UsbDeviceList.Count; i++)
             {
@@ -131,15 +137,15 @@ namespace MCS_USB_Windows_Forms_Application1
             {
                 int ChannelsInBlock;
 
-                mea.SetDataMode(DataModeEnumNet.dmSigned32bit, 0);
+                mea.SetDataMode(DataModeEnumNet.Signed_32bit, 0);
                 if (mea.GetDeviceId().IdProduct == ProductIdEnumNet.W2100)
                 {
-                    mea.SetDataMode(DataModeEnumNet.dmSigned16bit, 0);
-                    Samplerate = 10000;
+                    mea.SetDataMode(DataModeEnumNet.Signed_16bit, 0);
+                    Samplerate = 20000;
                 }
                 else
                 {
-                    mea.SetDataMode(DataModeEnumNet.dmSigned32bit, 0);
+                    mea.SetDataMode(DataModeEnumNet.Signed_32bit, 0);
                 }
 #if false
                 if (dataSource.SelectedIndex == 0)
@@ -153,7 +159,7 @@ namespace MCS_USB_Windows_Forms_Application1
 #endif
                 mea.SetNumberOfAnalogChannels(Channels, 0, Channels, 0, 0); // Read raw data
 
-                mea.SetSampleRate(Samplerate, 1, 0);
+                mea.SetSamplerate(Samplerate, 1, 0);
 
                 mea.EnableDigitalIn(use_digital_in, 0);
 
@@ -161,7 +167,7 @@ namespace MCS_USB_Windows_Forms_Application1
                 mea.SetDigitalSource(DigitalTargetEnumNet.Digstream, 4, W2100DigitalSourceEnumNet.Feedback, 0);
 
                 mea.EnableChecksum(true, 0);
-                ChannelsInBlock = mea.GetChannelsInBlock();
+                ChannelsInBlock = mea.GetChannelsInBlock(0);
 
                 mea.GetChannelLayout(out int analogChannels, out int digitalChannels, out int checksumChannels, out int timestampChannels, out int channelsInBlock, 0);
                 if (mea.GetDeviceId().IdProduct == ProductIdEnumNet.W2100)
@@ -181,11 +187,39 @@ namespace MCS_USB_Windows_Forms_Application1
                 {
 #if true
                     // Send Stimulation pattern
+                    bool first = true;
+                    int preplegth = 0;
                     CW2100_StimulatorFunctionNet stim = new CW2100_StimulatorFunctionNet(mea);
-                    int[] ampl = new[] {0, -100000, 100000, 0, 3};
-                    ulong[] dur = new ulong[] {0, 1000, 1000, 2000, 0};
-                    CStimulusFunctionNet.StimulusDeviceDataAndUnrolledData prep = stim.PrepareData(0, ampl, dur, STG_DestinationEnumNet.channeldata_current, 0);
-                    stim.SendPreparedData(0, prep, STG_DestinationEnumNet.channeldata_current);
+#if false
+                    int[] ampl = new[] {0, 1000000, -1000000, 0, 6};
+                    ulong[] dur = new ulong[] {0, 10000, 10000, 10000, 0};
+                    for (int i = 0; i < 16; i++)
+                    {
+                        ampl[4] = i + 2;
+#else
+                    int[] ampl = new[] { 1000000, -1000000, 0 };
+                    ulong[] dur = new ulong[] { 10000, 10000, 10000 };
+                    for (int i = 0; i < 16; i++)
+                    {
+                        ampl[0] = 100000 * i + 100000;
+                        ampl[1] = -100000 * i - 100000;
+
+#endif
+                        CStimulusFunctionNet.StimulusDeviceDataAndUnrolledData prep = stim.PrepareData(0, ampl, dur, STG_DestinationEnumNet.channeldata_current, 0);
+                        if (first)
+                        {
+                            first = false;
+                            preplegth = prep.DeviceDataLength;
+                        }
+
+                        Debug.Assert(preplegth == prep.DeviceDataLength);
+                        Debug.Assert(prep.DeviceDataLength < 15);
+                        stim.SendPreparedData(0x10 * i + 0, prep, STG_DestinationEnumNet.channeldata_current);
+                    }
+
+                    // switch the headstage to segmented mode
+                    mea.WriteRegisterTimeSlot(0x93B5, 0x4F, 0);
+                    mea.WriteRegisterTimeSlot(0x93B6, 1, 0);
 #endif
                     CW2100_FunctionNet func = new CW2100_FunctionNet(mea);
                     func.SetHeadstageSamplingActive(true, 0);
@@ -234,7 +268,8 @@ namespace MCS_USB_Windows_Forms_Application1
 
 
             // the chart can not handle every datapoint
-            for (int i = 0; i < Samplerate / 100; i += 1) // show only 1/10 data points
+            for (int i = 0; i < Samplerate; i += 1) // show each data point
+            //for (int i = 0; i < Samplerate / 100; i += 1) // show only 1/10 data points
             //for (int i = 0; i < Samplerate; i += 10) // show only each 10th data points
             {
                 dspData.Series[0].Points.AddXY((double)i / Samplerate, data[i * TotalChannels + series0Channel.SelectedIndex]);
@@ -246,10 +281,12 @@ namespace MCS_USB_Windows_Forms_Application1
 
         private void btTrigger_Click(object sender, EventArgs e)
         {
+            int segment = cbTriggerSegment.SelectedIndex;
+
             if (mea.GetDeviceId().IdProduct == ProductIdEnumNet.W2100)
             {
                 CW2100_StimulatorFunctionNet stim = new CW2100_StimulatorFunctionNet(mea);
-                stim.SendStart(1);
+                stim.SendStart((uint)((segment << 4) + 1));
             }
         }
     }
