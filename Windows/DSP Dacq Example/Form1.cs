@@ -16,6 +16,7 @@ namespace MCS_USB_Windows_Forms_Application1
     public partial class Form1 : Form
     {
         const int Channels = 64;
+        const int AnalogChannels = 8;
         const int Checksum = 2;
 
         private bool use_digital_in = true;
@@ -45,6 +46,15 @@ namespace MCS_USB_Windows_Forms_Application1
             for (int i = 0; i < Channels; i++)
             {
                 text = "Channel " + (i + 1).ToString();
+                series0Channel.Items.Add(text);
+                series1Channel.Items.Add(text);
+                series2Channel.Items.Add(text);
+                series3Channel.Items.Add(text);
+            }
+
+            for (int i = 0; i < AnalogChannels; i++)
+            {
+                text = "ANA " + (i + 1).ToString();
                 series0Channel.Items.Add(text);
                 series1Channel.Items.Add(text);
                 series2Channel.Items.Add(text);
@@ -81,10 +91,6 @@ namespace MCS_USB_Windows_Forms_Application1
             series1Channel.SelectedIndex = 1;
             series2Channel.SelectedIndex = 2;
             series3Channel.SelectedIndex = 3;
-
-            dataSource.Items.Add("Raw Data");
-            dataSource.Items.Add("DSP Data");
-            dataSource.SelectedIndex = 0;
 
             for (int i = 0; i < 16; i++)
             {
@@ -147,17 +153,7 @@ namespace MCS_USB_Windows_Forms_Application1
                 {
                     mea.SetDataMode(DataModeEnumNet.Signed_32bit, 0);
                 }
-#if false
-                if (dataSource.SelectedIndex == 0)
-                {
-                    mea.SetNumberOfAnalogChannels(Channels, 0, 0, 0, 0); // Read raw data
-                }
-                else
-                {
-                    mea.SetNumberOfAnalogChannels(0, 0, Channels, 0, 0); // Read Data from DSP
-                }
-#endif
-                mea.SetNumberOfAnalogChannels(Channels, 0, Channels, 0, 0); // Read raw data
+                mea.SetNumberOfAnalogChannels(Channels, 0, Channels, AnalogChannels, 0); // Read raw data
 
                 mea.SetSamplerate(Samplerate, 1, 0);
 
@@ -244,7 +240,7 @@ namespace MCS_USB_Windows_Forms_Application1
 
         void mea_ChannelDataEvent(CMcsUsbDacqNet dacq, int CbHandle, int numFrames)
         {
-            Debug.WriteLine("data available " + numFrames);
+            //Debug.WriteLine("data available " + numFrames);
 
             if (numFrames >= Samplerate)
             {

@@ -42,18 +42,17 @@
             this.serialNumber = new System.Windows.Forms.TextBox();
             this.dspData = new System.Windows.Forms.DataVisualization.Charting.Chart();
             this.label1 = new System.Windows.Forms.Label();
-            this.label2 = new System.Windows.Forms.Label();
             this.series0Channel = new System.Windows.Forms.ComboBox();
             this.series1Channel = new System.Windows.Forms.ComboBox();
-            this.label3 = new System.Windows.Forms.Label();
             this.series2Channel = new System.Windows.Forms.ComboBox();
-            this.label4 = new System.Windows.Forms.Label();
             this.series3Channel = new System.Windows.Forms.ComboBox();
-            this.label5 = new System.Windows.Forms.Label();
             this.stopDacq = new System.Windows.Forms.Button();
-            this.dataSource = new System.Windows.Forms.ComboBox();
             this.btTrigger = new System.Windows.Forms.Button();
             this.cbTriggerSegment = new System.Windows.Forms.ComboBox();
+            this.cbChart3 = new System.Windows.Forms.CheckBox();
+            this.cbChart4 = new System.Windows.Forms.CheckBox();
+            this.cbChart1 = new System.Windows.Forms.CheckBox();
+            this.cbChart2 = new System.Windows.Forms.CheckBox();
             ((System.ComponentModel.ISupportInitialize)(this.dspData)).BeginInit();
             this.SuspendLayout();
             // 
@@ -153,20 +152,11 @@
             this.label1.TabIndex = 7;
             this.label1.Text = "Serial Number";
             // 
-            // label2
-            // 
-            this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(15, 110);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(44, 13);
-            this.label2.TabIndex = 8;
-            this.label2.Text = "Chart 1:";
-            // 
             // series0Channel
             // 
             this.series0Channel.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.series0Channel.FormattingEnabled = true;
-            this.series0Channel.Location = new System.Drawing.Point(65, 107);
+            this.series0Channel.Location = new System.Drawing.Point(88, 107);
             this.series0Channel.Name = "series0Channel";
             this.series0Channel.Size = new System.Drawing.Size(121, 21);
             this.series0Channel.TabIndex = 9;
@@ -175,55 +165,28 @@
             // 
             this.series1Channel.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.series1Channel.FormattingEnabled = true;
-            this.series1Channel.Location = new System.Drawing.Point(65, 134);
+            this.series1Channel.Location = new System.Drawing.Point(88, 134);
             this.series1Channel.Name = "series1Channel";
             this.series1Channel.Size = new System.Drawing.Size(121, 21);
             this.series1Channel.TabIndex = 11;
-            // 
-            // label3
-            // 
-            this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(15, 137);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(44, 13);
-            this.label3.TabIndex = 10;
-            this.label3.Text = "Chart 2:";
             // 
             // series2Channel
             // 
             this.series2Channel.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.series2Channel.FormattingEnabled = true;
-            this.series2Channel.Location = new System.Drawing.Point(266, 107);
+            this.series2Channel.Location = new System.Drawing.Point(308, 107);
             this.series2Channel.Name = "series2Channel";
             this.series2Channel.Size = new System.Drawing.Size(121, 21);
             this.series2Channel.TabIndex = 13;
-            // 
-            // label4
-            // 
-            this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(216, 110);
-            this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(44, 13);
-            this.label4.TabIndex = 12;
-            this.label4.Text = "Chart 3:";
             // 
             // series3Channel
             // 
             this.series3Channel.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.series3Channel.FormattingEnabled = true;
-            this.series3Channel.Location = new System.Drawing.Point(266, 134);
+            this.series3Channel.Location = new System.Drawing.Point(308, 134);
             this.series3Channel.Name = "series3Channel";
             this.series3Channel.Size = new System.Drawing.Size(121, 21);
             this.series3Channel.TabIndex = 15;
-            // 
-            // label5
-            // 
-            this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(216, 137);
-            this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(44, 13);
-            this.label5.TabIndex = 14;
-            this.label5.Text = "Chart 4:";
             // 
             // stopDacq
             // 
@@ -234,15 +197,6 @@
             this.stopDacq.Text = "Stop Measurment";
             this.stopDacq.UseVisualStyleBackColor = true;
             this.stopDacq.Click += new System.EventHandler(this.stopDacq_Click);
-            // 
-            // dataSource
-            // 
-            this.dataSource.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.dataSource.FormattingEnabled = true;
-            this.dataSource.Location = new System.Drawing.Point(391, 65);
-            this.dataSource.Name = "dataSource";
-            this.dataSource.Size = new System.Drawing.Size(121, 21);
-            this.dataSource.TabIndex = 17;
             // 
             // btTrigger
             // 
@@ -263,23 +217,70 @@
             this.cbTriggerSegment.Size = new System.Drawing.Size(51, 21);
             this.cbTriggerSegment.TabIndex = 19;
             // 
+            // cbChart3
+            // 
+            this.cbChart3.AutoSize = true;
+            this.cbChart3.Checked = true;
+            this.cbChart3.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.cbChart3.Location = new System.Drawing.Point(239, 109);
+            this.cbChart3.Name = "cbChart3";
+            this.cbChart3.Size = new System.Drawing.Size(63, 17);
+            this.cbChart3.TabIndex = 20;
+            this.cbChart3.Text = "Chart 3:";
+            this.cbChart3.UseVisualStyleBackColor = true;
+            // 
+            // cbChart4
+            // 
+            this.cbChart4.AutoSize = true;
+            this.cbChart4.Checked = true;
+            this.cbChart4.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.cbChart4.Location = new System.Drawing.Point(239, 136);
+            this.cbChart4.Name = "cbChart4";
+            this.cbChart4.Size = new System.Drawing.Size(63, 17);
+            this.cbChart4.TabIndex = 21;
+            this.cbChart4.Text = "Chart 4:";
+            this.cbChart4.UseVisualStyleBackColor = true;
+            // 
+            // cbChart1
+            // 
+            this.cbChart1.AutoSize = true;
+            this.cbChart1.Checked = true;
+            this.cbChart1.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.cbChart1.Location = new System.Drawing.Point(19, 110);
+            this.cbChart1.Name = "cbChart1";
+            this.cbChart1.Size = new System.Drawing.Size(63, 17);
+            this.cbChart1.TabIndex = 22;
+            this.cbChart1.Text = "Chart 1:";
+            this.cbChart1.UseVisualStyleBackColor = true;
+            // 
+            // cbChart2
+            // 
+            this.cbChart2.AutoSize = true;
+            this.cbChart2.Checked = true;
+            this.cbChart2.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.cbChart2.Location = new System.Drawing.Point(19, 136);
+            this.cbChart2.Name = "cbChart2";
+            this.cbChart2.Size = new System.Drawing.Size(63, 17);
+            this.cbChart2.TabIndex = 23;
+            this.cbChart2.Text = "Chart 2:";
+            this.cbChart2.UseVisualStyleBackColor = true;
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(658, 528);
+            this.Controls.Add(this.cbChart2);
+            this.Controls.Add(this.cbChart1);
+            this.Controls.Add(this.cbChart4);
+            this.Controls.Add(this.cbChart3);
             this.Controls.Add(this.cbTriggerSegment);
             this.Controls.Add(this.btTrigger);
-            this.Controls.Add(this.dataSource);
             this.Controls.Add(this.stopDacq);
             this.Controls.Add(this.series3Channel);
-            this.Controls.Add(this.label5);
             this.Controls.Add(this.series2Channel);
-            this.Controls.Add(this.label4);
             this.Controls.Add(this.series1Channel);
-            this.Controls.Add(this.label3);
             this.Controls.Add(this.series0Channel);
-            this.Controls.Add(this.label2);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.dspData);
             this.Controls.Add(this.serialNumber);
@@ -306,18 +307,17 @@
         private System.Windows.Forms.TextBox serialNumber;
         private System.Windows.Forms.DataVisualization.Charting.Chart dspData;
         private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.Label label2;
         private System.Windows.Forms.ComboBox series0Channel;
         private System.Windows.Forms.ComboBox series1Channel;
-        private System.Windows.Forms.Label label3;
         private System.Windows.Forms.ComboBox series2Channel;
-        private System.Windows.Forms.Label label4;
         private System.Windows.Forms.ComboBox series3Channel;
-        private System.Windows.Forms.Label label5;
         private System.Windows.Forms.Button stopDacq;
-        private System.Windows.Forms.ComboBox dataSource;
         private System.Windows.Forms.Button btTrigger;
         private System.Windows.Forms.ComboBox cbTriggerSegment;
+        private System.Windows.Forms.CheckBox cbChart3;
+        private System.Windows.Forms.CheckBox cbChart4;
+        private System.Windows.Forms.CheckBox cbChart1;
+        private System.Windows.Forms.CheckBox cbChart2;
     }
 }
 
