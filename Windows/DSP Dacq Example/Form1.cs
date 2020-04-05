@@ -146,36 +146,25 @@ namespace MCS_USB_Windows_Forms_Application1
                 mea.SetDataMode(DataModeEnumNet.Signed_32bit, 0);
                 if (mea.GetDeviceId().IdProduct == ProductIdEnumNet.W2100)
                 {
-                    mea.SetDataMode(DataModeEnumNet.Signed_16bit, 0);
                     Samplerate = 20000;
-                }
-                else
-                {
-                    mea.SetDataMode(DataModeEnumNet.Signed_32bit, 0);
                 }
                 mea.SetNumberOfAnalogChannels(Channels, 0, Channels, AnalogChannels, 0); // Read raw data
 
                 mea.SetSamplerate(Samplerate, 1, 0);
 
-                mea.EnableDigitalIn(use_digital_in, 0);
+                mea.EnableDigitalIn((use_digital_in ? (DigitalDatastreamEnableEnumNet)3 : 0), 0);
 
                 // map feedback bit 0 to digital(in) stream bit 4
                 mea.SetDigitalSource(DigitalTargetEnumNet.Digstream, 4, W2100DigitalSourceEnumNet.Feedback, 0);
+                mea.SetDigitalSource(DigitalTargetEnumNet.Digout, 0, W2100DigitalSourceEnumNet.Feedback, 0);
 
                 mea.EnableChecksum(true, 0);
                 ChannelsInBlock = mea.GetChannelsInBlock(0);
 
                 mea.GetChannelLayout(out int analogChannels, out int digitalChannels, out int checksumChannels, out int timestampChannels, out int channelsInBlock, 0);
-                if (mea.GetDeviceId().IdProduct == ProductIdEnumNet.W2100)
-                {
-                    TotalChannels = channelsInBlock;
-                    mea.SetSelectedData(TotalChannels, Samplerate * 10, Samplerate, SampleSizeNet.SampleSize16Signed, SampleDstSizeNet.SampleDstSize32, ChannelsInBlock);
-                }
-                else
-                {
-                    TotalChannels = channelsInBlock / 2;
-                    mea.SetSelectedData(TotalChannels, Samplerate * 10, Samplerate, SampleSizeNet.SampleSize32Signed, ChannelsInBlock);
-                }
+                
+                TotalChannels = channelsInBlock / 2;
+                mea.SetSelectedData(TotalChannels, Samplerate * 10, Samplerate, SampleSizeNet.SampleSize32Signed, ChannelsInBlock);
 
                 mea.ChannelBlock_SetCheckChecksum((uint)checksumChannels, (uint)timestampChannels);
                 mea.StartDacq();
@@ -186,8 +175,8 @@ namespace MCS_USB_Windows_Forms_Application1
                     bool first = true;
                     int preplegth = 0;
                     CW2100_StimulatorFunctionNet stim = new CW2100_StimulatorFunctionNet(mea);
-#if false
-                    int[] ampl = new[] {0, 1000000, -1000000, 0, 6};
+#if true
+                    int[] ampl = new[] {0, 100000, -100000, 0, 6};
                     ulong[] dur = new ulong[] {0, 10000, 10000, 10000, 0};
                     for (int i = 0; i < 16; i++)
                     {
@@ -197,8 +186,8 @@ namespace MCS_USB_Windows_Forms_Application1
                     ulong[] dur = new ulong[] { 10000, 10000, 10000 };
                     for (int i = 0; i < 16; i++)
                     {
-                        ampl[0] = 100000 * i + 100000;
-                        ampl[1] = -100000 * i - 100000;
+                        ampl[0] = 20000 * i + 100000;
+                        ampl[1] = -20000 * i - 100000;
 
 #endif
                         CStimulusFunctionNet.StimulusDeviceDataAndUnrolledData prep = stim.PrepareData(0, ampl, dur, STG_DestinationEnumNet.channeldata_current, 0);
