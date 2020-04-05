@@ -266,17 +266,37 @@ namespace MCS_USB_Windows_Forms_Application1
             dspData.Series[2].Points.Clear();
             dspData.Series[3].Points.Clear();
 
-
+            int min = int.MaxValue;
+            int max = int.MinValue;
             // the chart can not handle every datapoint
             for (int i = 0; i < Samplerate; i += 1) // show each data point
             //for (int i = 0; i < Samplerate / 100; i += 1) // show only 1/10 data points
             //for (int i = 0; i < Samplerate; i += 10) // show only each 10th data points
             {
-                dspData.Series[0].Points.AddXY((double)i / Samplerate, data[i * TotalChannels + series0Channel.SelectedIndex]);
-                dspData.Series[1].Points.AddXY((double)i / Samplerate, data[i * TotalChannels + series1Channel.SelectedIndex]);
-                dspData.Series[2].Points.AddXY((double)i / Samplerate, data[i * TotalChannels + series2Channel.SelectedIndex]);
-                dspData.Series[3].Points.AddXY((double)i / Samplerate, data[i * TotalChannels + series3Channel.SelectedIndex]);
+                if (cbChart1.Checked) AddPoint(0, i, data[i * TotalChannels + series0Channel.SelectedIndex], ref min, ref max);
+                if (cbChart2.Checked) AddPoint(1, i, data[i * TotalChannels + series1Channel.SelectedIndex], ref min, ref max);
+                if (cbChart3.Checked) AddPoint(2, i, data[i * TotalChannels + series2Channel.SelectedIndex], ref min, ref max);
+                if (cbChart4.Checked) AddPoint(3, i, data[i * TotalChannels + series3Channel.SelectedIndex], ref min, ref max);
             }
+
+            if (min < max)
+            {
+                dspData.ChartAreas[0].AxisY.Minimum = min;
+                dspData.ChartAreas[0].AxisY.Maximum = max;
+            }
+            else if (min == max)
+            {
+                dspData.ChartAreas[0].AxisY.Minimum = min-5;
+                dspData.ChartAreas[0].AxisY.Maximum = max+5;
+            }
+
+        }
+
+        private void AddPoint(int series, int i, int data, ref int min, ref int max)
+        {
+            dspData.Series[series].Points.AddXY((double) i / Samplerate, (double)data);
+            if (data < min) min = data;
+            if (data > max) max = data;
         }
 
         private void btTrigger_Click(object sender, EventArgs e)
