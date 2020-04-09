@@ -53,7 +53,7 @@ namespace my_interface
             
             for (uint i = 0; i < devices.Count; i++) // loop through number of devices found
             {
-                if (devices.GetUsbListEntry(i).SerialNumber.EndsWith("A")) // check for each device if serial number ends with "A" (USB 1) This USB interface will be used by MC_Rack
+                if (devices.GetUsbListEntry(i).SerialNumber.EndsWith("A")) // check for each device if serial number ends with "A" (USB 1) This USB interface will be used by MC_Rack / Multi Channel Experimenter
                 {
                     RawPort = devices.GetUsbListEntry(i); // assign to RawPort "handle"
                     rawSerial.Text = RawPort.SerialNumber;
@@ -174,7 +174,7 @@ namespace my_interface
 
                 factorydev.Disconnect();
 
-                bool success = factorydev.LoadUserFirmware(FirmwareFile, DspPort); // Code for uploading compiled binary
+                bool success = factorydev.LoadUserFirmware(FirmwareFile, DspPort, LockMask); // Code for uploading compiled binary
                 if (!success)
                 {
                     MessageBox.Show("Firmware upload failed!");
