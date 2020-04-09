@@ -69,7 +69,10 @@ void main()
 
 	WRITE_REGISTER(DIGITAL_MUX, 0x42080200);   // Sideband data 0 HS 1 (0x42)  bit 8  to Digital Out (0x02) bit 0
 
-	while(1);
+	while(1)
+	{
+
+	}
 }
 
 

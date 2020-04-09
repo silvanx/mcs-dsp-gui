@@ -121,7 +121,6 @@ interrupt void interrupt6(void)
 	int i;
 	CSL_Edma3ccRegsOvly edma3ccRegs = (CSL_Edma3ccRegsOvly)CSL_EDMA3CC_0_REGS;
 	
-	Int32* restrict adc_i_p = &adc_intern[0]; // we create here a pointer for compiler optimization reasons
 	Int32* restrict HS1_Data_p = (Int32 *)&MeaData[DATA_HEADER_SIZE];
 	Int32* restrict IF_Data_p  = (Int32 *)&MeaData[DATA_HEADER_SIZE+HS1_CHANNELS+DATA_HEADER_SIZE];
 
@@ -141,6 +140,7 @@ interrupt void interrupt6(void)
 	}
 	WRITE_REGISTER(IFB_AUX_OUT, aux_value); // set  AUX 1 to value one
 
+#if 0
 	// Monitor Analog in
     if (IF_Data_p[0] > threshold)
     {
@@ -160,8 +160,8 @@ interrupt void interrupt6(void)
         aux_value &= ~2;
         WRITE_REGISTER(0x002C, 0x400); //switch on HS2 LED
     }
-#if 0
-	// once per second
+
+    // once per second
     if (timestamp == 49999)
     {    	
     	int enable;
@@ -251,6 +251,8 @@ interrupt void interrupt6(void)
 	{
 	    //WRITE_REGISTER(0x0480, 0); // Feedback
 	}
+	aux_value &= ~2;
+	MonitorData[3] = 0;
 	if (++timestamp == 20000)
 	{
 		timestamp = 0;
@@ -263,19 +265,31 @@ interrupt void interrupt6(void)
 	    	seg = 0;
 	    }
 	    WRITE_REGISTER(0x9A80, 0x1000 * seg +  0x100); // Trigger Channel 1
+	    aux_value |= 2;
+	    MonitorData[3] = 5;
 	}
 #endif
 
-	int f = HS1_Data_p[0] > 0;
-	WRITE_REGISTER(0x0480, f);
+	//int f = HS1_Data_p[0] > 0;
+	//WRITE_REGISTER(0x0480, f); // Feedback
 
-	MonitorData[0] = timestamp*100 & 0xFFFF;
-	MonitorData[1] = HS1_Data_p[4] + 30;
-	MonitorData[2] = HS1_Data_p[5] + 30;
-	MonitorData[3] = HS1_Data_p[6] + 30;
-	MonitorData[4] = HS1_Data_p[7] + 30;
+	MonitorData[0] = (timestamp >> 4) & 0xFF;
+	MonitorData[1] = HS1_Data_p[4] + 80;
+	MonitorData[2] = (IF_Data_p[0] - 1190000) >> 15;
+	//MonitorData[3] = HS1_Data_p[6] + 30;
+	MonitorData[4] = HS1_Data_p[0] >> 10;
 	MonitorData[5] = HS1_Data_p[8] + 30;
 	MonitorData[6] = HS1_Data_p[9] + 30;
+
+	for(i = 0; i < 64; i++)
+	{
+		//MonitorData[i] = HS1_Data_p[i];
+	}
+	for(i = 32; i < 64; i++)
+	{
+		//MonitorData[i] = IF_Data_p[i];
+	}
+
     CSL_FINST(edma3ccRegs->ESRH, EDMA3CC_ESRH_E53, SET);    // Manual Trigger Event 53
 
 	aux_value &= ~1;
