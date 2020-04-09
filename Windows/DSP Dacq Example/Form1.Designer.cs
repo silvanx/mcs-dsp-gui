@@ -28,12 +28,12 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea1 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
-            System.Windows.Forms.DataVisualization.Charting.Legend legend1 = new System.Windows.Forms.DataVisualization.Charting.Legend();
-            System.Windows.Forms.DataVisualization.Charting.Series series1 = new System.Windows.Forms.DataVisualization.Charting.Series();
-            System.Windows.Forms.DataVisualization.Charting.Series series2 = new System.Windows.Forms.DataVisualization.Charting.Series();
-            System.Windows.Forms.DataVisualization.Charting.Series series3 = new System.Windows.Forms.DataVisualization.Charting.Series();
-            System.Windows.Forms.DataVisualization.Charting.Series series4 = new System.Windows.Forms.DataVisualization.Charting.Series();
+            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea2 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+            System.Windows.Forms.DataVisualization.Charting.Legend legend2 = new System.Windows.Forms.DataVisualization.Charting.Legend();
+            System.Windows.Forms.DataVisualization.Charting.Series series5 = new System.Windows.Forms.DataVisualization.Charting.Series();
+            System.Windows.Forms.DataVisualization.Charting.Series series6 = new System.Windows.Forms.DataVisualization.Charting.Series();
+            System.Windows.Forms.DataVisualization.Charting.Series series7 = new System.Windows.Forms.DataVisualization.Charting.Series();
+            System.Windows.Forms.DataVisualization.Charting.Series series8 = new System.Windows.Forms.DataVisualization.Charting.Series();
             this.mcsdevices = new System.Windows.Forms.Label();
             this.cbDeviceList = new System.Windows.Forms.ComboBox();
             this.btnRefresh = new System.Windows.Forms.Button();
@@ -53,6 +53,7 @@
             this.cbChart4 = new System.Windows.Forms.CheckBox();
             this.cbChart1 = new System.Windows.Forms.CheckBox();
             this.cbChart2 = new System.Windows.Forms.CheckBox();
+            this.btResetSettings = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.dspData)).BeginInit();
             this.SuspendLayout();
             // 
@@ -113,32 +114,32 @@
             // 
             // dspData
             // 
-            chartArea1.Name = "ChartArea1";
-            this.dspData.ChartAreas.Add(chartArea1);
-            legend1.Name = "Legend1";
-            this.dspData.Legends.Add(legend1);
+            chartArea2.Name = "ChartArea1";
+            this.dspData.ChartAreas.Add(chartArea2);
+            legend2.Name = "Legend1";
+            this.dspData.Legends.Add(legend2);
             this.dspData.Location = new System.Drawing.Point(15, 183);
             this.dspData.Name = "dspData";
-            series1.ChartArea = "ChartArea1";
-            series1.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.FastLine;
-            series1.Legend = "Legend1";
-            series1.Name = "Chart 1";
-            series2.ChartArea = "ChartArea1";
-            series2.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.FastLine;
-            series2.Legend = "Legend1";
-            series2.Name = "Chart 2";
-            series3.ChartArea = "ChartArea1";
-            series3.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.FastLine;
-            series3.Legend = "Legend1";
-            series3.Name = "Chart 3";
-            series4.ChartArea = "ChartArea1";
-            series4.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.FastLine;
-            series4.Legend = "Legend1";
-            series4.Name = "Chart 4";
-            this.dspData.Series.Add(series1);
-            this.dspData.Series.Add(series2);
-            this.dspData.Series.Add(series3);
-            this.dspData.Series.Add(series4);
+            series5.ChartArea = "ChartArea1";
+            series5.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.FastLine;
+            series5.Legend = "Legend1";
+            series5.Name = "Chart 1";
+            series6.ChartArea = "ChartArea1";
+            series6.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.FastLine;
+            series6.Legend = "Legend1";
+            series6.Name = "Chart 2";
+            series7.ChartArea = "ChartArea1";
+            series7.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.FastLine;
+            series7.Legend = "Legend1";
+            series7.Name = "Chart 3";
+            series8.ChartArea = "ChartArea1";
+            series8.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.FastLine;
+            series8.Legend = "Legend1";
+            series8.Name = "Chart 4";
+            this.dspData.Series.Add(series5);
+            this.dspData.Series.Add(series6);
+            this.dspData.Series.Add(series7);
+            this.dspData.Series.Add(series8);
             this.dspData.Size = new System.Drawing.Size(621, 312);
             this.dspData.TabIndex = 6;
             this.dspData.Text = "DSP Data";
@@ -265,11 +266,22 @@
             this.cbChart2.Text = "Chart 2:";
             this.cbChart2.UseVisualStyleBackColor = true;
             // 
+            // btResetSettings
+            // 
+            this.btResetSettings.Location = new System.Drawing.Point(388, 65);
+            this.btResetSettings.Name = "btResetSettings";
+            this.btResetSettings.Size = new System.Drawing.Size(154, 23);
+            this.btResetSettings.TabIndex = 24;
+            this.btResetSettings.Text = "Reset Settings";
+            this.btResetSettings.UseVisualStyleBackColor = true;
+            this.btResetSettings.Click += new System.EventHandler(this.btResetSettings_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(658, 528);
+            this.Controls.Add(this.btResetSettings);
             this.Controls.Add(this.cbChart2);
             this.Controls.Add(this.cbChart1);
             this.Controls.Add(this.cbChart4);
@@ -318,6 +330,7 @@
         private System.Windows.Forms.CheckBox cbChart4;
         private System.Windows.Forms.CheckBox cbChart1;
         private System.Windows.Forms.CheckBox cbChart2;
+        private System.Windows.Forms.Button btResetSettings;
     }
 }
 

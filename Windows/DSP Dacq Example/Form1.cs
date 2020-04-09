@@ -25,6 +25,11 @@ namespace MCS_USB_Windows_Forms_Application1
 
         int Samplerate = 50000;
 
+        // for W2100
+        private int other_receiver = 0;
+        private bool w2100_hs_samling = false;
+
+
         CMcsUsbListNet UsbDeviceList = new CMcsUsbListNet(DeviceEnumNet.MCS_DEVICE_USB);
         CMeaUSBDeviceNet mea = new CMeaUSBDeviceNet();
 
@@ -81,12 +86,13 @@ namespace MCS_USB_Windows_Forms_Application1
 
             for (int i = 0; i < Checksum; i++)
             {
-                text = "Checksum " + (i+1).ToString();
+                text = "Checksum " + (i + 1).ToString();
                 series0Channel.Items.Add(text);
                 series1Channel.Items.Add(text);
                 series2Channel.Items.Add(text);
                 series3Channel.Items.Add(text);
             }
+
             series0Channel.SelectedIndex = 0;
             series1Channel.SelectedIndex = 1;
             series2Channel.SelectedIndex = 2;
@@ -108,6 +114,7 @@ namespace MCS_USB_Windows_Forms_Application1
             {
                 cbDeviceList.Items.Add(UsbDeviceList.GetUsbListEntry(i));
             }
+
             if (cbDeviceList.Items.Count > 0)
             {
                 cbDeviceList.SelectedIndex = 0;
@@ -122,10 +129,9 @@ namespace MCS_USB_Windows_Forms_Application1
         private void btnConnect_Click(object sender, EventArgs e)
         {
             CMcsUsbNet device = new CMcsUsbNet();
-            if (device.Connect((CMcsUsbListEntryNet)cbDeviceList.SelectedItem, 2) == 0)
+            if (device.Connect((CMcsUsbListEntryNet) cbDeviceList.SelectedItem, 2) == 0)
             {
                 serialNumber.Text = device.GetSerialNumber();
-                device.WriteRegister(0x8200, 0x8000+100);
                 device.Disconnect();
             }
             else
@@ -139,7 +145,14 @@ namespace MCS_USB_Windows_Forms_Application1
             startDacq.Enabled = false;
             stopDacq.Enabled = true;
 
-            if (mea.Connect((CMcsUsbListEntryNet) cbDeviceList.SelectedItem) == 0)
+            other_receiver = 0;
+            if (((CMcsUsbListEntryNet) cbDeviceList.SelectedItem).SerialNumber.EndsWith("-B"))
+            {
+                other_receiver = 4; // bit 0/1 select the timeslot of: bit 2/3 = 0 receiver according to USB port, 1 receiver A, 2 receiver B
+            }
+
+            uint status = mea.Connect((CMcsUsbListEntryNet) cbDeviceList.SelectedItem, 63);
+            if (status == 0)
             {
                 int ChannelsInBlock;
 
@@ -148,11 +161,19 @@ namespace MCS_USB_Windows_Forms_Application1
                 {
                     Samplerate = 20000;
                 }
+
                 mea.SetNumberOfAnalogChannels(Channels, 0, Channels, AnalogChannels, 0); // Read raw data
 
-                mea.SetSamplerate(Samplerate, 1, 0);
+                try
+                {
+                    mea.SetSamplerate(Samplerate, 1, 0);
+                }
+                catch (CUsbExceptionNet)
+                {
+                    Samplerate = mea.GetSamplerate(0);
+                }
 
-                mea.EnableDigitalIn((use_digital_in ? (DigitalDatastreamEnableEnumNet)3 : 0), 0);
+                mea.EnableDigitalIn((use_digital_in ? (DigitalDatastreamEnableEnumNet) 3 : 0), 0);
 
                 // map feedback bit 0 to digital(in) stream bit 4
                 mea.SetDigitalSource(DigitalTargetEnumNet.Digstream, 4, W2100DigitalSourceEnumNet.Feedback, 0);
@@ -162,19 +183,23 @@ namespace MCS_USB_Windows_Forms_Application1
                 ChannelsInBlock = mea.GetChannelsInBlock(0);
 
                 mea.GetChannelLayout(out int analogChannels, out int digitalChannels, out int checksumChannels, out int timestampChannels, out int channelsInBlock, 0);
-                
+
                 TotalChannels = channelsInBlock / 2;
                 mea.SetSelectedData(TotalChannels, Samplerate * 10, Samplerate, SampleSizeNet.SampleSize32Signed, ChannelsInBlock);
 
-                mea.ChannelBlock_SetCheckChecksum((uint)checksumChannels, (uint)timestampChannels);
+                mea.ChannelBlock_SetCheckChecksum((uint) checksumChannels, (uint) timestampChannels);
                 mea.StartDacq();
                 if (mea.GetDeviceId().IdProduct == ProductIdEnumNet.W2100)
                 {
+                    CW2100_FunctionNet func = new CW2100_FunctionNet(mea);
+                    w2100_hs_samling = func.GetHeadstageSamplingActive(other_receiver + 0);
+                    func.SetHeadstageSamplingActive(false, other_receiver + 0);
 #if true
                     // Send Stimulation pattern
                     bool first = true;
                     int preplegth = 0;
                     CW2100_StimulatorFunctionNet stim = new CW2100_StimulatorFunctionNet(mea);
+                    stim.SelectTimeSlot(other_receiver + 0);
 #if true
                     int[] ampl = new[] {0, 100000, -100000, 0, 6};
                     ulong[] dur = new ulong[] {0, 10000, 10000, 10000, 0};
@@ -203,12 +228,17 @@ namespace MCS_USB_Windows_Forms_Application1
                     }
 
                     // switch the headstage to segmented mode
-                    mea.WriteRegisterTimeSlot(0x93B5, 0x4F, 0);
+                    mea.WriteRegisterTimeSlot(0x93B5, 0x4F, other_receiver + 0);
                     mea.WriteRegisterTimeSlot(0x93B6, 1, 0);
 #endif
-                    CW2100_FunctionNet func = new CW2100_FunctionNet(mea);
-                    func.SetHeadstageSamplingActive(true, 0);
+                    func.SetHeadstageSamplingActive(true, other_receiver + 0);
                 }
+            }
+            else
+            {
+                MessageBox.Show(CMcsUsbNet.GetErrorText(status));
+                startDacq.Enabled = true;
+                stopDacq.Enabled = false;
             }
         }
 
@@ -217,7 +247,10 @@ namespace MCS_USB_Windows_Forms_Application1
             if (mea.GetDeviceId().IdProduct == ProductIdEnumNet.W2100)
             {
                 CW2100_FunctionNet func = new CW2100_FunctionNet(mea);
-                func.SetHeadstageSamplingActive(false, 0);
+                if (!w2100_hs_samling)
+                {
+                    func.SetHeadstageSamplingActive(false, other_receiver + 0);
+                }
             }
 
             startDacq.Enabled = true;
@@ -255,8 +288,8 @@ namespace MCS_USB_Windows_Forms_Application1
             int max = int.MinValue;
             // the chart can not handle every datapoint
             for (int i = 0; i < Samplerate; i += 1) // show each data point
-            //for (int i = 0; i < Samplerate / 100; i += 1) // show only 1/10 data points
-            //for (int i = 0; i < Samplerate; i += 10) // show only each 10th data points
+                //for (int i = 0; i < Samplerate / 100; i += 1) // show only 1/10 data points
+                //for (int i = 0; i < Samplerate; i += 10) // show only each 10th data points
             {
                 if (cbChart1.Checked) AddPoint(0, i, data[i * TotalChannels + series0Channel.SelectedIndex], ref min, ref max);
                 if (cbChart2.Checked) AddPoint(1, i, data[i * TotalChannels + series1Channel.SelectedIndex], ref min, ref max);
@@ -271,15 +304,15 @@ namespace MCS_USB_Windows_Forms_Application1
             }
             else if (min == max)
             {
-                dspData.ChartAreas[0].AxisY.Minimum = min-5;
-                dspData.ChartAreas[0].AxisY.Maximum = max+5;
+                dspData.ChartAreas[0].AxisY.Minimum = min - 5;
+                dspData.ChartAreas[0].AxisY.Maximum = max + 5;
             }
 
         }
 
         private void AddPoint(int series, int i, int data, ref int min, ref int max)
         {
-            dspData.Series[series].Points.AddXY((double) i / Samplerate, (double)data);
+            dspData.Series[series].Points.AddXY((double) i / Samplerate, (double) data);
             if (data < min) min = data;
             if (data > max) max = data;
         }
@@ -291,7 +324,22 @@ namespace MCS_USB_Windows_Forms_Application1
             if (mea.GetDeviceId().IdProduct == ProductIdEnumNet.W2100)
             {
                 CW2100_StimulatorFunctionNet stim = new CW2100_StimulatorFunctionNet(mea);
-                stim.SendStart((uint)((segment << 4) + 1));
+                stim.SelectTimeSlot(other_receiver + 0);
+                stim.SendStart((uint) ((segment << 4) + 1));
+            }
+        }
+
+        private void btResetSettings_Click(object sender, EventArgs e)
+        {
+            if (mea.Connect((CMcsUsbListEntryNet) cbDeviceList.SelectedItem) == 0)
+            {
+                if (mea.GetDeviceId().IdProduct == ProductIdEnumNet.W2100)
+                {
+                    mea.SetDataMode(DataModeEnumNet.Unsigned_16bit, 0);
+                    mea.SetNumberOfAnalogChannels(32, 0, 0, AnalogChannels, 0); // Read raw data
+                }
+
+                mea.Disconnect();
             }
         }
     }
