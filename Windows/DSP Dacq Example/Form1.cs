@@ -317,7 +317,7 @@ namespace MCS_USB_Windows_Forms_Application1
             if (data > max) max = data;
         }
 
-        private void btTrigger_Click(object sender, EventArgs e)
+        private void btStartTrigger_Click(object sender, EventArgs e)
         {
             int segment = cbTriggerSegment.SelectedIndex;
 
@@ -326,6 +326,16 @@ namespace MCS_USB_Windows_Forms_Application1
                 CW2100_StimulatorFunctionNet stim = new CW2100_StimulatorFunctionNet(mea);
                 stim.SelectTimeSlot(other_receiver + 0);
                 stim.SendStart((uint) ((segment << 4) + 1));
+            }
+        }
+
+        private void btStopTrigger_Click(object sender, EventArgs e)
+        {
+            if (mea.GetDeviceId().IdProduct == ProductIdEnumNet.W2100)
+            {
+                CW2100_StimulatorFunctionNet stim = new CW2100_StimulatorFunctionNet(mea);
+                stim.SelectTimeSlot(other_receiver + 0);
+                stim.SendStop(1);
             }
         }
 
