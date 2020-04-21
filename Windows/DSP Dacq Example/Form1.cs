@@ -223,13 +223,9 @@ namespace MCS_USB_Windows_Forms_Application1
                         }
 
                         Debug.Assert(preplegth == prep.DeviceDataLength);
-                        Debug.Assert(prep.DeviceDataLength < 15);
+                        Debug.Assert(prep.DeviceDataLength <= 15);
                         stim.SendPreparedData(0x10 * i + 0, prep, STG_DestinationEnumNet.channeldata_current);
                     }
-
-                    // switch the headstage to segmented mode
-                    mea.WriteRegisterTimeSlot(0x93B5, 0x4F, other_receiver + 0);
-                    mea.WriteRegisterTimeSlot(0x93B6, 1, 0);
 #endif
                     func.SetHeadstageSamplingActive(true, other_receiver + 0);
                 }
