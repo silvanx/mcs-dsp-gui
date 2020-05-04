@@ -247,6 +247,37 @@ interrupt void interrupt6(void)
 
 	}
 #else
+#if 1
+#define PERIOD 200
+	int nextsegment[16] =
+	{
+			0, 1, 2, 3,
+			2, 1, 0, 2,
+			4, 8, 7, 6,
+			5, 4, 3, 2,
+	};
+	static int j = 0;
+	if (timestamp == PERIOD - 50)
+	{
+		WRITE_REGISTER(0x9A80, 0x1000 * nextsegment[j] +  0x100); // Trigger Channel 1
+		j++;
+	}
+
+	if (timestamp > 0 && timestamp < PERIOD * 16 - 100)
+	{
+		if (timestamp % PERIOD == 0)
+		{
+			WRITE_REGISTER(0x9A80, 0x1000 * nextsegment[j] +  0x100); // Trigger Channel 1
+			j++;
+		}
+	}
+
+	if (timestamp == PERIOD * 16 + 50)
+	{
+		WRITE_REGISTER(0x9A80, 0); // Stop Trigger
+	}
+	++timestamp;
+#else
 	if (timestamp == 5000)
 	{
 	    //WRITE_REGISTER(0x0480, 0); // Feedback
@@ -268,6 +299,7 @@ interrupt void interrupt6(void)
 	    aux_value |= 2;
 	    MonitorData[3] = 5;
 	}
+#endif
 #endif
 
 	//int f = HS1_Data_p[0] > 0;

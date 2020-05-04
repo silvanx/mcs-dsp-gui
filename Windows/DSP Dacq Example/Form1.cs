@@ -200,22 +200,25 @@ namespace MCS_USB_Windows_Forms_Application1
                     int preplegth = 0;
                     CW2100_StimulatorFunctionNet stim = new CW2100_StimulatorFunctionNet(mea);
                     stim.SelectTimeSlot(other_receiver + 0);
-#if true
-                    int[] ampl = new[] {0, 100000, -100000, 0, 6};
-                    ulong[] dur = new ulong[] {0, 10000, 10000, 10000, 0};
+#if false
+                    // Different repetition
+                    int[] ampl = new[] {0, 100000, -100000, 0, 6, 0};
+                    ulong[] dur = new ulong[] {0, 10000, 10000, 10000, 0, 300000};
                     for (int i = 0; i < 16; i++)
                     {
                         ampl[4] = i + 2;
 #else
+                    // Different strength
                     int[] ampl = new[] { 1000000, -1000000, 0 };
-                    ulong[] dur = new ulong[] { 10000, 10000, 10000 };
+                    ulong[] dur = new ulong[] { 2000, 2000, 10000 - 2 * 2000 };
                     for (int i = 0; i < 16; i++)
                     {
-                        ampl[0] = 20000 * i + 100000;
-                        ampl[1] = -20000 * i - 100000;
+                        ampl[0] = 40000 * i + 50000;
+                        ampl[1] = -40000 * i - 50000;
 
 #endif
-                        CStimulusFunctionNet.StimulusDeviceDataAndUnrolledData prep = stim.PrepareData(0, ampl, dur, STG_DestinationEnumNet.channeldata_current, 0);
+                        // choose, if global repeat is desired
+                        CStimulusFunctionNet.StimulusDeviceDataAndUnrolledData prep = stim.PrepareData(0, ampl, dur, STG_DestinationEnumNet.channeldata_current, 1);
                         if (first)
                         {
                             first = false;
