@@ -121,8 +121,67 @@ interrupt void interrupt6(void)
 	int i;
 	CSL_Edma3ccRegsOvly edma3ccRegs = (CSL_Edma3ccRegsOvly)CSL_EDMA3CC_0_REGS;
 	
-	Int32* restrict HS1_Data_p = (Int32 *)&MeaData[DATA_HEADER_SIZE];
-	Int32* restrict IF_Data_p  = (Int32 *)&MeaData[DATA_HEADER_SIZE+HS1_CHANNELS+DATA_HEADER_SIZE];
+	// search start of data segments
+	Int32  HS_data_header[NUM_SEGMENTS];
+    // command information decoding
+    // bits 31:28 Data Source/Group
+    // bits 27:21 reserved for future use
+    // bit 20:19 data format '00': 2x16 bit, '01': 1x32 bit, '10': 64 bit in 2 DWords
+    // bit 18 '0': Analog data, '1': Digital data / don't alow data manipulation (no filter, no sign/unsign change)
+    // bit 17 last Frame/Segment of sweep
+    // bit 16 first Frame/Segment of sweep
+#ifdef _W2100
+    // bits 15:8 segment number / sub group
+    // bits 7:0 length of this packet excluding token counter/CRC
+#else
+    // bits 15:9 segment number / sub group
+    // bits 8:0 length of this packet excluding token counter/CRC
+#endif
+
+    // Data Source/Group decoding:
+    // 0: Header
+#ifdef _W2100
+    // 1: Receiver 0 Data (up to 32 segments, each segment has up to 255 32-bit words)
+    // 2: Receiver 1 Data (up to 32 segments, each segment has up to 255 32-bit words)
+    // 3: IFB Analog Data
+    // 4: DSP Data (up to 128 segments, each segment has up to 256 32-bit words)
+    // 7: Digital Data
+#else
+    // 1,2,3,4: Extender Unit 0 Data (up to 4*16 segments, each segment has up to 511 32-bit words)
+    // 5,6,7,8: Extender Unit 1 Data (up to 4*16 segments, each segment has up to 511 32-bit words)
+    // 9: IFB Analog Data
+    // A: Analog data
+    // B: DAC data
+    // C: DSP Data (up to 128 segments, each segment has up to 256 32-bit words)
+    // D: Digital Data
+#endif
+    // E: reserved
+    // F: Fooder/Tail
+
+	Int32* restrict HS_Data_p[NUM_SEGMENTS];
+	Int32* restrict IF_Data_p  = 0;
+	int index = 0;
+	for(i = 0;i < NUM_SEGMENTS;i++)
+	{
+		HS_data_header[i] = MeaData[index];
+		HS_Data_p[i] = (Int32 *)&MeaData[index + 1];
+#ifdef _W2100
+		if ((HS_data_header[i] & 0xF0000000) == 0x30000000) // IF Analog
+#else
+		if ((HS_data_header[i]& 0xF0000000) == 0x90000000) // IF Analog
+#endif
+		{
+			IF_Data_p =  (Int32 *)&MeaData[index + 1];
+		}
+        // debug
+		// MonitorData[i] = MeaData[index];
+
+#ifdef _W2100
+		index += (HS_data_header[i] & 0xFF) + 1;
+#else
+		index += (HS_data_header[i] & 0x1FF) + 1;
+#endif
+	}
 
 	// Prepare DMA for next data transfer DO NOT CHANGE THE FOLLOWING LINE
 	CSL_FINST(edma3ccRegs->ICRH, EDMA3CC_ICRH_I52, CLEAR);	// Clear pending interrupt for event 52
@@ -140,7 +199,7 @@ interrupt void interrupt6(void)
 	}
 	WRITE_REGISTER(IFB_AUX_OUT, aux_value); // set  AUX 1 to value one
 
-#if 0
+#ifndef _W2100
 	// Monitor Analog in
     if (IF_Data_p[0] > threshold)
     {
@@ -302,24 +361,24 @@ interrupt void interrupt6(void)
 #endif
 #endif
 
-	//int f = HS1_Data_p[0] > 0;
+	//int f = HS_Data_p[0][0] > 0;
 	//WRITE_REGISTER(0x0480, f); // Feedback
-
+/*
 	MonitorData[0] = (timestamp >> 4) & 0xFF;
-	MonitorData[1] = HS1_Data_p[4] + 80;
-	MonitorData[2] = (IF_Data_p[0] - 1190000) >> 15;
-	//MonitorData[3] = HS1_Data_p[6] + 30;
-	MonitorData[4] = HS1_Data_p[0] >> 10;
-	MonitorData[5] = HS1_Data_p[8] + 30;
-	MonitorData[6] = HS1_Data_p[9] + 30;
-
+	MonitorData[1] = HS_Data_p[0][4] + 80;
+	MonitorData[2] = (IF_Data_p[0][0] - 1190000) >> 15;
+	//MonitorData[3] = HS_Data_p[0][6] + 30;
+	MonitorData[4] = HS_Data_p[0][0] >> 10;
+	MonitorData[5] = HS_Data_p[0][8] + 30;
+	MonitorData[6] = HS_Data_p[0][9] + 30;
+*/
 	for(i = 0; i < 64; i++)
 	{
-		//MonitorData[i] = HS1_Data_p[i];
+		//MonitorData[i] = HS_Data_p[0][i];
 	}
 	for(i = 32; i < 64; i++)
 	{
-		//MonitorData[i] = IF_Data_p[i];
+		//MonitorData[i] = IF_Data_p[0][i];
 	}
 
     CSL_FINST(edma3ccRegs->ESRH, EDMA3CC_ESRH_E53, SET);    // Manual Trigger Event 53

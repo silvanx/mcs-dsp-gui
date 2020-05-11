@@ -20,8 +20,6 @@
 #define DOWNSAMPLE         	1
 #define FRAMES_PER_LOOP    	1
 
-extern Int32 adc_intern[HS1_CHANNELS + IF_CHANNELS];
-
 extern int threshold;
 extern int deadtime;
 
