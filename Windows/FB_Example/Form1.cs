@@ -131,25 +131,37 @@ namespace my_interface
         {
             CMcsUsbFactoryNet factorydev = new CMcsUsbFactoryNet(); // Create object of class CMcsUsbFactoryNet (provides firmware upgrade and register access capabilities)
 
-            if (factorydev.Connect(DspPort, LockMask) == 0)  // if connect call returns zero, connect has been successful
+            if (DspPort != null || RawPort != null)
             {
-                //int Thresh = (int)(Convert.ToDouble(SpikeThresh.Text) / (5000000 / Math.Pow(2, 24) / 10)); // 5 V input range ADC, 24bit ADC, 10 volt hardware gain
-                int Thresh = (int)(Convert.ToInt64(SpikeThresh.Text) * 8388608 / 2500);
-                int DeadTime = Convert.ToInt32(Deadtime.Text) * Fs / 1000;
+                CMcsUsbListEntryNet port = DspPort;
+                if (port == null)
+                {
+                    port = RawPort;
+                }
+                if (factorydev.Connect(port, LockMask) == 0) // if connect call returns zero, connect has been successful
+                {
+                    //int Thresh = (int)(Convert.ToDouble(SpikeThresh.Text) / (5000000 / Math.Pow(2, 24) / 10)); // 5 V input range ADC, 24bit ADC, 10 volt hardware gain
+                    int Thresh = (int) (Convert.ToInt64(SpikeThresh.Text) * 8388608 / 2500);
+                    int DeadTime = Convert.ToInt32(Deadtime.Text) * Fs / 1000;
 
-                int StimAmplitude = 2 * Convert.ToInt32(BoxStimAmplitude.Text); // resolution is 500 uV / bit, thus factor allows user to specify stim amplitude in mV
-                int StimDuration = Convert.ToInt32(BoxStimDuration.Text) / (1000000 / Fs);
-                int StimRepeats = Convert.ToInt32(BoxStimRepeats.Text);
-                int StimStepsize = 2 * Convert.ToInt32(BoxStimStepsize.Text); // resolution is 500 uV / bit, thus factor allows user to specify stim amplitude in mV
+                    int StimAmplitude = 2 * Convert.ToInt32(BoxStimAmplitude.Text); // resolution is 500 uV / bit, thus factor allows user to specify stim amplitude in mV
+                    int StimDuration = Convert.ToInt32(BoxStimDuration.Text) / (1000000 / Fs);
+                    int StimRepeats = Convert.ToInt32(BoxStimRepeats.Text);
+                    int StimStepsize = 2 * Convert.ToInt32(BoxStimStepsize.Text); // resolution is 500 uV / bit, thus factor allows user to specify stim amplitude in mV
 
-                factorydev.WriteRegister(0x1000, (uint)Thresh);
-                factorydev.WriteRegister(0x1004, (uint)DeadTime);
-                factorydev.WriteRegister(0x1008, (uint)StimAmplitude);
-                factorydev.WriteRegister(0x100c, (uint)StimDuration);
-                factorydev.WriteRegister(0x1010, (uint)StimRepeats);
-                factorydev.WriteRegister(0x1014, (uint)StimStepsize);
+                    factorydev.WriteRegister(0x1000, (uint) Thresh);
+                    factorydev.WriteRegister(0x1004, (uint) DeadTime);
+                    factorydev.WriteRegister(0x1008, (uint) StimAmplitude);
+                    factorydev.WriteRegister(0x100c, (uint) StimDuration);
+                    factorydev.WriteRegister(0x1010, (uint) StimRepeats);
+                    factorydev.WriteRegister(0x1014, (uint) StimStepsize);
 
-                factorydev.Disconnect();
+                    factorydev.Disconnect();
+                }
+            }
+            else
+            {
+                MessageBox.Show("No port available");
             }
         }
 
@@ -157,28 +169,41 @@ namespace my_interface
         {
             CMcsUsbFactoryNet factorydev = new CMcsUsbFactoryNet();
 
-            if (factorydev.Connect(DspPort, LockMask) == 0)
+            if (DspPort != null || RawPort != null)
             {
-                string FirmwareFile;
-                FirmwareFile = System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location);
-                if (factorydev.GetDeviceId().IdProduct == ProductIdEnumNet.MEA2100)
+                CMcsUsbListEntryNet port = DspPort;
+                if (port == null)
                 {
-                    FirmwareFile += @"\..\..\..\..\DSP\FB_Example\Release\";
-                    FirmwareFile += "FB_Example.bin";
-                }
-                else
-                {
-                    FirmwareFile += @"\..\..\..\..\DSP\FB_W2100_SCU_MEA256\Release\";
-                    FirmwareFile += "FB_W2100_SCU_MEA256.bin";
+                    port = RawPort;
                 }
 
-                factorydev.Disconnect();
-
-                bool success = factorydev.LoadUserFirmware(FirmwareFile, DspPort, LockMask); // Code for uploading compiled binary
-                if (!success)
+                if (factorydev.Connect(port, LockMask) == 0)
                 {
-                    MessageBox.Show("Firmware upload failed!");
+                    string FirmwareFile;
+                    FirmwareFile = System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location);
+                    if (factorydev.GetDeviceId().IdProduct == ProductIdEnumNet.MEA2100)
+                    {
+                        FirmwareFile += @"\..\..\..\..\DSP\FB_Example\Release\";
+                        FirmwareFile += "FB_Example.bin";
+                    }
+                    else
+                    {
+                        FirmwareFile += @"\..\..\..\..\DSP\FB_W2100_SCU_MEA256\Release\";
+                        FirmwareFile += "FB_W2100_SCU_MEA256.bin";
+                    }
+
+                    factorydev.Disconnect();
+
+                    bool success = factorydev.LoadUserFirmware(FirmwareFile, port, LockMask); // Code for uploading compiled binary
+                    if (!success)
+                    {
+                        MessageBox.Show("Firmware upload failed!");
+                    }
                 }
+            }
+            else
+            {
+                MessageBox.Show("No port available");
             }
         }
 
@@ -186,10 +211,23 @@ namespace my_interface
         {
             CMcsUsbFactoryNet factorydev = new CMcsUsbFactoryNet(); // Create object of class CMcsUsbFactoryNet (provides firmware upgrade and register access capabilities)
 
-            if (factorydev.Connect(DspPort, LockMask) == 0)  // if connect call returns zero, connect has been successful
+            if (DspPort != null || RawPort != null)
             {
-                factorydev.Coldstart(CFirmwareDestinationNet.MCU1);
-                factorydev.Disconnect();
+                CMcsUsbListEntryNet port = DspPort;
+                if (port == null)
+                {
+                    port = RawPort;
+                }
+
+                if (factorydev.Connect(port, LockMask) == 0) // if connect call returns zero, connect has been successful
+                {
+                    factorydev.Coldstart(CFirmwareDestinationNet.MCU1);
+                    factorydev.Disconnect();
+                }
+            }
+            else
+            {
+                MessageBox.Show("No port available");
             }
         }
 
