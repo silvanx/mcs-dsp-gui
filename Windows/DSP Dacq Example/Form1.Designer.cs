@@ -55,6 +55,7 @@
             this.cbChart2 = new System.Windows.Forms.CheckBox();
             this.btResetSettings = new System.Windows.Forms.Button();
             this.btStopTrigger = new System.Windows.Forms.Button();
+            this.listBox1 = new System.Windows.Forms.ListBox();
             ((System.ComponentModel.ISupportInitialize)(this.dspData)).BeginInit();
             this.SuspendLayout();
             // 
@@ -287,11 +288,20 @@
             this.btStopTrigger.UseVisualStyleBackColor = true;
             this.btStopTrigger.Click += new System.EventHandler(this.btStopTrigger_Click);
             // 
+            // listBox1
+            // 
+            this.listBox1.FormattingEnabled = true;
+            this.listBox1.Location = new System.Drawing.Point(649, 183);
+            this.listBox1.Name = "listBox1";
+            this.listBox1.Size = new System.Drawing.Size(165, 303);
+            this.listBox1.TabIndex = 26;
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(658, 528);
+            this.ClientSize = new System.Drawing.Size(830, 528);
+            this.Controls.Add(this.listBox1);
             this.Controls.Add(this.btStopTrigger);
             this.Controls.Add(this.btResetSettings);
             this.Controls.Add(this.cbChart2);
@@ -344,6 +354,7 @@
         private System.Windows.Forms.CheckBox cbChart2;
         private System.Windows.Forms.Button btResetSettings;
         private System.Windows.Forms.Button btStopTrigger;
+        private System.Windows.Forms.ListBox listBox1;
     }
 }
 

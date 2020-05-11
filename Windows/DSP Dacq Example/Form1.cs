@@ -306,7 +306,11 @@ namespace MCS_USB_Windows_Forms_Application1
                 dspData.ChartAreas[0].AxisY.Minimum = min - 5;
                 dspData.ChartAreas[0].AxisY.Maximum = max + 5;
             }
-
+            listBox1.Items.Clear();
+            for (int i = 0; i < 10; i++)
+            {
+                listBox1.Items.Add(data[series0Channel.SelectedIndex + i].ToString("X8"));
+            }
         }
 
         private void AddPoint(int series, int i, int data, ref int min, ref int max)
