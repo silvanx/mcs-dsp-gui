@@ -88,6 +88,12 @@ void MEA21_enableData()
         if (ChannelsPerSweepConfigured) break;                            // a non-zero value indicated the FPGA has finished configuration
     }
 
+    if (ChannelsPerSweepConfigured > MAX_DATAPOINTS_PER_FRAME)
+    {
+    	// You should increase MAX_DATAPOINTS_PER_FRAME if this condition is true
+    	ChannelsPerSweepConfigured = MAX_DATAPOINTS_PER_FRAME;
+    }
+
     init_timer();
     init_dma(ChannelsPerSweepConfigured);
     init_qdma(ChannelsPerSweepConfigured);
