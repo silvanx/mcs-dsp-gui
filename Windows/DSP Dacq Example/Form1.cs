@@ -209,12 +209,12 @@ namespace MCS_USB_Windows_Forms_Application1
                         ampl[4] = i + 2;
 #else
                     // Different strength
-                    int[] ampl = new[] { 1000000, -1000000, 0 };
+                    int[] ampl = new[] { 100000, -100000, 0 };
                     ulong[] dur = new ulong[] { 2000, 2000, 10000 - 2 * 2000 };
                     for (int i = 0; i < 16; i++)
                     {
-                        ampl[0] = 40000 * i + 50000;
-                        ampl[1] = -40000 * i - 50000;
+                        ampl[0] = 20000 * i + 50000;
+                        ampl[1] = -20000 * i - 50000;
 
 #endif
                         // choose, if global repeat is desired
