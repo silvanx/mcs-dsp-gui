@@ -197,7 +197,7 @@ interrupt void interrupt6(void)
 	{
 	//	aux_value &= ~1;
 	}
-	WRITE_REGISTER(IFB_AUX_OUT, aux_value); // set  AUX 1 to value one
+	////// WRITE_REGISTER(IFB_AUX_OUT, aux_value); // set  AUX 1 to value one
 
 #ifndef _W2100
 	// Monitor Analog in
@@ -311,14 +311,20 @@ interrupt void interrupt6(void)
 	int nextsegment[16] =
 	{
 			0, 1, 2, 3,
-			2, 1, 0, 2,
-			4, 8, 7, 6,
-			5, 4, 3, 2,
+			4, 5, 6, 7,
+			8, 9, 10, 11,
+			12, 13, 14, 15,
 	};
 	static int j = 0;
 	if (timestamp == PERIOD - 50)
 	{
+		aux_value |= 1;
+		WRITE_REGISTER(IFB_AUX_OUT, aux_value); // set  AUX 1 to value one
+
 		WRITE_REGISTER(0x9A80, 0x1000 * nextsegment[j] +  0x100); // Trigger Channel 1
+
+		aux_value &= ~1;
+		WRITE_REGISTER(IFB_AUX_OUT, aux_value); // set AUX 1 to value zero
 		j++;
 	}
 
@@ -326,7 +332,14 @@ interrupt void interrupt6(void)
 	{
 		if (timestamp % PERIOD == 0)
 		{
+			aux_value |= 1;
+			WRITE_REGISTER(IFB_AUX_OUT, aux_value); // set  AUX 1 to value one
+
 			WRITE_REGISTER(0x9A80, 0x1000 * nextsegment[j] +  0x100); // Trigger Channel 1
+
+			aux_value &= ~1;
+			WRITE_REGISTER(IFB_AUX_OUT, aux_value); // set AUX 1 to value zero
+
 			j++;
 		}
 	}
@@ -384,7 +397,7 @@ interrupt void interrupt6(void)
     CSL_FINST(edma3ccRegs->ESRH, EDMA3CC_ESRH_E53, SET);    // Manual Trigger Event 53
 
 	aux_value &= ~1;
-	WRITE_REGISTER(IFB_AUX_OUT, aux_value); // set AUX 1 to value zero
+	////// WRITE_REGISTER(IFB_AUX_OUT, aux_value); // set AUX 1 to value zero
 }
 
 
