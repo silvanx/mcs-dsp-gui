@@ -110,6 +110,65 @@ interrupt void interrupt8(void)
 // DMA finished Interrupt
 interrupt void interrupt6(void)
 {
+	// Define sampling frequency and period
+	const float f_s = 20000;
+	const float T_s = 1 / f_s;
+
+	// Define controller call period (20ms)
+	const float T_controller = 0.02; 
+
+	// Calculate T_controller to T_s ratio to know every how many calls of interrupt 6 we need to call the controller
+	const int ratio_T_controller_T_s = T_controller / T_s;
+
+	// Define SetPoint being the target beta ARV 
+    const float SetPoint = 5*10^-3;                     //set SetPoint randomly to be 5mV
+    
+	// Define a variable that is true just the first run
+    static int first_run = 1; 
+
+    // Define the upper and lower bounds for the controller output (i.e. DBS amplitude)
+    const float MaxValue = 300 * 10^(-6);           //in A
+    const float MinValue = 0;                       //in A
+
+    // Define the step between pulses amplitude
+    const float delta_DBS_amp = ( MaxValue - MinValue ) / 15;
+
+    // Define vector to store the amplitude of the stimulation pulses
+    static float pulse[16] = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15};
+
+    // Define dummy variable
+    static int c = 0;
+
+    // Multiply pulse vector by delta_DBS_amp to get the vector assoicated with the amplitude of the stimulation pulses
+    if (first_run)
+    {
+        for (c = 0; c < 16; c++)
+        {
+            pulse[c] = pulse[c] * delta_DBS_amp;
+        }
+        // Not anymore the first run (thus, this if statement will be run only in the first call of interrupt6 function)
+        first_run = 0;
+	}
+
+    // Define current error
+    static float error = 0;
+
+    // Define the applied bounded controller output value (i.e. applied pulse amplitude)
+    static float OutputValue = 0;
+
+    // Set increment initially to 0
+    static float increment = 0.0;
+
+    // Define index of stimulation pulse to be applied
+    static int stim_index = 0;
+
+    // Define difference between the amplitude of the required stimulation pulse and the one to be applied
+    static float pulse_amp_diff = 0;
+
+    // Define state value
+    static float state_value = 0;
+    
+	// Define counter for function run
 	static int timestamp = 0; // exists only in this function but is created only once on the first function call (i.e. static)
 	static int segment = 0;
 	static int crossing_detected = 0;
@@ -307,6 +366,77 @@ interrupt void interrupt6(void)
 	}
 #else
 #if 1
+    // Increment timestamp each function call and call controller when T_controller elapsed i.e. when timestamp ==	ratio_T_controller_T_s
+    if (++timestamp ==	ratio_T_controller_T_s)
+    {
+        // set AUX output to 1
+        aux_value &= 1;
+	    WRITE_REGISTER(IFB_AUX_OUT, aux_value); 
+        
+        // reset timestamp counter
+        timestamp=0;
+        
+        // Calculate current beta ARV (differential recording)
+        state_value = abs(HS_Data_p[2] - HS_Data_p[0]) * 10^(-12); //convert from pV to V
+
+        // Calculate Error - if SetPoint > 0.0,
+        // then normalize error with respect to SetPoint
+        if (SetPoint==0)
+        {
+            error = state_value - SetPoint;                     //in V
+            increment = 0.0;
+        }
+        else
+        {
+            error = (state_value - SetPoint) / SetPoint;          //in V
+            if (error>0)
+                increment = delta_DBS_amp;
+            else
+                increment = -1*delta_DBS_amp;
+        }
+
+        // Bound the controller output (between MinValue - MaxValue)
+        if ( OutputValue + increment > MaxValue )
+            OutputValue = MaxValue;
+        else if ( OutputValue + increment < MinValue )
+            OutputValue = MinValue;
+        else
+            OutputValue = OutputValue + increment;
+        
+        // Determine the pulse closest to OutputValue (and its index)
+        // Set randomly the index of the pulse closest to OutputValue to be 0
+        stim_index = 0;
+
+        // Calculate the difference between OutputValue and pulse of index stim_index
+        pulse_amp_diff = abs(pulse[stim_index] - OutputValue);
+
+        // Pick the stimulation pulse of amplitude closest to OutputValue
+        // Loop around all 16 pulses
+        for (c = 1; c < 16; c++)
+        {
+            // Check if this pulse is the closest to OuputValue
+            if ( abs(pulse[c] - OutputValue) < pulse_amp_diff)
+            {
+                // Update the index of the closest pulse to OutputValue
+                stim_index = c;
+
+                // Update the difference between OutputValue and pulse of index stim_index
+               pulse_amp_diff = abs(pulse[c] - OutputValue);
+            }
+        }
+        
+        // Relate the pulse index to the memory segment index assoicated with it 
+        seg = stim_index;
+
+        // Update stimulation pulse
+        WRITE_REGISTER(0x9A80, 0x1000 * seg +  0x100); // Trigger Channel 1
+        
+        // Set AUX 1 output value to zero
+        aux_value &= ~1;
+	    WRITE_REGISTER(IFB_AUX_OUT, aux_value);
+     }
+
+/*
 #define PERIOD 200
 	int nextsegment[16] =
 	{
@@ -336,6 +466,8 @@ interrupt void interrupt6(void)
 		WRITE_REGISTER(0x9A80, 0); // Stop Trigger
 	}
 	++timestamp;
+*/
+
 #else
 	if (timestamp == 5000)
 	{
