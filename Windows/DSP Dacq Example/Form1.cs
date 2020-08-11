@@ -228,7 +228,7 @@ namespace MCS_USB_Windows_Forms_Application1
                     int[] ampl = new[] { 100000, -100000, 0 };
 
                     // Define the duraion vector of the 3 segments of the biphasic pulse (in us)
-                    ulong[] dur = new ulong[] { 60, 60, 7692 - 2 * 60};
+                    ulong[] dur = new ulong[] { 3000, 3000, 12000};
 
                     // Define each pulse
                     for (int i = 0; i < 16; i++)
@@ -238,8 +238,8 @@ namespace MCS_USB_Windows_Forms_Application1
                         ampl[1] = -delta_DBS_amp * i - 1;
 
                         // Define the duration (us) of each of the 3 segments
-                        dur[0] = (ulong)pulse_on_phase_dur;
-                        dur[1] = (ulong)pulse_on_phase_dur;
+                        //dur[0] = (ulong)pulse_on_phase_dur;
+                        //dur[1] = (ulong)pulse_on_phase_dur;
                         //dur[2] = (ulong)pulse_off_phase_dur;
 
 #endif

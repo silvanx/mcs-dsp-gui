@@ -118,17 +118,17 @@ interrupt void interrupt6(void)
 	const float T_controller = 0.02; 
 
 	// Calculate T_controller to T_s ratio to know every how many calls of interrupt 6 we need to call the controller
-	const int ratio_T_controller_T_s = T_controller / T_s;
+	const int ratio_T_controller_T_s = 1000;  //5 * 18 / 1000 * f_s;
 
 	// Define SetPoint being the target beta ARV 
-    const float SetPoint = 5*10^-3;                     //set SetPoint randomly to be 5mV
+    const float SetPoint = 12000;                     //set SetPoint randomly to be 5mV ie 5000uV
     
 	// Define a variable that is true just the first run
     static int first_run = 1; 
 
     // Define the upper and lower bounds for the controller output (i.e. DBS amplitude)
-    const float MaxValue = 300 * 10^(-6);           //in A
-    const float MinValue = 0;                       //in A
+    const float MaxValue = 300;                     //in uA
+    const float MinValue = 0;                       //in uA
 
     // Define the step between pulses amplitude
     const float delta_DBS_amp = ( MaxValue - MinValue ) / 15;
@@ -256,7 +256,7 @@ interrupt void interrupt6(void)
 	{
 	//	aux_value &= ~1;
 	}
-	WRITE_REGISTER(IFB_AUX_OUT, aux_value); // set  AUX 1 to value one
+	///// WRITE_REGISTER(IFB_AUX_OUT, aux_value); // set  AUX 1 to value one
 
 #ifndef _W2100
 	// Monitor Analog in
@@ -370,25 +370,25 @@ interrupt void interrupt6(void)
     if (++timestamp ==	ratio_T_controller_T_s)
     {
         // set AUX output to 1
-        aux_value &= 1;
+        aux_value |= 1;
 	    WRITE_REGISTER(IFB_AUX_OUT, aux_value); 
         
         // reset timestamp counter
         timestamp=0;
         
         // Calculate current beta ARV (differential recording)
-        state_value = abs(HS_Data_p[2] - HS_Data_p[0]) * 10^(-12); //convert from pV to V
+        state_value = abs(HS_Data_p[0][2] - HS_Data_p[0][0]); // NB: In uV
 
         // Calculate Error - if SetPoint > 0.0,
         // then normalize error with respect to SetPoint
         if (SetPoint==0)
         {
-            error = state_value - SetPoint;                     //in V
+            error = state_value - SetPoint;                     //in uV
             increment = 0.0;
         }
         else
         {
-            error = (state_value - SetPoint) / SetPoint;          //in V
+            error = (state_value - SetPoint) / SetPoint;        //in uV
             if (error>0)
                 increment = delta_DBS_amp;
             else
@@ -421,7 +421,7 @@ interrupt void interrupt6(void)
                 stim_index = c;
 
                 // Update the difference between OutputValue and pulse of index stim_index
-               pulse_amp_diff = abs(pulse[c] - OutputValue);
+                pulse_amp_diff = abs(pulse[c] - OutputValue);
             }
         }
         
@@ -432,9 +432,31 @@ interrupt void interrupt6(void)
         WRITE_REGISTER(0x9A80, 0x1000 * seg +  0x100); // Trigger Channel 1
         
         // Set AUX 1 output value to zero
-        aux_value &= ~1;
+        aux_value &= 0;
 	    WRITE_REGISTER(IFB_AUX_OUT, aux_value);
+
+        MonitorData[1] = OutputValue;
+        MonitorData[2] = stim_index;
+        MonitorData[3] = delta_DBS_amp;
      }
+
+MonitorData[0] = HS_Data_p[0][2];
+MonitorData[6] = pulse[0];
+MonitorData[7] = pulse[1];
+MonitorData[8] = pulse[2];
+MonitorData[9] = pulse[3];
+MonitorData[10] = pulse[4];
+MonitorData[11] = pulse[5];
+MonitorData[12] = pulse[6];
+MonitorData[13] = pulse[7];
+MonitorData[14] = pulse[8];
+MonitorData[15] = pulse[9];
+MonitorData[16] = pulse[10];
+MonitorData[17] = pulse[11];
+MonitorData[18] = pulse[12];
+MonitorData[19] = pulse[13];
+MonitorData[20] = pulse[14];
+MonitorData[21] = pulse[15];
 
 /*
 #define PERIOD 200
@@ -516,7 +538,7 @@ interrupt void interrupt6(void)
     CSL_FINST(edma3ccRegs->ESRH, EDMA3CC_ESRH_E53, SET);    // Manual Trigger Event 53
 
 	aux_value &= ~1;
-	WRITE_REGISTER(IFB_AUX_OUT, aux_value); // set AUX 1 to value zero
+	////// WRITE_REGISTER(IFB_AUX_OUT, aux_value); // set AUX 1 to value zero
 }
 
 
