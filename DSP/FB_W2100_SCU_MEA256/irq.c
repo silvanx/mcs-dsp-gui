@@ -120,8 +120,11 @@ interrupt void interrupt6(void)
 	// Calculate T_controller to T_s ratio to know every how many calls of interrupt 6 we need to call the controller
 	const int ratio_T_controller_T_s = 1000;  //5 * 18 / 1000 * f_s;
 
-	// Define SetPoint being the target beta ARV 
-    const float SetPoint = 12000;                     //set SetPoint randomly to be 5mV ie 5000uV
+    // Define the upper threshold for target beta ARV range
+    const float UpperThreshold = 12000;           // in uV
+
+    // Define the lower threshold for target beta ARV range
+    const float LowerThreshold = 11000;           // in uV
     
 	// Define a variable that is true just the first run
     static int first_run = 1; 
@@ -379,57 +382,66 @@ interrupt void interrupt6(void)
         // Calculate current beta ARV (differential recording)
         state_value = abs(HS_Data_p[0][2] - HS_Data_p[0][0]); // NB: In uV
 
-        // Calculate Error - if SetPoint > 0.0,
-        // then normalize error with respect to SetPoint
-        if (SetPoint==0)
+        // Check how to update controller value and calculate
+        // error with respect to upper/lower threshold
+        if (state_value > UpperThreshold)	   // Increase if above upper threshold
         {
-            error = state_value - SetPoint;                     //in uV
-            increment = 0.0;
+            error = (state_value - UpperThreshold) / UpperThreshold;
+            increment = delta_DBS_amp;
         }
+        else if (state_value < LowerThreshold) // Decrease if below lower threshold
+        {
+            error = (state_value - LowerThreshold) / LowerThreshold;
+            increment = -delta_DBS_amp;
+        }
+        else			       // Do nothing when within upper and lower thresholds
+        {
+            error = 0;
+            increment = 0;
+        }
+
+        if (increment == 0)
+            MonitorData[4] = 1;
         else
         {
-            error = (state_value - SetPoint) / SetPoint;        //in uV
-            if (error>0)
-                increment = delta_DBS_amp;
+            // Bound the controller output (between MinValue - MaxValue)
+            if ( OutputValue + increment > MaxValue )
+                OutputValue = MaxValue;
+            else if ( OutputValue + increment < MinValue )
+                OutputValue = MinValue;
             else
-                increment = -1*delta_DBS_amp;
-        }
-
-        // Bound the controller output (between MinValue - MaxValue)
-        if ( OutputValue + increment > MaxValue )
-            OutputValue = MaxValue;
-        else if ( OutputValue + increment < MinValue )
-            OutputValue = MinValue;
-        else
-            OutputValue = OutputValue + increment;
+                OutputValue = OutputValue + increment;
         
-        // Determine the pulse closest to OutputValue (and its index)
-        // Set randomly the index of the pulse closest to OutputValue to be 0
-        stim_index = 0;
+            // Determine the pulse closest to OutputValue (and its index)
+            // Set randomly the index of the pulse closest to OutputValue to be 0
+            stim_index = 0;
 
-        // Calculate the difference between OutputValue and pulse of index stim_index
-        pulse_amp_diff = abs(pulse[stim_index] - OutputValue);
+            // Calculate the difference between OutputValue and pulse of index stim_index
+            pulse_amp_diff = abs(pulse[stim_index] - OutputValue);
 
-        // Pick the stimulation pulse of amplitude closest to OutputValue
-        // Loop around all 16 pulses
-        for (c = 1; c < 16; c++)
-        {
-            // Check if this pulse is the closest to OuputValue
-            if ( abs(pulse[c] - OutputValue) < pulse_amp_diff)
+            // Pick the stimulation pulse of amplitude closest to OutputValue
+            // Loop around all 16 pulses
+            for (c = 1; c < 16; c++)
             {
-                // Update the index of the closest pulse to OutputValue
-                stim_index = c;
+                // Check if this pulse is the closest to OuputValue
+                if ( abs(pulse[c] - OutputValue) < pulse_amp_diff)
+                {
+                    // Update the index of the closest pulse to OutputValue
+                    stim_index = c;
 
-                // Update the difference between OutputValue and pulse of index stim_index
-                pulse_amp_diff = abs(pulse[c] - OutputValue);
+                    // Update the difference between OutputValue and pulse of index stim_index
+                    pulse_amp_diff = abs(pulse[c] - OutputValue);
+                }
             }
-        }
         
-        // Relate the pulse index to the memory segment index assoicated with it 
-        seg = stim_index;
+            // Relate the pulse index to the memory segment index assoicated with it 
+            seg = stim_index;
 
-        // Update stimulation pulse
-        WRITE_REGISTER(0x9A80, 0x1000 * seg +  0x100); // Trigger Channel 1
+            // Update stimulation pulse
+            WRITE_REGISTER(0x9A80, 0x1000 * seg +  0x100); // Trigger Channel 1
+
+            MonitorData[4] = 0;
+        }
         
         // Set AUX 1 output value to zero
         aux_value &= 0;
