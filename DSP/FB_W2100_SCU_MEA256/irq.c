@@ -121,7 +121,16 @@ interrupt void interrupt6(void)
 	const int ratio_T_controller_T_s = 1000;  //5 * 18 / 1000 * f_s;
 
 	// Define SetPoint being the target beta ARV 
-    const float SetPoint = 12000;                     //set SetPoint randomly to be 5mV ie 5000uV
+    const float SetPoint = 8000;                     //set SetPoint randomly to be 12mV ie 12000uV
+
+    // Determine how aggressively the controller reacts to the current error with setting Proportional Gain
+    const float Kp=0.23;                        //in AU
+    
+    // Determine how fast the controller integrates the error history by setting Integral Time Constant
+    const float Ti=0.20;                        //in s
+    
+    // Determine far into the future the controller predicts future errors setting Derivative Time Constant
+    //const float Td=0.19;                        //in s
     
 	// Define a variable that is true just the first run
     static int first_run = 1; 
@@ -150,14 +159,27 @@ interrupt void interrupt6(void)
         first_run = 0;
 	}
 
-    // Define current error
+    // Define integral term
+    static float ITerm=0;
+
+    // Define derivative term
+    // static float DTerm=0;
+
+    // Define difference in time between previous and current frames
+    const float delta_time = T_s;
+
+    // Define current and last errors
+    static float last_error = 0;
     static float error = 0;
+
+    // Define delta Error
+    static float delta_error = 0;
+
+    // Define u(t) which is calculated controller output (i.e. pulse amplitude)
+    static float u = 0; 
 
     // Define the applied bounded controller output value (i.e. applied pulse amplitude)
     static float OutputValue = 0;
-
-    // Set increment initially to 0
-    static float increment = 0.0;
 
     // Define index of stimulation pulse to be applied
     static int stim_index = 0;
@@ -366,6 +388,22 @@ interrupt void interrupt6(void)
 	}
 #else
 #if 1
+    // Calculate current beta ARV (differential recording)
+    state_value = abs(HS_Data_p[0][2] - HS_Data_p[0][0]); // NB: In uV
+
+    // Calculate Error - if SetPoint > 0.0, then normalize error with respect to SetPoint
+    if (SetPoint==0)
+    {
+        error = state_value - SetPoint;                       //in V
+    }
+    else
+    {
+        error = (state_value - SetPoint) / SetPoint;          //in V
+    }
+
+    // Calculate integral term
+    ITerm += error * delta_time;   
+
     // Increment timestamp each function call and call controller when T_controller elapsed i.e. when timestamp ==	ratio_T_controller_T_s
     if (++timestamp ==	ratio_T_controller_T_s)
     {
@@ -376,32 +414,33 @@ interrupt void interrupt6(void)
         // reset timestamp counter
         timestamp=0;
         
-        // Calculate current beta ARV (differential recording)
-        state_value = abs(HS_Data_p[0][2] - HS_Data_p[0][0]); // NB: In uV
+        // Define difference in error between previous and current frames
+        delta_error = error - last_error;
 
-        // Calculate Error - if SetPoint > 0.0,
-        // then normalize error with respect to SetPoint
-        if (SetPoint==0)
-        {
-            error = state_value - SetPoint;                     //in uV
-            increment = 0.0;
-        }
-        else
-        {
-            error = (state_value - SetPoint) / SetPoint;        //in uV
-            if (error>0)
-                increment = delta_DBS_amp;
-            else
-                increment = -1*delta_DBS_amp;
-        }
+        // Calculate derivative term
+        //DTerm=delta_error/delta_time;
 
-        // Bound the controller output (between MinValue - MaxValue)
-        if ( OutputValue + increment > MaxValue )
+        // Calculate u(t)
+        u = Kp * ( error + 1/Ti*ITerm /*+ Td*DTerm */);
+        
+        // Bound the controller output if necessary (between MinValue - MaxValue)
+        if (u>MaxValue)
+        {
             OutputValue = MaxValue;
-        else if ( OutputValue + increment < MinValue )
+            //ITerm -= error * delta_time; 	// Back-calculate the integral error
+            MonitorData[4] = 0;
+        }
+        else if(u<MinValue)
+        {
             OutputValue = MinValue;
+            //ITerm -= error * delta_time; 	// Back-calculate the integral error
+            MonitorData[4] = 1;
+        }
         else
-            OutputValue = OutputValue + increment;
+        {
+            OutputValue = u;
+            MonitorData[4] = 2;
+        }
         
         // Determine the pulse closest to OutputValue (and its index)
         // Set randomly the index of the pulse closest to OutputValue to be 0
@@ -437,8 +476,15 @@ interrupt void interrupt6(void)
 
         MonitorData[1] = OutputValue;
         MonitorData[2] = stim_index;
+        MonitorData[5] = seg;
         MonitorData[3] = delta_DBS_amp;
+        MonitorData[23] = 1/Ti*ITerm;
+        MonitorData[25] = ( error + 1/Ti*ITerm /*+ Td*DTerm */);
+        MonitorData[26] = u;
      }
+
+// Update last error value
+last_error = error;
 
 MonitorData[0] = HS_Data_p[0][2];
 MonitorData[6] = pulse[0];
@@ -457,6 +503,11 @@ MonitorData[18] = pulse[12];
 MonitorData[19] = pulse[13];
 MonitorData[20] = pulse[14];
 MonitorData[21] = pulse[15];
+MonitorData[22] = ITerm;
+MonitorData[24] = error;
+MonitorData[27] = state_value;
+MonitorData[28] = SetPoint;
+
 
 /*
 #define PERIOD 200
