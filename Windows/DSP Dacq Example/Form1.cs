@@ -142,20 +142,23 @@ namespace MCS_USB_Windows_Forms_Application1
 
         private void startDacq_Click(object sender, EventArgs e)
         {
-            // Define stimulation frequency and period
-            int f_stim = 130;
-            int T_stim = (int)( (1 / f_stim) * (10 ^ 6) );       // in us
+            // Define the upper and lower bounds for the controller output (i.e. DBS frequency)
+            const int MaxValue = 250;                              //in Hz
+            const int MinValue = 0;                                //in Hz
 
-            // Define on and off phases of stimulation pulse    (in us)
-            int pulse_on_phase_dur = 60;
-            int pulse_off_phase_dur = T_stim - 2 * pulse_on_phase_dur;
+            // Define the step between pulses frquency
+            const int delta_DBS_freq = (MaxValue - MinValue) / 15; //in Hz
 
-            // Define the upper and lower bounds for the controller output
-            const int MaxValue = 300000;                //in nA
-            const int MinValue = 0;                     //in uA
+            // Define on phase of stimulation pulse  
+            const int pulse_on_phase_dur = 60;                     //in us
 
-            // Define the step between pulses amplitude
-            const int delta_DBS_amp = (MaxValue - MinValue) / 15;    // in nA
+            // Define stimulation pulse amplitude
+            const int stim_amp = 300000;                             //in uA                 
+
+            // Define variable to store stimulation frequency
+            int f_stim = 0;                                        //in Hz
+
+            ulong T_fs;
 
             startDacq.Enabled = false;
             stopDacq.Enabled = true;
@@ -227,20 +230,45 @@ namespace MCS_USB_Windows_Forms_Application1
                     // Define the amplitude vector of the 3 segments of the biphasic pulse (in nA)
                     int[] ampl = new[] { 100000, -100000, 0 };
 
-                    // Define the duraion vector of the 3 segments of the biphasic pulse (in us)
-                    ulong[] dur = new ulong[] { 3000, 3000, 12000};
+                    // Define the duration vector of the 3 segments of the biphasic pulse (in us)
+                    ulong[] dur = new ulong[] { 60, 60, 60 };
 
                     // Define each pulse
                     for (int i = 0; i < 16; i++)
                     {
-                        // Define the amplitude (nA) of each of the 3 segments
-                        ampl[0] = delta_DBS_amp * i + 1;
-                        ampl[1] = -delta_DBS_amp * i - 1;
+                        //ampl[0] = 40000 * i + 50000;
+                        //ampl[1] = -40000 * i - 50000;
+
+                        // The case of i == 0 is assoicated with no pulse, thus we treat it seperately,
+                        // by setting the pulse amplitude to be zero and DBS freuqnecy to be that of i==1
+                        if (i == 0)
+                        {
+                            f_stim = delta_DBS_freq;
+                            ampl[0] = -1;
+                            ampl[1] = 1;
+                        }
+                        // for all i != 0, DBS is on
+                        else
+                        {
+                            // Calculate stimulation frequency
+                            f_stim = i * delta_DBS_freq;
+                            T_fs = 1000000 / (ulong)f_stim;
+
+                            // Define the amplitude (uA) of each of the 3 segments
+                            ampl[0] = -1 * stim_amp;
+                            ampl[1] = stim_amp;
+
+                            // Define the duration vector of the 3 segments of the biphasic pulse (in us)
+                            //ulong[] dur = new ulong[] { 60, 60, 1 / (ulong)f_stim * 1000000 - 2 * 60 };
+
+                            // Define the duration (us) of each of the 3 segments
+                            dur[2] = T_fs - 2 * 60;
+                        }
 
                         // Define the duration (us) of each of the 3 segments
                         //dur[0] = (ulong)pulse_on_phase_dur;
                         //dur[1] = (ulong)pulse_on_phase_dur;
-                        //dur[2] = (ulong)pulse_off_phase_dur;
+                        //dur[2] = (ulong)(1 / f_stim * 10 ^ (6) - 2 * pulse_on_phase_dur);
 
 #endif
                         // choose, if global repeat is desired

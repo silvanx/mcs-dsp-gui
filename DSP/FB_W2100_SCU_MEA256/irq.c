@@ -135,25 +135,25 @@ interrupt void interrupt6(void)
 	// Define a variable that is true just the first run
     static int first_run = 1; 
 
-    // Define the upper and lower bounds for the controller output (i.e. DBS amplitude)
-    const float MaxValue = 300;                     //in uA
-    const float MinValue = 0;                       //in uA
+    // Define the upper and lower bounds for the controller output (i.e. DBS frequency)
+    const float MaxValue = 250;                     //in Hz
+    const float MinValue = 0;                       //in Hz
 
     // Define the step between pulses amplitude
-    const float delta_DBS_amp = ( MaxValue - MinValue ) / 15;
+    const float delta_DBS_freq = ( MaxValue - MinValue ) / 15;
 
-    // Define vector to store the amplitude of the stimulation pulses
+    // Define vector to store the frequency of the stimulation pulses
     static float pulse[16] = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15};
 
     // Define dummy variable
     static int c = 0;
 
-    // Multiply pulse vector by delta_DBS_amp to get the vector assoicated with the amplitude of the stimulation pulses
+    // Multiply pulse vector by delta_DBS_freq to get the vector assoicated with the amplitude of the stimulation pulses
     if (first_run)
     {
         for (c = 0; c < 16; c++)
         {
-            pulse[c] = pulse[c] * delta_DBS_amp;
+            pulse[c] = pulse[c] * delta_DBS_freq;
         }
         // Not anymore the first run (thus, this if statement will be run only in the first call of interrupt6 function)
         first_run = 0;
@@ -184,8 +184,8 @@ interrupt void interrupt6(void)
     // Define index of stimulation pulse to be applied
     static int stim_index = 0;
 
-    // Define difference between the amplitude of the required stimulation pulse and the one to be applied
-    static float pulse_amp_diff = 0;
+    // Define difference between the frequency of the required stimulation pulse and the one to be applied
+    static float pulse_freq_diff = 0;
 
     // Define state value
     static float state_value = 0;
@@ -447,20 +447,20 @@ interrupt void interrupt6(void)
         stim_index = 0;
 
         // Calculate the difference between OutputValue and pulse of index stim_index
-        pulse_amp_diff = abs(pulse[stim_index] - OutputValue);
+        pulse_freq_diff = abs(pulse[stim_index] - OutputValue);
 
         // Pick the stimulation pulse of amplitude closest to OutputValue
         // Loop around all 16 pulses
         for (c = 1; c < 16; c++)
         {
             // Check if this pulse is the closest to OuputValue
-            if ( abs(pulse[c] - OutputValue) < pulse_amp_diff)
+            if ( abs(pulse[c] - OutputValue) < pulse_freq_diff)
             {
                 // Update the index of the closest pulse to OutputValue
                 stim_index = c;
 
                 // Update the difference between OutputValue and pulse of index stim_index
-                pulse_amp_diff = abs(pulse[c] - OutputValue);
+                pulse_freq_diff = abs(pulse[c] - OutputValue);
             }
         }
         
@@ -477,7 +477,7 @@ interrupt void interrupt6(void)
         MonitorData[1] = OutputValue;
         MonitorData[2] = stim_index;
         MonitorData[5] = seg;
-        MonitorData[3] = delta_DBS_amp;
+        MonitorData[3] = delta_DBS_freq;
         MonitorData[23] = 1/Ti*ITerm;
         MonitorData[25] = ( error + 1/Ti*ITerm /*+ Td*DTerm */);
         MonitorData[26] = u;
