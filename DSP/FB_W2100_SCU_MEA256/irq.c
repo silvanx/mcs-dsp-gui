@@ -17,6 +17,7 @@ int last_tr_cross[HS1_CHANNELS/2];
 Uint32 aux_value = 0;
 
 #define DATA_HEADER_SIZE 1
+#define FILTERLENGTH 3
 
 void toggleLED()
 {
@@ -126,6 +127,10 @@ interrupt void interrupt6(void)
 	// Define a variable that is true just the first run
     static int first_run = 1; 
 
+	// Define array that remembers previous inputs and outputs for the sake of filtering
+	static double xPrevious[FILTERLENGTH - 1];
+	static double yPrevious[FILTERLENGTH - 1];
+
     // Define the upper and lower bounds for the controller output (i.e. DBS amplitude)
     const float MaxValue = 300;                     //in uA
     const float MinValue = 0;                       //in uA
@@ -146,6 +151,11 @@ interrupt void interrupt6(void)
         {
             pulse[c] = pulse[c] * delta_DBS_amp;
         }
+		// These should be zero anyway, since the arrays are declared static but better safe than sorry
+		for (int i = 0; i < FILTERLENGTH - 1; i++) {
+			yPrevious[i] = 0;
+			xPrevious[i] = 0;
+		}
         // Not anymore the first run (thus, this if statement will be run only in the first call of interrupt6 function)
         first_run = 0;
 	}
@@ -366,6 +376,29 @@ interrupt void interrupt6(void)
 	}
 #else
 #if 1
+	// Calculate current beta ARV (differential recording)
+	xCurrent = abs(HS_Data_p[0][2] - HS_Data_p[0][0]); // NB: In uV
+	// Hardcoded filter parameters
+	double a[FILTERLENGTH] = {1, -1.99273, 0.99277};
+	double b[FILTERLENGTH] = {0.003614, 0, -0.003614};
+
+	double b_acc = b[0] * xCurrent;
+	double a_acc = 0;
+	for (int i = 1; i < FILTERLENGTH; i++) {
+		b_acc += b[i] * xPrevious[i - 1];
+		a_acc += a[i] * yPrevious[i - 1];
+	}
+	yCurrent = b_acc - a_acc;
+
+	for (int i = FILTERLENGTH - 2; i > 0; i--) {
+		yPrevious[i] = yPrevious[i - 1];
+		xPrevious[i] = xPrevious[i - 1];
+	}
+	yPrevious[0] = yCurrent;
+	xPrevious[0] = xCurrent;
+
+	state_value = yCurrent;
+
     // Increment timestamp each function call and call controller when T_controller elapsed i.e. when timestamp ==	ratio_T_controller_T_s
     if (++timestamp ==	ratio_T_controller_T_s)
     {
@@ -375,9 +408,6 @@ interrupt void interrupt6(void)
         
         // reset timestamp counter
         timestamp=0;
-        
-        // Calculate current beta ARV (differential recording)
-        state_value = abs(HS_Data_p[0][2] - HS_Data_p[0][0]); // NB: In uV
 
         // Calculate Error - if SetPoint > 0.0,
         // then normalize error with respect to SetPoint
