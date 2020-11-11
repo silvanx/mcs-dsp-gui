@@ -144,7 +144,7 @@ namespace MCS_USB_Windows_Forms_Application1
         {
             // Define stimulation frequency and period
             int f_stim = 130;
-            int T_stim = (int)( (1 / f_stim) * (10 ^ 6) );       // in us
+            int T_stim = (int)( (1.0 / f_stim) * 10E6 );       // in us
 
             // Define on and off phases of stimulation pulse    (in us)
             int pulse_on_phase_dur = 60;
@@ -299,6 +299,7 @@ namespace MCS_USB_Windows_Forms_Application1
             {
                 int[] data = mea.ChannelBlock_ReadFramesI32(0, Samplerate, out int frames_read);
                 BeginInvoke(new DisplayDataAction(DisplayData), data);
+                Thread.Sleep(800);
             }
             else
             {
@@ -314,20 +315,20 @@ namespace MCS_USB_Windows_Forms_Application1
             dspData.Series[1].Points.Clear();
             dspData.Series[2].Points.Clear();
             dspData.Series[3].Points.Clear();
-
+            
             int min = int.MaxValue;
             int max = int.MinValue;
             // the chart can not handle every datapoint
-            for (int i = 0; i < Samplerate; i += 1) // show each data point
-                //for (int i = 0; i < Samplerate / 100; i += 1) // show only 1/10 data points
-                //for (int i = 0; i < Samplerate; i += 10) // show only each 10th data points
+            //for (int i = 0; i < Samplerate; i += 1) // show each data point
+            //for (int i = 0; i < Samplerate / 100; i += 1) // show only 1/10 data points
+            for (int i = 0; i < Samplerate; i += 100) // show only each 100th data points
             {
                 if (cbChart1.Checked) AddPoint(0, i, data[i * TotalChannels + series0Channel.SelectedIndex], ref min, ref max);
                 if (cbChart2.Checked) AddPoint(1, i, data[i * TotalChannels + series1Channel.SelectedIndex], ref min, ref max);
                 if (cbChart3.Checked) AddPoint(2, i, data[i * TotalChannels + series2Channel.SelectedIndex], ref min, ref max);
                 if (cbChart4.Checked) AddPoint(3, i, data[i * TotalChannels + series3Channel.SelectedIndex], ref min, ref max);
             }
-
+            
             if (min < max)
             {
                 dspData.ChartAreas[0].AxisY.Minimum = min;
