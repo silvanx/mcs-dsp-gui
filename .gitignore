@@ -26,3 +26,4 @@ Windows/DSP Dacq Example/.vs
 Windows/FB_Example/.vs
 *.bak
 /Windows/FB_Example/FB_Example.csproj.user
+.vs/
