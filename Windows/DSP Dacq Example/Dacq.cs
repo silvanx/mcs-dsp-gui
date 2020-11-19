@@ -43,6 +43,7 @@ namespace MCS_USB_Windows_Forms_Application1
             InitializeComponent();
             UsbDeviceList.DeviceArrival += new OnDeviceArrivalRemoval(devices_DeviceArrival);
             UsbDeviceList.DeviceRemoval += new OnDeviceArrivalRemoval(devices_DeviceRemoval);
+            SearchDevice();
             InitDialog();
 
             startDacq.Enabled = true;
