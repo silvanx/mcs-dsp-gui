@@ -121,7 +121,7 @@ interrupt void interrupt6(void)
 	const int ratio_T_controller_T_s = 1000;  //5 * 18 / 1000 * f_s;
 
 	// Define SetPoint being the target beta ARV 
-    const float SetPoint = 12000;                     //set SetPoint randomly to be 5mV ie 5000uV
+    const float SetPoint = 3000;                     //set SetPoint randomly to be 5mV ie 5000uV
     
 	// Define a variable that is true just the first run
     static int first_run = 1; 
@@ -405,7 +405,7 @@ interrupt void interrupt6(void)
         
         // Determine the pulse closest to OutputValue (and its index)
         // Set randomly the index of the pulse closest to OutputValue to be 0
-        stim_index = 0;
+//        stim_index = 0;
 
         // Calculate the difference between OutputValue and pulse of index stim_index
         pulse_amp_diff = abs(pulse[stim_index] - OutputValue);
@@ -418,7 +418,7 @@ interrupt void interrupt6(void)
             if ( abs(pulse[c] - OutputValue) < pulse_amp_diff)
             {
                 // Update the index of the closest pulse to OutputValue
-                stim_index = c;
+//                stim_index = c;
 
                 // Update the difference between OutputValue and pulse of index stim_index
                 pulse_amp_diff = abs(pulse[c] - OutputValue);
@@ -426,10 +426,20 @@ interrupt void interrupt6(void)
         }
         
         // Relate the pulse index to the memory segment index assoicated with it 
-        seg = stim_index;
+        if (HS_Data_p[0][2] > SetPoint){
+            stim_index = (stim_index + 1) % 16;
+            seg = stim_index;
+        }
 
-        // Update stimulation pulse
-        WRITE_REGISTER(0x9A80, 0x1000 * seg +  0x100); // Trigger Channel 1
+        if (seg == 0) {
+
+            // Turn off stimulation if stim_index = 0
+            WRITE_REGISTER(0x9A80, 0);
+        }
+        else {
+            // Update stimulation pulse
+            WRITE_REGISTER(0x9A80, 0x1000 * seg +  0x100); // Trigger Channel 1
+        }
         
         // Set AUX 1 output value to zero
         aux_value &= 0;
