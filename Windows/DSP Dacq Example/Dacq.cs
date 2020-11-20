@@ -431,9 +431,40 @@ namespace MCS_USB_Windows_Forms_Application1
             }
         }
 
-        private void UploadDSPBinary_Click(object sender, EventArgs e)
+        delegate void UploadDSBBinaryAction(CMcsUsbListEntryNet port);
+
+
+        void UploadDSBBinary(CMcsUsbListEntryNet port)
         {
             CMcsUsbFactoryNet factorydev = new CMcsUsbFactoryNet();
+            if (factorydev.Connect(port, LockMask) == 0)
+            {
+                string FirmwareFile;
+                FirmwareFile = System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location);
+                //if (factorydev.GetDeviceId().IdProduct == ProductIdEnumNet.MEA2100)
+                //{
+                //    FirmwareFile += @"\..\..\..\..\DSP\FB_Example\Release\";
+                //    FirmwareFile += "FB_Example.bin";
+                //}
+                //else
+                //{
+                FirmwareFile += @"\..\..\..\..\DSP\FB_W2100_SCU_MEA256\Release\";
+                FirmwareFile += "FB_W2100_SCU_MEA256.bin";
+                //}
+
+                factorydev.Disconnect();
+
+                bool success = factorydev.LoadUserFirmware(FirmwareFile, port, LockMask); // Code for uploading compiled binary
+                if (!success)
+                {
+                    MessageBox.Show("Firmware upload failed!");
+                }
+            }
+        }
+
+        private void UploadDSPBinary_Click(object sender, EventArgs e)
+        {
+            
 
             if (DspPort != null || RawPort != null)
             {
@@ -442,30 +473,7 @@ namespace MCS_USB_Windows_Forms_Application1
                 {
                     port = RawPort;
                 }
-
-                if (factorydev.Connect(port, LockMask) == 0)
-                {
-                    string FirmwareFile;
-                    FirmwareFile = System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location);
-                    //if (factorydev.GetDeviceId().IdProduct == ProductIdEnumNet.MEA2100)
-                    //{
-                    //    FirmwareFile += @"\..\..\..\..\DSP\FB_Example\Release\";
-                    //    FirmwareFile += "FB_Example.bin";
-                    //}
-                    //else
-                    //{
-                        FirmwareFile += @"\..\..\..\..\DSP\FB_W2100_SCU_MEA256\Release\";
-                        FirmwareFile += "FB_W2100_SCU_MEA256.bin";
-                    //}
-
-                    factorydev.Disconnect();
-
-                    bool success = factorydev.LoadUserFirmware(FirmwareFile, port, LockMask); // Code for uploading compiled binary
-                    if (!success)
-                    {
-                        MessageBox.Show("Firmware upload failed!");
-                    }
-                }
+                BeginInvoke(new UploadDSBBinaryAction(UploadDSBBinary), port);
             }
             else
             {

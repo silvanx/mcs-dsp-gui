@@ -1,12 +1,11 @@
 {
   "ExpandedNodes": [
     "",
-    "\\DSP",
     "\\DSP\\FB_W2100_SCU_MEA256",
     "\\Windows",
     "\\Windows\\DSP Dacq Example",
     "\\Windows\\FB_Example"
   ],
-  "SelectedNode": "\\DSP\\FB_W2100_SCU_MEA256\\irq.c",
+  "SelectedNode": "\\Windows\\DSP Dacq Example\\DSP Dacq Example.sln",
   "PreviewInSolutionExplorer": false
 }
