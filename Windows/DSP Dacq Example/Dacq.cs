@@ -189,20 +189,6 @@ namespace MCS_USB_Windows_Forms_Application1
 
         private void startDacq_Click(object sender, EventArgs e)
         {
-            // Define stimulation frequency and period
-            int f_stim = 130;
-            int T_stim = (int)( (1.0 / f_stim) * 10E6 );       // in us
-
-            // Define on and off phases of stimulation pulse    (in us)
-            int pulse_on_phase_dur = 60;
-            int pulse_off_phase_dur = T_stim - 2 * pulse_on_phase_dur;
-
-            // Define the upper and lower bounds for the controller output
-            const int MaxValue = 300000;                //in nA
-            const int MinValue = 0;                     //in uA
-
-            // Define the step between pulses amplitude
-            const int delta_DBS_amp = (MaxValue - MinValue) / 15;    // in nA
 
             startDacq.Enabled = false;
             stopDacq.Enabled = true;
@@ -256,59 +242,6 @@ namespace MCS_USB_Windows_Forms_Application1
                     CW2100_FunctionNet func = new CW2100_FunctionNet(mea);
                     w2100_hs_samling = func.GetHeadstageSamplingActive(other_receiver + 0);
                     func.SetHeadstageSamplingActive(false, other_receiver + 0);
-#if true
-                    // Send Stimulation pattern
-                    bool first = true;
-                    int preplegth = 0;
-                    CW2100_StimulatorFunctionNet stim = new CW2100_StimulatorFunctionNet(mea);
-                    stim.SelectTimeSlot(other_receiver + 0);
-#if false
-                    // Different repetition
-                    int[] ampl = new[] {0, 100000, -100000, 0, 6, 0};
-                    ulong[] dur = new ulong[] {0, 10000, 10000, 10000, 0, 300000};
-                    for (int i = 0; i < 16; i++)
-                    {
-                        ampl[4] = i + 2;
-#else
-                    // Different strength
-                    // Define the amplitude vector of the 3 segments of the biphasic pulse (in nA)
-                    int[] ampl = new[] { 100000, -100000, 0 };
-
-                    // Define the duraion vector of the 3 segments of the biphasic pulse (in us)
-                    ulong[] dur = new ulong[] { 3000, 3000, 12000};
-
-                    // Define each pulse
-                    for (int i = 0; i < 16; i++)
-                    {
-                        // Define the amplitude (nA) of each of the 3 segments
-                        ampl[0] = delta_DBS_amp * i + 1;
-                        ampl[1] = -delta_DBS_amp * i - 1;
-
-                        // Define the duration (us) of each of the 3 segments
-                        //dur[0] = (ulong)pulse_on_phase_dur;
-                        //dur[1] = (ulong)pulse_on_phase_dur;
-                        //dur[2] = (ulong)pulse_off_phase_dur;
-
-#endif
-                        // choose, if global repeat is desired
-                        // Define the associated pulse
-                        CStimulusFunctionNet.StimulusDeviceDataAndUnrolledData prep = stim.PrepareData(0, ampl, dur, STG_DestinationEnumNet.channeldata_current, 1);
-
-                        // Check the available memory in the headstage  
-                        if (first)
-                        {
-                            first = false;
-                            preplegth = prep.DeviceDataLength;
-                        }
-
-                        // Check that the pulse fits into the designated memory
-                        Debug.Assert(preplegth == prep.DeviceDataLength);
-                        Debug.Assert(prep.DeviceDataLength <= 15);
-
-                        // Store pulse into designated memory
-                        stim.SendPreparedData(0x10 * i + 0, prep, STG_DestinationEnumNet.channeldata_current);
-                    }
-#endif
                     func.SetHeadstageSamplingActive(true, other_receiver + 0);
                 }
             }
@@ -436,6 +369,64 @@ namespace MCS_USB_Windows_Forms_Application1
 
         void UploadDSBBinary(CMcsUsbListEntryNet port)
         {
+            // Define stimulation frequency and period
+            int f_stim = 130;
+            int T_stim = (int)((1.0 / f_stim) * 10E6);       // in us
+
+            // Define on and off phases of stimulation pulse    (in us)
+            int pulse_on_phase_dur = 60;
+            int pulse_off_phase_dur = T_stim - 2 * pulse_on_phase_dur;
+
+            // Define the upper and lower bounds for the controller output
+            const int MaxValue = 300000;                //in nA
+            const int MinValue = 0;                     //in uA
+
+            // Define the step between pulses amplitude
+            const int delta_DBS_amp = (MaxValue - MinValue) / 15;    // in nA
+#if true
+            // Send Stimulation pattern
+            bool first = true;
+            int preplegth = 0;
+            CW2100_StimulatorFunctionNet stim = new CW2100_StimulatorFunctionNet(mea);
+            stim.SelectTimeSlot(other_receiver + 0);
+            // Different strength
+            // Define the amplitude vector of the 3 segments of the biphasic pulse (in nA)
+            int[] ampl = new[] { 100000, -100000, 0 };
+
+            // Define the duraion vector of the 3 segments of the biphasic pulse (in us)
+            ulong[] dur = new ulong[] { 3000, 3000, 12000 };
+
+            // Define each pulse
+            for (int i = 0; i < 16; i++)
+            {
+                // Define the amplitude (nA) of each of the 3 segments
+                ampl[0] = delta_DBS_amp * i + 1;
+                ampl[1] = -delta_DBS_amp * i - 1;
+
+                // Define the duration (us) of each of the 3 segments
+                //dur[0] = (ulong)pulse_on_phase_dur;
+                //dur[1] = (ulong)pulse_on_phase_dur;
+                //dur[2] = (ulong)pulse_off_phase_dur;
+
+                // choose, if global repeat is desired
+                // Define the associated pulse
+                CStimulusFunctionNet.StimulusDeviceDataAndUnrolledData prep = stim.PrepareData(0, ampl, dur, STG_DestinationEnumNet.channeldata_current, 1);
+
+                // Check the available memory in the headstage  
+                if (first)
+                {
+                    first = false;
+                    preplegth = prep.DeviceDataLength;
+                }
+
+                // Check that the pulse fits into the designated memory
+                Debug.Assert(preplegth == prep.DeviceDataLength);
+                Debug.Assert(prep.DeviceDataLength <= 15);
+
+                // Store pulse into designated memory
+                stim.SendPreparedData(0x10 * i + 0, prep, STG_DestinationEnumNet.channeldata_current);
+            }
+#endif
             CMcsUsbFactoryNet factorydev = new CMcsUsbFactoryNet();
             if (factorydev.Connect(port, LockMask) == 0)
             {
@@ -496,6 +487,7 @@ namespace MCS_USB_Windows_Forms_Application1
                 if (factorydev.Connect(port, LockMask) == 0) // if connect call returns zero, connect has been successful
                 {
                     factorydev.Coldstart(CFirmwareDestinationNet.MCU1);
+                    factorydev.WriteRegister(0x9A80, 0);
                     factorydev.Disconnect();
                 }
             }
