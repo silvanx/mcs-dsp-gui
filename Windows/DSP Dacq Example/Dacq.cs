@@ -109,28 +109,49 @@ namespace MCS_USB_Windows_Forms_Application1
             CMcsUsbFactoryNet factorydev = new CMcsUsbFactoryNet(); // Create object of class CMcsUsbFactoryNet (provides firmware upgrade and register access capabilities)
             if (DspPort != null && factorydev.Connect(DspPort, LockMask) == 0)  // if connect call returns zero, connect has been successful
             {
-#if false
                 double[] xcoeffs;
                 double[] ycoeffs;
-                mkfilterNet.mkfilter("Bu", 0, "Lp", 2, 1000.0 / 50000.0, 0, out xcoeffs, out ycoeffs);
-                factorydev.WriteRegister(0x600, DoubleToFixedInt(1, 16, 30, xcoeffs[0])); // set b[0] fpr 100 Hz HP
-                factorydev.WriteRegister(0x608, DoubleToFixedInt(1, 15, 30, xcoeffs[1])); // set b[1] fpr 100 Hz HP
-                factorydev.WriteRegister(0x60C, DoubleToFixedInt(1, 30, 30, ycoeffs[1])); // set a[1] fpr 100 Hz HP
-                factorydev.WriteRegister(0x610, DoubleToFixedInt(1, 16, 30, xcoeffs[2])); // set b[2] fpr 100 Hz HP
-                factorydev.WriteRegister(0x614, DoubleToFixedInt(1, 30, 30, ycoeffs[2])); // set a[2] fpr 100 Hz HP
+                mkfilterNet.mkfilter("Bu", 0, "Lp", 2, 30.0 / (float)Samplerate, 0, out xcoeffs, out ycoeffs);
+                factorydev.WriteRegister(0x600, DoubleToFixedInt(1, 16, 30, xcoeffs[0])); // set b[0] fpr 30 Hz LP
+                factorydev.WriteRegister(0x608, DoubleToFixedInt(1, 15, 30, xcoeffs[1])); // set b[1] fpr 30 Hz LP
+                factorydev.WriteRegister(0x60C, DoubleToFixedInt(1, 30, 30, ycoeffs[1])); // set a[1] fpr 30 Hz LP
+                factorydev.WriteRegister(0x610, DoubleToFixedInt(1, 16, 30, xcoeffs[2])); // set b[2] fpr 30 Hz LP
+                factorydev.WriteRegister(0x614, DoubleToFixedInt(1, 30, 30, ycoeffs[2])); // set a[2] fpr 30 Hz LP
                 factorydev.WriteRegister(0x61C, 0x00000001); // enable
-                mkfilterNet.mkfilter("Bu", 0, "Hp", 2, 100.0 / 50000.0, 0, out xcoeffs, out ycoeffs);
-                factorydev.WriteRegister(0x620, DoubleToFixedInt(1, 16, 30, xcoeffs[0])); // set b[0] fpr 100 Hz HP
-                factorydev.WriteRegister(0x628, DoubleToFixedInt(1, 15, 30, xcoeffs[1])); // set b[1] fpr 100 Hz HP
-                factorydev.WriteRegister(0x62C, DoubleToFixedInt(1, 30, 30, ycoeffs[1])); // set a[1] fpr 100 Hz HP
-                factorydev.WriteRegister(0x630, DoubleToFixedInt(1, 16, 30, xcoeffs[2])); // set b[2] fpr 100 Hz HP
-                factorydev.WriteRegister(0x634, DoubleToFixedInt(1, 30, 30, ycoeffs[2])); // set a[2] fpr 100 Hz HP
-                factorydev.WriteRegister(0x63C, 0x00000001); // enable
-#endif
+
+                //mkfilterNet.mkfilter("Bu", 0, "Hp", 2, 1.0 / 50000.0, 0, out xcoeffs, out ycoeffs);
+                //factorydev.WriteRegister(0x620, DoubleToFixedInt(1, 16, 30, xcoeffs[0])); // set b[0] fpr 100 Hz HP
+                //factorydev.WriteRegister(0x628, DoubleToFixedInt(1, 15, 30, xcoeffs[1])); // set b[1] fpr 100 Hz HP
+                //factorydev.WriteRegister(0x62C, DoubleToFixedInt(1, 30, 30, ycoeffs[1])); // set a[1] fpr 100 Hz HP
+                //factorydev.WriteRegister(0x630, DoubleToFixedInt(1, 16, 30, xcoeffs[2])); // set b[2] fpr 100 Hz HP
+                //factorydev.WriteRegister(0x634, DoubleToFixedInt(1, 30, 30, ycoeffs[2])); // set a[2] fpr 100 Hz HP
+                //factorydev.WriteRegister(0x63C, 0x00000001); // enable
+
                 factorydev.Disconnect();
             }
         }
 
+        static uint DoubleToFixedInt(int vk, int nk, int commaPos, double valF)
+        {
+            valF *= 1 << nk;
+            if (valF > 0)
+            {
+                valF += 0.5;
+            }
+            else
+            {
+                valF -= 0.5;
+            }
+            ulong mask = ((ulong)1 << (vk + nk + 1)) - 1;
+            ulong val = (ulong)valF;
+            uint value = (uint)(val & mask);
+            if (commaPos > nk)
+            {
+                value = value << (commaPos - nk);
+            }
+
+            return value;
+        }
 
         void InitDialog()
         {
@@ -384,47 +405,60 @@ namespace MCS_USB_Windows_Forms_Application1
             // Define the step between pulses amplitude
             const int delta_DBS_amp = (MaxValue - MinValue) / 15;    // in nA
 #if true
-            // Send Stimulation pattern
-            bool first = true;
-            int preplegth = 0;
-            CW2100_StimulatorFunctionNet stim = new CW2100_StimulatorFunctionNet(mea);
-            stim.SelectTimeSlot(other_receiver + 0);
-            // Different strength
-            // Define the amplitude vector of the 3 segments of the biphasic pulse (in nA)
-            int[] ampl = new[] { 100000, -100000, 0 };
-
-            // Define the duraion vector of the 3 segments of the biphasic pulse (in us)
-            ulong[] dur = new ulong[] { 3000, 3000, 12000 };
-
-            // Define each pulse
-            for (int i = 0; i < 16; i++)
+            other_receiver = 0;
+            if (((CMcsUsbListEntryNet)cbDeviceList.SelectedItem).SerialNumber.EndsWith("-B"))
             {
-                // Define the amplitude (nA) of each of the 3 segments
-                ampl[0] = delta_DBS_amp * i + 1;
-                ampl[1] = -delta_DBS_amp * i - 1;
+                other_receiver = 4; // bit 0/1 select the timeslot of: bit 2/3 = 0 receiver according to USB port, 1 receiver A, 2 receiver B
+            }
+            if (mea.GetDeviceId().IdProduct == ProductIdEnumNet.W2100)
+            {
+                CW2100_FunctionNet func = new CW2100_FunctionNet(mea);
+                w2100_hs_samling = func.GetHeadstageSamplingActive(other_receiver + 0);
+                func.SetHeadstageSamplingActive(false, other_receiver + 0);
 
-                // Define the duration (us) of each of the 3 segments
-                //dur[0] = (ulong)pulse_on_phase_dur;
-                //dur[1] = (ulong)pulse_on_phase_dur;
-                //dur[2] = (ulong)pulse_off_phase_dur;
+                // Send Stimulation pattern
+                bool first = true;
+                int preplegth = 0;
+                CW2100_StimulatorFunctionNet stim = new CW2100_StimulatorFunctionNet(mea);
+                stim.SelectTimeSlot(other_receiver + 0);
+                // Different strength
+                // Define the amplitude vector of the 3 segments of the biphasic pulse (in nA)
+                int[] ampl = new[] { 100000, -100000, 0 };
 
-                // choose, if global repeat is desired
-                // Define the associated pulse
-                CStimulusFunctionNet.StimulusDeviceDataAndUnrolledData prep = stim.PrepareData(0, ampl, dur, STG_DestinationEnumNet.channeldata_current, 1);
+                // Define the duraion vector of the 3 segments of the biphasic pulse (in us)
+                ulong[] dur = new ulong[] { 3000, 3000, 12000 };
 
-                // Check the available memory in the headstage  
-                if (first)
+                // Define each pulse
+                for (int i = 0; i < 16; i++)
                 {
-                    first = false;
-                    preplegth = prep.DeviceDataLength;
+                    // Define the amplitude (nA) of each of the 3 segments
+                    ampl[0] = delta_DBS_amp * i + 1;
+                    ampl[1] = -delta_DBS_amp * i - 1;
+
+                    // Define the duration (us) of each of the 3 segments
+                    //dur[0] = (ulong)pulse_on_phase_dur;
+                    //dur[1] = (ulong)pulse_on_phase_dur;
+                    //dur[2] = (ulong)pulse_off_phase_dur;
+
+                    // choose, if global repeat is desired
+                    // Define the associated pulse
+                    CStimulusFunctionNet.StimulusDeviceDataAndUnrolledData prep = stim.PrepareData(0, ampl, dur, STG_DestinationEnumNet.channeldata_current, 1);
+
+                    // Check the available memory in the headstage  
+                    if (first)
+                    {
+                        first = false;
+                        preplegth = prep.DeviceDataLength;
+                    }
+
+                    // Check that the pulse fits into the designated memory
+                    Debug.Assert(preplegth == prep.DeviceDataLength);
+                    Debug.Assert(prep.DeviceDataLength <= 15);
+
+                    // Store pulse into designated memory
+                    stim.SendPreparedData(0x10 * i + 0, prep, STG_DestinationEnumNet.channeldata_current);
                 }
-
-                // Check that the pulse fits into the designated memory
-                Debug.Assert(preplegth == prep.DeviceDataLength);
-                Debug.Assert(prep.DeviceDataLength <= 15);
-
-                // Store pulse into designated memory
-                stim.SendPreparedData(0x10 * i + 0, prep, STG_DestinationEnumNet.channeldata_current);
+                func.SetHeadstageSamplingActive(true, other_receiver + 0);
             }
 #endif
             CMcsUsbFactoryNet factorydev = new CMcsUsbFactoryNet();
