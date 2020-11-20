@@ -281,8 +281,8 @@ namespace MCS_USB_Windows_Forms_Application1
                     for (int i = 0; i < 16; i++)
                     {
                         // Define the amplitude (nA) of each of the 3 segments
-                        ampl[0] = delta_DBS_amp * i;
-                        ampl[1] = -delta_DBS_amp * i;
+                        ampl[0] = delta_DBS_amp * i + 1;
+                        ampl[1] = -delta_DBS_amp * i - 1;
 
                         // Define the duration (us) of each of the 3 segments
                         //dur[0] = (ulong)pulse_on_phase_dur;
