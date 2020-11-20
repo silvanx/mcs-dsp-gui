@@ -121,7 +121,7 @@ interrupt void interrupt6(void)
 	const int ratio_T_controller_T_s = 1000;  //5 * 18 / 1000 * f_s;
 
 	// Define SetPoint being the target beta ARV 
-    const float SetPoint = 3000;                     //set SetPoint randomly to be 5mV ie 5000uV
+    const float SetPoint = 7;                     //set SetPoint randomly to be 5mV ie 5000uV
     
 	// Define a variable that is true just the first run
     static int first_run = 1; 
