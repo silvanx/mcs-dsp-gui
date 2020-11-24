@@ -111,13 +111,13 @@ namespace MCS_USB_Windows_Forms_Application1
             {
                 double[] xcoeffs;
                 double[] ycoeffs;
-                mkfilterNet.mkfilter("Bu", 0, "Lp", 2, 30.0 / (float)Samplerate, 0, out xcoeffs, out ycoeffs);
-                factorydev.WriteRegister(0x600, DoubleToFixedInt(1, 16, 30, xcoeffs[0])); // set b[0] fpr 30 Hz LP
-                factorydev.WriteRegister(0x608, DoubleToFixedInt(1, 15, 30, xcoeffs[1])); // set b[1] fpr 30 Hz LP
-                factorydev.WriteRegister(0x60C, DoubleToFixedInt(1, 30, 30, ycoeffs[1])); // set a[1] fpr 30 Hz LP
-                factorydev.WriteRegister(0x610, DoubleToFixedInt(1, 16, 30, xcoeffs[2])); // set b[2] fpr 30 Hz LP
-                factorydev.WriteRegister(0x614, DoubleToFixedInt(1, 30, 30, ycoeffs[2])); // set a[2] fpr 30 Hz LP
-                factorydev.WriteRegister(0x61C, 0x00000001); // enable
+                //mkfilterNet.mkfilter("Bu", 0, "Lp", 2, 1000.0 / (float)Samplerate, 0, out xcoeffs, out ycoeffs);
+                //factorydev.WriteRegister(0x600, DoubleToFixedInt(1, 16, 30, xcoeffs[0])); // set b[0] fpr 30 Hz LP
+                //factorydev.WriteRegister(0x608, DoubleToFixedInt(1, 15, 30, xcoeffs[1])); // set b[1] fpr 30 Hz LP
+                //factorydev.WriteRegister(0x60C, DoubleToFixedInt(1, 30, 30, ycoeffs[1])); // set a[1] fpr 30 Hz LP
+                //factorydev.WriteRegister(0x610, DoubleToFixedInt(1, 16, 30, xcoeffs[2])); // set b[2] fpr 30 Hz LP
+                //factorydev.WriteRegister(0x614, DoubleToFixedInt(1, 30, 30, ycoeffs[2])); // set a[2] fpr 30 Hz LP
+                //factorydev.WriteRegister(0x61C, 0x00000001); // enable
 
                 //mkfilterNet.mkfilter("Bu", 0, "Hp", 2, 1.0 / 50000.0, 0, out xcoeffs, out ycoeffs);
                 //factorydev.WriteRegister(0x620, DoubleToFixedInt(1, 16, 30, xcoeffs[0])); // set b[0] fpr 100 Hz HP
@@ -262,7 +262,6 @@ namespace MCS_USB_Windows_Forms_Application1
                 {
                     CW2100_FunctionNet func = new CW2100_FunctionNet(mea);
                     w2100_hs_samling = func.GetHeadstageSamplingActive(other_receiver + 0);
-                    func.SetHeadstageSamplingActive(false, other_receiver + 0);
                     func.SetHeadstageSamplingActive(true, other_receiver + 0);
                 }
             }
@@ -300,7 +299,7 @@ namespace MCS_USB_Windows_Forms_Application1
             {
                 int[] data = mea.ChannelBlock_ReadFramesI32(0, Samplerate, out int frames_read);
                 BeginInvoke(new DisplayDataAction(DisplayData), data);
-                Thread.Sleep(800);
+                Thread.Sleep(350);
             }
             else
             {
@@ -321,8 +320,8 @@ namespace MCS_USB_Windows_Forms_Application1
             int max = int.MinValue;
             // the chart can not handle every datapoint
             //for (int i = 0; i < Samplerate; i += 1) // show each data point
-            //for (int i = 0; i < Samplerate / 100; i += 1) // show only 1/10 data points
-            for (int i = 0; i < Samplerate; i += 100) // show only each 100th data points
+            for (int i = 0; i < Samplerate / 5; i += 20) // show only 1/10 data points
+            //for (int i = 0; i < Samplerate; i += 100) // show only each 100th data points
             {
                 if (cbChart1.Checked) AddPoint(0, i, data[i * TotalChannels + series0Channel.SelectedIndex], ref min, ref max);
                 if (cbChart2.Checked) AddPoint(1, i, data[i * TotalChannels + series1Channel.SelectedIndex], ref min, ref max);

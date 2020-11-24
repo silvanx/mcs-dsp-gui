@@ -17,6 +17,7 @@ int last_tr_cross[HS1_CHANNELS/2];
 Uint32 aux_value = 0;
 
 #define DATA_HEADER_SIZE 1
+#define FILTERLENGTH 3
 
 void toggleLED()
 {
@@ -118,10 +119,14 @@ interrupt void interrupt6(void)
 	const float T_controller = 0.02; 
 
 	// Calculate T_controller to T_s ratio to know every how many calls of interrupt 6 we need to call the controller
-	const int ratio_T_controller_T_s = 1000;  //5 * 18 / 1000 * f_s;
+	const int ratio_T_controller_T_s = 100;  //5 * 18 / 1000 * f_s;
 
 	// Define SetPoint being the target beta ARV 
-    const float SetPoint = 5;                     //set SetPoint randomly to be 5mV ie 5000uV
+    const float SetPoint = 3500;                     //set SetPoint randomly to be 5mV ie 5000uV
+
+    // Define array that remembers previous inputs and outputs for the sake of filtering
+    static double xPrevious[FILTERLENGTH - 1];
+    static double yPrevious[FILTERLENGTH - 1];
     
 	// Define a variable that is true just the first run
     static int first_run = 1; 
@@ -138,6 +143,7 @@ interrupt void interrupt6(void)
 
     // Define dummy variable
     static int c = 0;
+    static int i = 0;
 
     // Multiply pulse vector by delta_DBS_amp to get the vector assoicated with the amplitude of the stimulation pulses
     if (first_run)
@@ -146,6 +152,13 @@ interrupt void interrupt6(void)
         {
             pulse[c] = pulse[c] * delta_DBS_amp;
         }
+
+        // These should be zero anyway, since the arrays are declared static but better safe than sorry
+        for (i = 0; i < FILTERLENGTH - 1; i++) {
+            yPrevious[i] = 0;
+            xPrevious[i] = 0;
+        }
+
         // Not anymore the first run (thus, this if statement will be run only in the first call of interrupt6 function)
         first_run = 0;
 	}
@@ -167,6 +180,9 @@ interrupt void interrupt6(void)
 
     // Define state value
     static float state_value = 0;
+    static float filtered_state_value = 0;
+    static float xCurrent = 0;
+    static float yCurrent = 0;
     
 	// Define counter for function run
 	static int timestamp = 0; // exists only in this function but is created only once on the first function call (i.e. static)
@@ -177,7 +193,6 @@ interrupt void interrupt6(void)
 
 	static int seg = 0;
 
-	int i;
 	CSL_Edma3ccRegsOvly edma3ccRegs = (CSL_Edma3ccRegsOvly)CSL_EDMA3CC_0_REGS;
 	
 	// search start of data segments
@@ -366,6 +381,33 @@ interrupt void interrupt6(void)
 	}
 #else
 #if 1
+
+    // Calculate current beta ARV (differential recording)
+    // xCurrent = abs(HS_Data_p[0][2] - HS_Data_p[0][0]); // NB: In uV
+	// Calculate current beta ARV (single electrode for testing purposes)
+	xCurrent = HS_Data_p[0][2];
+    // Hardcoded filter parameters (BP, beta)
+    double a[FILTERLENGTH] = {1, -1.99273, 0.99277};
+    double b[FILTERLENGTH] = {0.003614, 0, -0.003614};
+
+    double b_acc = b[0] * xCurrent;
+    double a_acc = 0;
+    for (i = 1; i < FILTERLENGTH; i++) {
+        b_acc += b[i] * xPrevious[i - 1];
+        a_acc += a[i] * yPrevious[i - 1];
+    }
+    yCurrent = b_acc - a_acc;
+
+    for (i = FILTERLENGTH - 2; i > 0; i--) {
+        yPrevious[i] = yPrevious[i - 1];
+        xPrevious[i] = xPrevious[i - 1];
+    }
+    yPrevious[0] = yCurrent;
+    xPrevious[0] = xCurrent;
+
+    filtered_state_value = yCurrent;
+    state_value = abs(HS_Data_p[0][2]);
+
     // Increment timestamp each function call and call controller when T_controller elapsed i.e. when timestamp ==	ratio_T_controller_T_s
     if (++timestamp ==	ratio_T_controller_T_s)
     {
@@ -426,9 +468,13 @@ interrupt void interrupt6(void)
         }
         
         // Relate the pulse index to the memory segment index assoicated with it 
-        if (HS_Data_p[0][2] > SetPoint){
-            stim_index = (stim_index + 1) % 16;
+        if (abs(filtered_state_value) > SetPoint){
+            stim_index = 1;
             seg = stim_index;
+        }
+        else {
+            stim_index = 0;
+            seg = 0;
         }
 
         if (seg == 0) {
@@ -451,8 +497,10 @@ interrupt void interrupt6(void)
      }
 
 MonitorData[0] = HS_Data_p[0][2];
-MonitorData[6] = pulse[0];
-MonitorData[7] = pulse[1];
+MonitorData[6] = filtered_state_value;
+MonitorData[7] = state_value;
+//MonitorData[6] = pulse[0];
+//MonitorData[7] = pulse[1];
 MonitorData[8] = pulse[2];
 MonitorData[9] = pulse[3];
 MonitorData[10] = pulse[4];
