@@ -463,7 +463,8 @@ namespace MCS_USB_Windows_Forms_Application1
             {
                 other_receiver = 4; // bit 0/1 select the timeslot of: bit 2/3 = 0 receiver according to USB port, 1 receiver A, 2 receiver B
             }
-            if (mea.GetDeviceId().IdProduct == ProductIdEnumNet.W2100)
+            uint status = mea.Connect((CMcsUsbListEntryNet)cbDeviceList.SelectedItem, 63);
+            if (status == 0 && mea.GetDeviceId().IdProduct == ProductIdEnumNet.W2100)
             {
                 CW2100_FunctionNet func = new CW2100_FunctionNet(mea);
                 w2100_hs_samling = func.GetHeadstageSamplingActive(other_receiver + 0);
