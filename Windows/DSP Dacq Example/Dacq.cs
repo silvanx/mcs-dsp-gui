@@ -329,8 +329,8 @@ namespace MCS_USB_Windows_Forms_Application1
             if (numFrames >= Samplerate)
             {
                 int[] rawData = mea.ChannelBlock_ReadFramesI32(0, numFrames, out int frames_read);
-                int[] data = new int[Samplerate * 139];
-                Array.Copy(rawData, (numFrames - Samplerate) * 139, data, 0, Samplerate * 139);
+                int[] data = new int[Samplerate * TotalChannels];
+                Array.Copy(rawData, (numFrames - Samplerate) * TotalChannels, data, 0, Samplerate * TotalChannels);
                 this.Invoke((MethodInvoker)delegate { SaveDataToFile(rawData, "data.txt", numFrames); });
                 BeginInvoke(new DisplayDataAction(DisplayData), data);
                 Thread.Sleep(250);
