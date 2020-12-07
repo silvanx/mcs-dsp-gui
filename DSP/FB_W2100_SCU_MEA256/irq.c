@@ -122,7 +122,7 @@ interrupt void interrupt6(void)
 	const int ratio_T_controller_T_s = T_controller * f_s;  //5 * 18 / 1000 * f_s;
 
 	// Define SetPoint being the target beta ARV 
-    const float SetPoint = 3500;                     //set SetPoint randomly to be 5mV ie 5000uV
+    const float SetPoint = 7;                     //set SetPoint randomly to be 5mV ie 5000uV
 
     // Define array that remembers previous inputs and outputs for the sake of filtering
     static double xPrevious[FILTERLENGTH - 1];
@@ -468,7 +468,7 @@ interrupt void interrupt6(void)
 //        }
         
         // Relate the pulse index to the memory segment index assoicated with it 
-        if (abs(filtered_state_value) > SetPoint){
+        if (state_value > SetPoint){
             stim_index = 1;
             seg = stim_index;
         }
@@ -497,6 +497,7 @@ interrupt void interrupt6(void)
      }
 
 MonitorData[0] = HS_Data_p[0][2];
+MonitorData[4] = (HS_Data_p[1][0] & 1) * 1000;
 MonitorData[6] = filtered_state_value;
 MonitorData[7] = state_value;
 //MonitorData[6] = pulse[0];
