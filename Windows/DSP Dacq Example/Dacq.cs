@@ -8,6 +8,7 @@ using System.Text;
 using System.Windows.Forms;
 using System.Threading;
 using System.Diagnostics;
+using System.IO;
 using System.Runtime.CompilerServices;
 using Mcs.Usb;
 
@@ -291,15 +292,46 @@ namespace MCS_USB_Windows_Forms_Application1
             mea.Disconnect();
         }
 
+        private void SaveDataToFile(int[] data, string file, int numFrames)
+        {
+            if (SaveToFileCheckBox.Checked)
+            {
+                List<string> contents = new List<string>();
+                for (int i = 0; i < numFrames; i += 1)
+                {
+                    List<string> row = new List<string>();
+                    row.Add(data[i * TotalChannels + 0].ToString());
+                    row.Add(data[i * TotalChannels + 1].ToString());
+                    row.Add(data[i * TotalChannels + 2].ToString());
+                    row.Add(data[i * TotalChannels + 3].ToString());
+                    row.Add(data[i * TotalChannels + Channels + AnalogChannels + 0].ToString());
+                    row.Add(data[i * TotalChannels + Channels + AnalogChannels + 1].ToString());
+                    row.Add(data[i * TotalChannels + Channels + AnalogChannels + 2].ToString());
+                    row.Add(data[i * TotalChannels + Channels + AnalogChannels + 3].ToString());
+                    row.Add(data[i * TotalChannels + Channels + AnalogChannels + 4].ToString());
+                    row.Add(data[i * TotalChannels + Channels + AnalogChannels + 5].ToString());
+                    row.Add(data[i * TotalChannels + Channels + AnalogChannels + 6].ToString());
+                    row.Add(data[i * TotalChannels + Channels + AnalogChannels + 7].ToString());
+                    string rowString = string.Join(", ", row);
+                    contents.Add(rowString);
+                }
+                File.AppendAllLines(file, contents);
+            }
+        }
+
+
         void mea_ChannelDataEvent(CMcsUsbDacqNet dacq, int CbHandle, int numFrames)
         {
             //Debug.WriteLine("data available " + numFrames);
 
             if (numFrames >= Samplerate)
             {
-                int[] data = mea.ChannelBlock_ReadFramesI32(0, Samplerate, out int frames_read);
+                int[] rawData = mea.ChannelBlock_ReadFramesI32(0, numFrames, out int frames_read);
+                int[] data = new int[Samplerate * 139];
+                Array.Copy(rawData, (numFrames - Samplerate) * 139, data, 0, Samplerate * 139);
+                this.Invoke((MethodInvoker)delegate { SaveDataToFile(rawData, "data.txt", numFrames); });
                 BeginInvoke(new DisplayDataAction(DisplayData), data);
-                Thread.Sleep(350);
+                Thread.Sleep(250);
             }
             else
             {

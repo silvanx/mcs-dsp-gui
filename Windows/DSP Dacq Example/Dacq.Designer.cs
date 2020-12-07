@@ -28,12 +28,12 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea6 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
-            System.Windows.Forms.DataVisualization.Charting.Legend legend6 = new System.Windows.Forms.DataVisualization.Charting.Legend();
-            System.Windows.Forms.DataVisualization.Charting.Series series21 = new System.Windows.Forms.DataVisualization.Charting.Series();
-            System.Windows.Forms.DataVisualization.Charting.Series series22 = new System.Windows.Forms.DataVisualization.Charting.Series();
-            System.Windows.Forms.DataVisualization.Charting.Series series23 = new System.Windows.Forms.DataVisualization.Charting.Series();
-            System.Windows.Forms.DataVisualization.Charting.Series series24 = new System.Windows.Forms.DataVisualization.Charting.Series();
+            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea1 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+            System.Windows.Forms.DataVisualization.Charting.Legend legend1 = new System.Windows.Forms.DataVisualization.Charting.Legend();
+            System.Windows.Forms.DataVisualization.Charting.Series series1 = new System.Windows.Forms.DataVisualization.Charting.Series();
+            System.Windows.Forms.DataVisualization.Charting.Series series2 = new System.Windows.Forms.DataVisualization.Charting.Series();
+            System.Windows.Forms.DataVisualization.Charting.Series series3 = new System.Windows.Forms.DataVisualization.Charting.Series();
+            System.Windows.Forms.DataVisualization.Charting.Series series4 = new System.Windows.Forms.DataVisualization.Charting.Series();
             this.startDacq = new System.Windows.Forms.Button();
             this.dspData = new System.Windows.Forms.DataVisualization.Charting.Chart();
             this.series0Channel = new System.Windows.Forms.ComboBox();
@@ -55,6 +55,7 @@
             this.label1 = new System.Windows.Forms.Label();
             this.StopDSP = new System.Windows.Forms.Button();
             this.UploadDSPBinary = new System.Windows.Forms.Button();
+            this.SaveToFileCheckBox = new System.Windows.Forms.CheckBox();
             ((System.ComponentModel.ISupportInitialize)(this.dspData)).BeginInit();
             this.SuspendLayout();
             // 
@@ -70,32 +71,32 @@
             // 
             // dspData
             // 
-            chartArea6.Name = "ChartArea1";
-            this.dspData.ChartAreas.Add(chartArea6);
-            legend6.Name = "Legend1";
-            this.dspData.Legends.Add(legend6);
+            chartArea1.Name = "ChartArea1";
+            this.dspData.ChartAreas.Add(chartArea1);
+            legend1.Name = "Legend1";
+            this.dspData.Legends.Add(legend1);
             this.dspData.Location = new System.Drawing.Point(12, 165);
             this.dspData.Name = "dspData";
-            series21.ChartArea = "ChartArea1";
-            series21.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.FastLine;
-            series21.Legend = "Legend1";
-            series21.Name = "Chart 1";
-            series22.ChartArea = "ChartArea1";
-            series22.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.FastLine;
-            series22.Legend = "Legend1";
-            series22.Name = "Chart 2";
-            series23.ChartArea = "ChartArea1";
-            series23.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.FastLine;
-            series23.Legend = "Legend1";
-            series23.Name = "Chart 3";
-            series24.ChartArea = "ChartArea1";
-            series24.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.FastLine;
-            series24.Legend = "Legend1";
-            series24.Name = "Chart 4";
-            this.dspData.Series.Add(series21);
-            this.dspData.Series.Add(series22);
-            this.dspData.Series.Add(series23);
-            this.dspData.Series.Add(series24);
+            series1.ChartArea = "ChartArea1";
+            series1.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.FastLine;
+            series1.Legend = "Legend1";
+            series1.Name = "Chart 1";
+            series2.ChartArea = "ChartArea1";
+            series2.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.FastLine;
+            series2.Legend = "Legend1";
+            series2.Name = "Chart 2";
+            series3.ChartArea = "ChartArea1";
+            series3.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.FastLine;
+            series3.Legend = "Legend1";
+            series3.Name = "Chart 3";
+            series4.ChartArea = "ChartArea1";
+            series4.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.FastLine;
+            series4.Legend = "Legend1";
+            series4.Name = "Chart 4";
+            this.dspData.Series.Add(series1);
+            this.dspData.Series.Add(series2);
+            this.dspData.Series.Add(series3);
+            this.dspData.Series.Add(series4);
             this.dspData.Size = new System.Drawing.Size(806, 376);
             this.dspData.TabIndex = 6;
             this.dspData.Text = "DSP Data";
@@ -138,7 +139,7 @@
             // 
             // stopDacq
             // 
-            this.stopDacq.Location = new System.Drawing.Point(198, 70);
+            this.stopDacq.Location = new System.Drawing.Point(186, 70);
             this.stopDacq.Name = "stopDacq";
             this.stopDacq.Size = new System.Drawing.Size(146, 23);
             this.stopDacq.TabIndex = 16;
@@ -196,7 +197,7 @@
             // 
             // btResetSettings
             // 
-            this.btResetSettings.Location = new System.Drawing.Point(389, 70);
+            this.btResetSettings.Location = new System.Drawing.Point(652, 127);
             this.btResetSettings.Name = "btResetSettings";
             this.btResetSettings.Size = new System.Drawing.Size(154, 23);
             this.btResetSettings.TabIndex = 24;
@@ -281,11 +282,22 @@
             this.UploadDSPBinary.UseVisualStyleBackColor = true;
             this.UploadDSPBinary.Click += new System.EventHandler(this.UploadDSPBinary_Click);
             // 
+            // SaveToFileCheckBox
+            // 
+            this.SaveToFileCheckBox.AutoSize = true;
+            this.SaveToFileCheckBox.Location = new System.Drawing.Point(350, 74);
+            this.SaveToFileCheckBox.Name = "SaveToFileCheckBox";
+            this.SaveToFileCheckBox.Size = new System.Drawing.Size(79, 17);
+            this.SaveToFileCheckBox.TabIndex = 36;
+            this.SaveToFileCheckBox.Text = "Save to file";
+            this.SaveToFileCheckBox.UseVisualStyleBackColor = true;
+            // 
             // Dacq
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(830, 553);
+            this.Controls.Add(this.SaveToFileCheckBox);
             this.Controls.Add(this.StopDSP);
             this.Controls.Add(this.UploadDSPBinary);
             this.Controls.Add(this.label1);
@@ -337,6 +349,7 @@
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Button StopDSP;
         private System.Windows.Forms.Button UploadDSPBinary;
+        private System.Windows.Forms.CheckBox SaveToFileCheckBox;
     }
 }
 
