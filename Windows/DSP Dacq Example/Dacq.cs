@@ -214,6 +214,7 @@ namespace MCS_USB_Windows_Forms_Application1
 
             startDacq.Enabled = false;
             stopDacq.Enabled = true;
+            SaveToFileCheckBox.Enabled = false;
 
             other_receiver = 0;
             if (((CMcsUsbListEntryNet) cbDeviceList.SelectedItem).SerialNumber.EndsWith("-B"))
@@ -276,6 +277,7 @@ namespace MCS_USB_Windows_Forms_Application1
 
         private void stopDacq_Click(object sender, EventArgs e)
         {
+            SaveToFileCheckBox.Enabled = true;
             if (mea.GetDeviceId().IdProduct == ProductIdEnumNet.W2100)
             {
                 CW2100_FunctionNet func = new CW2100_FunctionNet(mea);
@@ -347,7 +349,20 @@ namespace MCS_USB_Windows_Forms_Application1
             dspData.Series[1].Points.Clear();
             dspData.Series[2].Points.Clear();
             dspData.Series[3].Points.Clear();
-            
+
+            double multiplierSeries0 = 1;
+            double multiplierSeries1 = 1;
+            double multiplierSeries2 = 1;
+            double multiplierSeries3 = 1;
+
+            if (DisplayInMicrovoltsCheckbox.Checked)
+            {
+                if (series0Channel.SelectedIndex < Channels) multiplierSeries0 = 0.381;
+                if (series1Channel.SelectedIndex < Channels) multiplierSeries1 = 0.381;
+                if (series2Channel.SelectedIndex < Channels) multiplierSeries2 = 0.381;
+                if (series3Channel.SelectedIndex < Channels) multiplierSeries3 = 0.381;
+            }
+
             int min = int.MaxValue;
             int max = int.MinValue;
             // the chart can not handle every datapoint
@@ -355,10 +370,10 @@ namespace MCS_USB_Windows_Forms_Application1
             //for (int i = 0; i < Samplerate / 5; i += 20) // show only 1/10 data points
             for (int i = 0; i < Samplerate; i += 100) // show only each 100th data points
             {
-                if (cbChart1.Checked) AddPoint(0, i, data[i * TotalChannels + series0Channel.SelectedIndex], ref min, ref max);
-                if (cbChart2.Checked) AddPoint(1, i, data[i * TotalChannels + series1Channel.SelectedIndex], ref min, ref max);
-                if (cbChart3.Checked) AddPoint(2, i, data[i * TotalChannels + series2Channel.SelectedIndex], ref min, ref max);
-                if (cbChart4.Checked) AddPoint(3, i, data[i * TotalChannels + series3Channel.SelectedIndex], ref min, ref max);
+                if (cbChart1.Checked) AddPoint(0, i, multiplierSeries0 * data[i * TotalChannels + series0Channel.SelectedIndex], ref min, ref max);
+                if (cbChart2.Checked) AddPoint(1, i, multiplierSeries1 * data[i * TotalChannels + series1Channel.SelectedIndex], ref min, ref max);
+                if (cbChart3.Checked) AddPoint(2, i, multiplierSeries2 * data[i * TotalChannels + series2Channel.SelectedIndex], ref min, ref max);
+                if (cbChart4.Checked) AddPoint(3, i, multiplierSeries3 * data[i * TotalChannels + series3Channel.SelectedIndex], ref min, ref max);
             }
             
             if (min < max)
@@ -378,6 +393,13 @@ namespace MCS_USB_Windows_Forms_Application1
             dspData.Series[series].Points.AddXY((double) i / Samplerate, (double) data);
             if (data < min) min = data;
             if (data > max) max = data;
+        }
+
+        private void AddPoint(int series, int i, double data, ref int min, ref int max)
+        {
+            dspData.Series[series].Points.AddXY((double)i / Samplerate, data);
+            if (data < min) min = (int) Math.Floor(data);
+            if (data > max) max = (int) Math.Ceiling(data);
         }
 
         //private void btStartTrigger_Click(object sender, EventArgs e)
