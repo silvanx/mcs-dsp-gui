@@ -408,7 +408,7 @@ interrupt void interrupt6(void)
     yPrevious[0] = yCurrent;
     xPrevious[0] = xCurrent;
 
-    filtered_state_value = yCurrent;
+    filtered_state_value = abs(yCurrent);
     state_value = abs(HS_Data_p[0][2]);
 
     if (timestamp == (ratio_T_controller_T_s - 1)  && (HS_Data_p[1][0] & 1) * 1000) {
@@ -475,7 +475,7 @@ interrupt void interrupt6(void)
 //        }
         
         // Relate the pulse index to the memory segment index assoicated with it 
-        if (state_value > SetPoint){
+        if (filtered_state_value > SetPoint){
             stim_index = 1;
             seg = stim_index;
         }
