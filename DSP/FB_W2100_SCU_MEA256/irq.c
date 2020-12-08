@@ -17,7 +17,7 @@ int last_tr_cross[HS1_CHANNELS/2];
 Uint32 aux_value = 0;
 
 #define DATA_HEADER_SIZE 1
-#define FILTERLENGTH 3
+#define FILTERLENGTH 5
 
 void toggleLED()
 {
@@ -387,8 +387,12 @@ interrupt void interrupt6(void)
 	// Calculate current beta ARV (single electrode for testing purposes)
 	xCurrent = HS_Data_p[0][2];
     // Hardcoded filter parameters (BP, beta)
-    double a[FILTERLENGTH] = {1, -1.99273, 0.99277};
-    double b[FILTERLENGTH] = {0.003614, 0, -0.003614};
+	// First order filter
+    // double a[FILTERLENGTH] = {1, -1.99273, 0.99277};
+    // double b[FILTERLENGTH] = {0.003614, 0, -0.003614};
+	// Second order filter
+	double a[FILTERLENGTH] = { 1, -3.9924, 5.9772, -3.9773, 0.9925 };
+	double b[FILTERLENGTH] = { 0.0000071039, 0, -0.000014208, 0, 0.0000071039 };
 
     double b_acc = b[0] * xCurrent;
     double a_acc = 0;
