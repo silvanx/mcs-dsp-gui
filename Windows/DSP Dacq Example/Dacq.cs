@@ -228,10 +228,10 @@ namespace MCS_USB_Windows_Forms_Application1
                 int ChannelsInBlock;
 
                 mea.SetDataMode(DataModeEnumNet.Signed_32bit, 0);
-                if (mea.GetDeviceId().IdProduct == ProductIdEnumNet.W2100)
-                {
-                    Samplerate = 20000;
-                }
+                //if (mea.GetDeviceId().IdProduct == ProductIdEnumNet.W2100)
+                //{
+                //    Samplerate = 20000;
+                //}
 
                 mea.SetNumberOfAnalogChannels(Channels, 0, Channels, AnalogChannels, 0); // Read raw data
 
@@ -466,6 +466,19 @@ namespace MCS_USB_Windows_Forms_Application1
             uint status = mea.Connect((CMcsUsbListEntryNet)cbDeviceList.SelectedItem, 63);
             if (status == 0 && mea.GetDeviceId().IdProduct == ProductIdEnumNet.W2100)
             {
+                mea.SetDataMode(DataModeEnumNet.Signed_32bit, 0);
+
+                mea.SetNumberOfAnalogChannels(Channels, 0, Channels, AnalogChannels, 0); // Read raw data
+
+                try
+                {
+                    mea.SetSamplerate(Samplerate, 1, 0);
+                }
+                catch (CUsbExceptionNet)
+                {
+                    Samplerate = mea.GetSamplerate(0);
+                }
+
                 CW2100_FunctionNet func = new CW2100_FunctionNet(mea);
                 w2100_hs_samling = func.GetHeadstageSamplingActive(other_receiver + 0);
                 func.SetHeadstageSamplingActive(false, other_receiver + 0);
@@ -477,10 +490,10 @@ namespace MCS_USB_Windows_Forms_Application1
                 stim.SelectTimeSlot(other_receiver + 0);
                 // Different strength
                 // Define the amplitude vector of the 3 segments of the biphasic pulse (in nA)
-                int[] ampl = new[] { 100000, -100000, 0 };
+                int[] ampl = new[] { 10000, -10000, 0 };
 
                 // Define the duraion vector of the 3 segments of the biphasic pulse (in us)
-                ulong[] dur = new ulong[] { 3000, 3000, 12000 };
+                ulong[] dur = new ulong[] { 100, 100, 7492 };
 
                 // Define each pulse
                 for (int i = 0; i < 16; i++)
@@ -514,6 +527,10 @@ namespace MCS_USB_Windows_Forms_Application1
                 }
                 func.SetHeadstageSamplingActive(true, other_receiver + 0);
             }
+            if (startDacq.Enabled)
+            {
+                mea.Disconnect();
+            }            
 #endif
             CMcsUsbFactoryNet factorydev = new CMcsUsbFactoryNet();
             if (factorydev.Connect(port, LockMask) == 0)

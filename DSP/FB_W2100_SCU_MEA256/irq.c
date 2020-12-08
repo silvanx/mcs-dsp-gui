@@ -115,14 +115,14 @@ interrupt void interrupt6(void)
 	const float f_s = 20000;
 	const float T_s = 1 / f_s;
 
-	// Define controller call period (20ms)
-	const float T_controller = 0.02; 
+	// Define controller call period (23.08ms)
+	const float T_controller = 0.02308;
 
 	// Calculate T_controller to T_s ratio to know every how many calls of interrupt 6 we need to call the controller
 	const int ratio_T_controller_T_s = T_controller * f_s;  //5 * 18 / 1000 * f_s;
 
 	// Define SetPoint being the target beta ARV 
-    const float SetPoint = 7;                     //set SetPoint randomly to be 5mV ie 5000uV
+    const float SetPoint = 3500;                     //set SetPoint randomly to be 5mV ie 5000uV
 
     // Define array that remembers previous inputs and outputs for the sake of filtering
     static double xPrevious[FILTERLENGTH - 1];
@@ -381,7 +381,6 @@ interrupt void interrupt6(void)
 	}
 #else
 #if 1
-
     // Calculate current beta ARV (differential recording)
     // xCurrent = abs(HS_Data_p[0][2] - HS_Data_p[0][0]); // NB: In uV
 	// Calculate current beta ARV (single electrode for testing purposes)
@@ -407,6 +406,10 @@ interrupt void interrupt6(void)
 
     filtered_state_value = yCurrent;
     state_value = abs(HS_Data_p[0][2]);
+
+    if (timestamp == (ratio_T_controller_T_s - 1)  && (HS_Data_p[1][0] & 1) * 1000) {
+            timestamp == ratio_T_controller_T_s - (int) (0.0004 * f_s);
+    }
 
     // Increment timestamp each function call and call controller when T_controller elapsed i.e. when timestamp ==	ratio_T_controller_T_s
     if (++timestamp ==	ratio_T_controller_T_s)
