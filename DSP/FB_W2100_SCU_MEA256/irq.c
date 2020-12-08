@@ -411,6 +411,7 @@ interrupt void interrupt6(void)
     filtered_state_value = abs(yCurrent);
     state_value = abs(HS_Data_p[0][2]);
 
+	// If we're about to update the controller but we're currently stimulating, delay the controller update by 400 us
     if (timestamp == (ratio_T_controller_T_s - 1)  && (HS_Data_p[1][0] & 1) * 1000) {
             timestamp == ratio_T_controller_T_s - (int) (0.0004 * f_s);
     }
@@ -476,7 +477,7 @@ interrupt void interrupt6(void)
         
         // Relate the pulse index to the memory segment index assoicated with it 
         if (filtered_state_value > SetPoint){
-            stim_index = 1;
+            stim_index = 15;
             seg = stim_index;
         }
         else {

@@ -31,6 +31,8 @@ namespace MCS_USB_Windows_Forms_Application1
 
         int Samplerate = 20000;
 
+        int maxAmplitudeValue = 30000;
+
         // for W2100
         private int other_receiver = 0;
         private bool w2100_hs_samling = false;
@@ -452,11 +454,11 @@ namespace MCS_USB_Windows_Forms_Application1
             int pulse_off_phase_dur = T_stim - 2 * pulse_on_phase_dur;
 
             // Define the upper and lower bounds for the controller output
-            const int MaxValue = 300000;                //in nA
+            int MaxValue = maxAmplitudeValue;                //in nA
             const int MinValue = 0;                     //in uA
 
             // Define the step between pulses amplitude
-            const int delta_DBS_amp = (MaxValue - MinValue) / 15;    // in nA
+            int delta_DBS_amp = (MaxValue - MinValue) / 16;    // in nA
 #if true
             other_receiver = 0;
             if (((CMcsUsbListEntryNet)cbDeviceList.SelectedItem).SerialNumber.EndsWith("-B"))
@@ -499,8 +501,8 @@ namespace MCS_USB_Windows_Forms_Application1
                 for (int i = 0; i < 16; i++)
                 {
                     // Define the amplitude (nA) of each of the 3 segments
-                    ampl[0] = delta_DBS_amp * i + 1;
-                    ampl[1] = -delta_DBS_amp * i - 1;
+                    ampl[0] = delta_DBS_amp * (i + 1);
+                    ampl[1] = -delta_DBS_amp * (i + 1);
 
                     // Define the duration (us) of each of the 3 segments
                     //dur[0] = (ulong)pulse_on_phase_dur;
@@ -560,7 +562,14 @@ namespace MCS_USB_Windows_Forms_Application1
 
         private void UploadDSPBinary_Click(object sender, EventArgs e)
         {
-            
+            if (! int.TryParse(MaxAmplitudeTextBox.Text, out maxAmplitudeValue))
+            {
+                MessageBox.Show("Max amplitude has to be an integer");
+            }
+            else if (maxAmplitudeValue > 300000 || maxAmplitudeValue < 0)
+            {
+                MessageBox.Show("Max amplitude has to be between 0 and 300000 nA");
+            }
 
             if (DspPort != null || RawPort != null)
             {
