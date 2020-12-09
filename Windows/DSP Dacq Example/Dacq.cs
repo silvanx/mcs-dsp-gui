@@ -31,7 +31,7 @@ namespace MCS_USB_Windows_Forms_Application1
 
         int Samplerate = 20000;
 
-        int maxAmplitudeValue = 30000;
+        int maxAmplitudeValue = 10;
 
         // for W2100
         private int other_receiver = 0;
@@ -164,8 +164,6 @@ namespace MCS_USB_Windows_Forms_Application1
                 text = "Channel " + (i + 1).ToString();
                 series0Channel.Items.Add(text);
                 series1Channel.Items.Add(text);
-                series2Channel.Items.Add(text);
-                series3Channel.Items.Add(text);
             }
 
             for (int i = 0; i < AnalogChannels; i++)
@@ -173,8 +171,6 @@ namespace MCS_USB_Windows_Forms_Application1
                 text = "ANA " + (i + 1).ToString();
                 series0Channel.Items.Add(text);
                 series1Channel.Items.Add(text);
-                series2Channel.Items.Add(text);
-                series3Channel.Items.Add(text);
             }
 
             for (int i = 0; i < Channels; i++)
@@ -182,8 +178,6 @@ namespace MCS_USB_Windows_Forms_Application1
                 text = "DSP " + (i + 1).ToString();
                 series0Channel.Items.Add(text);
                 series1Channel.Items.Add(text);
-                series2Channel.Items.Add(text);
-                series3Channel.Items.Add(text);
             }
 
             if (use_digital_in)
@@ -191,8 +185,6 @@ namespace MCS_USB_Windows_Forms_Application1
                 text = "Digital In";
                 series0Channel.Items.Add(text);
                 series1Channel.Items.Add(text);
-                series2Channel.Items.Add(text);
-                series3Channel.Items.Add(text);
             }
 
             for (int i = 0; i < Checksum; i++)
@@ -200,14 +192,10 @@ namespace MCS_USB_Windows_Forms_Application1
                 text = "Checksum " + (i + 1).ToString();
                 series0Channel.Items.Add(text);
                 series1Channel.Items.Add(text);
-                series2Channel.Items.Add(text);
-                series3Channel.Items.Add(text);
             }
 
             series0Channel.SelectedIndex = 0;
             series1Channel.SelectedIndex = 1;
-            series2Channel.SelectedIndex = 2;
-            series3Channel.SelectedIndex = 3;
 
         }
 
@@ -361,8 +349,6 @@ namespace MCS_USB_Windows_Forms_Application1
             {
                 if (series0Channel.SelectedIndex < Channels) multiplierSeries0 = 0.381;
                 if (series1Channel.SelectedIndex < Channels) multiplierSeries1 = 0.381;
-                if (series2Channel.SelectedIndex < Channels) multiplierSeries2 = 0.381;
-                if (series3Channel.SelectedIndex < Channels) multiplierSeries3 = 0.381;
             }
 
             int min = int.MaxValue;
@@ -374,8 +360,6 @@ namespace MCS_USB_Windows_Forms_Application1
             {
                 if (cbChart1.Checked) AddPoint(0, i, multiplierSeries0 * data[i * TotalChannels + series0Channel.SelectedIndex], ref min, ref max);
                 if (cbChart2.Checked) AddPoint(1, i, multiplierSeries1 * data[i * TotalChannels + series1Channel.SelectedIndex], ref min, ref max);
-                if (cbChart3.Checked) AddPoint(2, i, multiplierSeries2 * data[i * TotalChannels + series2Channel.SelectedIndex], ref min, ref max);
-                if (cbChart4.Checked) AddPoint(3, i, multiplierSeries3 * data[i * TotalChannels + series3Channel.SelectedIndex], ref min, ref max);
             }
             
             if (min < max)
@@ -403,28 +387,6 @@ namespace MCS_USB_Windows_Forms_Application1
             if (data < min) min = (int) Math.Floor(data);
             if (data > max) max = (int) Math.Ceiling(data);
         }
-
-        //private void btStartTrigger_Click(object sender, EventArgs e)
-        //{
-        //    int segment = cbTriggerSegment.SelectedIndex;
-
-        //    if (mea.GetDeviceId().IdProduct == ProductIdEnumNet.W2100)
-        //    {
-        //        CW2100_StimulatorFunctionNet stim = new CW2100_StimulatorFunctionNet(mea);
-        //        stim.SelectTimeSlot(other_receiver + 0);
-        //        stim.SendStart((uint) ((segment << 4) + 1));
-        //    }
-        //}
-
-        //private void btStopTrigger_Click(object sender, EventArgs e)
-        //{
-        //    if (mea.GetDeviceId().IdProduct == ProductIdEnumNet.W2100)
-        //    {
-        //        CW2100_StimulatorFunctionNet stim = new CW2100_StimulatorFunctionNet(mea);
-        //        stim.SelectTimeSlot(other_receiver + 0);
-        //        stim.SendStop(1);
-        //    }
-        //}
 
         private void btResetSettings_Click(object sender, EventArgs e)
         {
@@ -454,8 +416,8 @@ namespace MCS_USB_Windows_Forms_Application1
             int pulse_off_phase_dur = T_stim - 2 * pulse_on_phase_dur;
 
             // Define the upper and lower bounds for the controller output
-            int MaxValue = maxAmplitudeValue;                //in nA
-            const int MinValue = 0;                     //in uA
+            int MaxValue = maxAmplitudeValue * 1000;                //in nA
+            const int MinValue = 0;                     //in nA
 
             // Define the step between pulses amplitude
             int delta_DBS_amp = (MaxValue - MinValue) / 16;    // in nA
@@ -539,16 +501,8 @@ namespace MCS_USB_Windows_Forms_Application1
             {
                 string FirmwareFile;
                 FirmwareFile = System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location);
-                //if (factorydev.GetDeviceId().IdProduct == ProductIdEnumNet.MEA2100)
-                //{
-                //    FirmwareFile += @"\..\..\..\..\DSP\FB_Example\Release\";
-                //    FirmwareFile += "FB_Example.bin";
-                //}
-                //else
-                //{
                 FirmwareFile += @"\..\..\..\..\DSP\FB_W2100_SCU_MEA256\Release\";
                 FirmwareFile += "FB_W2100_SCU_MEA256.bin";
-                //}
 
                 factorydev.Disconnect();
 
@@ -566,9 +520,9 @@ namespace MCS_USB_Windows_Forms_Application1
             {
                 MessageBox.Show("Max amplitude has to be an integer");
             }
-            else if (maxAmplitudeValue > 300000 || maxAmplitudeValue < 0)
+            else if (maxAmplitudeValue > 300 || maxAmplitudeValue <= 0)
             {
-                MessageBox.Show("Max amplitude has to be between 0 and 300000 nA");
+                MessageBox.Show("Max amplitude has to be between 0 and 300 μA");
             }
 
             if (DspPort != null || RawPort != null)
