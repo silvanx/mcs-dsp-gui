@@ -112,8 +112,8 @@ namespace MCS_USB_Windows_Forms_Application1
             CMcsUsbFactoryNet factorydev = new CMcsUsbFactoryNet(); // Create object of class CMcsUsbFactoryNet (provides firmware upgrade and register access capabilities)
             if (DspPort != null && factorydev.Connect(DspPort, LockMask) == 0)  // if connect call returns zero, connect has been successful
             {
-                double[] xcoeffs;
-                double[] ycoeffs;
+                //double[] xcoeffs;
+                //double[] ycoeffs;
                 //mkfilterNet.mkfilter("Bu", 0, "Lp", 2, 1000.0 / (float)Samplerate, 0, out xcoeffs, out ycoeffs);
                 //factorydev.WriteRegister(0x600, DoubleToFixedInt(1, 16, 30, xcoeffs[0])); // set b[0] fpr 30 Hz LP
                 //factorydev.WriteRegister(0x608, DoubleToFixedInt(1, 15, 30, xcoeffs[1])); // set b[1] fpr 30 Hz LP
@@ -337,17 +337,16 @@ namespace MCS_USB_Windows_Forms_Application1
         {
             dspData.Series[0].Points.Clear();
             dspData.Series[1].Points.Clear();
-            dspData.Series[2].Points.Clear();
-            dspData.Series[3].Points.Clear();
 
             double multiplierSeries0 = 1;
             double multiplierSeries1 = 1;
-            double multiplierSeries2 = 1;
-            double multiplierSeries3 = 1;
 
-            if (DisplayInMicrovoltsCheckbox.Checked)
+            if (DisplayInMicrovoltsChannel1.Checked)
             {
                 if (series0Channel.SelectedIndex < Channels) multiplierSeries0 = 0.381;
+            }
+            if (DisplayInMicrovoltsChannel2.Checked)
+            {
                 if (series1Channel.SelectedIndex < Channels) multiplierSeries1 = 0.381;
             }
 
