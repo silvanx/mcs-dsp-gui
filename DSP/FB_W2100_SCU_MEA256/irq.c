@@ -17,7 +17,8 @@ int last_tr_cross[HS1_CHANNELS/2];
 Uint32 aux_value = 0;
 
 #define DATA_HEADER_SIZE 1
-#define FILTERLENGTH 5
+#define LOWPASS_LENGTH 4
+#define BANDPASS_LENGTH 7
 
 void toggleLED()
 {
@@ -44,6 +45,33 @@ void W2100Usb(Uint32 direction, Uint32 request, Uint32 value, Uint32 index, Uint
 		repeat--;
 		ready = READ_REGISTER(0x0c13);
 	}
+}
+
+
+void filter(double *b, double *a, int filterLength, double *xPrevious, double *yPrevious, double xCurrent)
+{
+	int i;
+	if (filterLength <= 0)
+		return;
+
+	double b_acc = b[0] * xCurrent;
+	double a_acc = 0;
+
+	for (i = 1; i < filterLength; i++)
+	{
+		b_acc += b[i] * xPrevious[i - 1];
+		a_acc += a[i] * yPrevious[i - 1];
+	}
+
+	double yCurrent = b_acc - a_acc;
+
+	for (i = filterLength - 1; i > 0; i--)
+	{
+		xPrevious[i] = xPrevious[i - 1];
+		yPrevious[i] = yPrevious[i - 1];
+	}
+	yPrevious[0] = yCurrent;
+	xPrevious[0] = xCurrent;
 }
 
 // Mailbox write interrupt
@@ -125,8 +153,12 @@ interrupt void interrupt6(void)
     const float SetPoint = 3500;                     //set SetPoint randomly to be 5mV ie 5000uV
 
     // Define array that remembers previous inputs and outputs for the sake of filtering
-    static double xPrevious[FILTERLENGTH - 1];
-    static double yPrevious[FILTERLENGTH - 1];
+    static double xPrevious1[LOWPASS_LENGTH];
+    static double yPrevious1[LOWPASS_LENGTH];
+	static double xPrevious2[LOWPASS_LENGTH];
+	static double yPrevious2[LOWPASS_LENGTH];
+	static double xPrevious3[BANDPASS_LENGTH];
+	static double yPrevious3[BANDPASS_LENGTH];
     
 	// Define a variable that is true just the first run
     static int first_run = 1; 
@@ -154,10 +186,17 @@ interrupt void interrupt6(void)
         }
 
         // These should be zero anyway, since the arrays are declared static but better safe than sorry
-        for (i = 0; i < FILTERLENGTH - 1; i++) {
-            yPrevious[i] = 0;
-            xPrevious[i] = 0;
+        for (i = 0; i < LOWPASS_LENGTH; i++) {
+            yPrevious1[i] = 0;
+            xPrevious1[i] = 0;
+			yPrevious2[i] = 0;
+			xPrevious2[i] = 0;
         }
+		for (i = 0; i < BANDPASS_LENGTH; i++) {
+			yPrevious3[i] = 0;
+			xPrevious3[i] = 0;
+		}
+
 
         // Not anymore the first run (thus, this if statement will be run only in the first call of interrupt6 function)
         first_run = 0;
@@ -179,10 +218,16 @@ interrupt void interrupt6(void)
     static float pulse_amp_diff = 0;
 
     // Define state value
-    static float state_value = 0;
-    static float filtered_state_value = 0;
-    static float xCurrent = 0;
-    static float yCurrent = 0;
+    static double state_value = 0;
+    static double xCurrent = 0;
+    static double yCurrent1 = 0;
+	static double decimated1 = 0;
+	static double yCurrent2 = 0;
+	static double decimated2 = 0;
+	static double yCurrent3 = 0;
+	static double filtered_state_value = 0;
+	static int decimationCounter1 = 0;
+	static int decimationCounter2 = 0;
     
 	// Define counter for function run
 	static int timestamp = 0; // exists only in this function but is created only once on the first function call (i.e. static)
@@ -383,33 +428,47 @@ interrupt void interrupt6(void)
 #if 1
     // Calculate current beta ARV (differential recording)
     // xCurrent = abs(HS_Data_p[0][2] - HS_Data_p[0][0]); // NB: In uV
-	// Calculate current beta ARV (single electrode for testing purposes)
+	// Calculate current beta ARV (single electrode for testing with signal generator)
 	xCurrent = HS_Data_p[0][2];
-    // Hardcoded filter parameters (BP, beta)
-	// First order filter
-    // double a[FILTERLENGTH] = {1, -1.99273, 0.99277};
-    // double b[FILTERLENGTH] = {0.003614, 0, -0.003614};
-	// Second order filter
-	double a[FILTERLENGTH] = { 1, -3.9924, 5.9772, -3.9773, 0.9925 };
-	double b[FILTERLENGTH] = { 0.0000071039, 0, -0.000014208, 0, 0.0000071039 };
+    
+	// Hardcoded filter parameters
+	// First downsampling (Butterworth, lowpass, cutoff 0.1 (normalized))
+	double a1[LOWPASS_LENGTH] = { 1, -2.37409474370935, 1.92935566909122, -0.532075368312092 };
+	double b1[LOWPASS_LENGTH] = { 0.00289819463372137, 0.00869458390116412, 0.00869458390116412, 0.00289819463372137 };
+	int decimationFactor1 = 10;
 
-    double b_acc = b[0] * xCurrent;
-    double a_acc = 0;
-    for (i = 1; i < FILTERLENGTH; i++) {
-        b_acc += b[i] * xPrevious[i - 1];
-        a_acc += a[i] * yPrevious[i - 1];
-    }
-    yCurrent = b_acc - a_acc;
+	// Second downsampling (Butterworth, lowpass, cutoff 0.25 (normalized))
+	double a2[LOWPASS_LENGTH] = { 1, -1.45902906222806, 0.910369000290069, -0.197825187264319 };
+	double b2[LOWPASS_LENGTH] = { 0.0316893438497110, 0.0950680315491330, 0.0950680315491330, 0.0316893438497110 };
+	int decimationFactor2 = 4;
 
-    for (i = FILTERLENGTH - 2; i > 0; i--) {
-        yPrevious[i] = yPrevious[i - 1];
-        xPrevious[i] = xPrevious[i - 1];
-    }
-    yPrevious[0] = yCurrent;
-    xPrevious[0] = xCurrent;
+	// Beta extraction (Butterworth, bandpass, 13-30 Hz, assuming 500 Hz sampling frequency)
+	double a3[BANDPASS_LENGTH] = { 1, -5.40212898354275, 12.3252130462259, -15.1987442456715, 10.6838109529814, -4.05972313481503, 0.651760197122122 };
+	double b3[BANDPASS_LENGTH] = { 0.000995173561555180, 0, -0.00298552068466554, 0, 0.00298552068466554, 0, -0.000995173561555180 };
 
-    filtered_state_value = abs(yCurrent);
-    state_value = abs(HS_Data_p[0][2]);
+	filter(b1, a1, LOWPASS_LENGTH, xPrevious1, yPrevious1, xCurrent);
+	yCurrent1 = yPrevious1[0];
+	if (decimationCounter1 % decimationFactor1 == 0)
+	{
+		decimated1 = yCurrent1;
+		filter(b2, a2, LOWPASS_LENGTH, xPrevious2, yPrevious2, decimated1);
+		yCurrent2 = yPrevious2[0];
+		if (decimationCounter2 % decimationFactor2 == 0)
+		{
+		    decimated2 = yCurrent2;
+			filter(b3, a3, BANDPASS_LENGTH, xPrevious3, yPrevious3, decimated2);
+			yCurrent3 = yPrevious3[0];
+		}
+		decimationCounter2++;
+	}
+	decimationCounter1++;
+
+    filtered_state_value = abs(yPrevious3[0]);
+	double magnitude = 0;
+	for (i = 0; i < BANDPASS_LENGTH; i++)
+	{
+		if (abs(yPrevious3[i]) > magnitude) magnitude = abs(yPrevious3[i]);
+	}
 
 	// If we're about to update the controller but we're currently stimulating, delay the controller update by 400 us
     if (timestamp == (ratio_T_controller_T_s - 1)  && (HS_Data_p[1][0] & 1) * 1000) {
@@ -476,17 +535,14 @@ interrupt void interrupt6(void)
 //        }
         
         // Relate the pulse index to the memory segment index assoicated with it 
-        if (filtered_state_value > SetPoint){
-            stim_index = 15;
-            seg = stim_index;
+        if (magnitude > SetPoint){
+            seg = 14;
         }
         else {
-            stim_index = 0;
             seg = 0;
         }
 
         if (seg == 0) {
-
             // Turn off stimulation if stim_index = 0
             WRITE_REGISTER(0x9A80, 0);
         }
@@ -498,16 +554,16 @@ interrupt void interrupt6(void)
         // Set AUX 1 output value to zero
         aux_value &= 0;
 	    WRITE_REGISTER(IFB_AUX_OUT, aux_value);
-
-        MonitorData[1] = OutputValue;
-        MonitorData[2] = stim_index;
-        MonitorData[3] = delta_DBS_amp;
      }
 
-MonitorData[0] = HS_Data_p[0][2];
-MonitorData[4] = (HS_Data_p[1][0] & 1) * 1000;
+MonitorData[0] = xCurrent;
+MonitorData[1] = yCurrent1;
+MonitorData[2] = decimated1;
+MonitorData[3] = yCurrent2;
+MonitorData[4] = decimated2;
+MonitorData[5] = yCurrent3;
 MonitorData[6] = filtered_state_value;
-MonitorData[7] = state_value;
+MonitorData[7] = magnitude;
 //MonitorData[6] = pulse[0];
 //MonitorData[7] = pulse[1];
 MonitorData[8] = pulse[2];

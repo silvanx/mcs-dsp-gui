@@ -32,20 +32,13 @@
             System.Windows.Forms.DataVisualization.Charting.Legend legend1 = new System.Windows.Forms.DataVisualization.Charting.Legend();
             System.Windows.Forms.DataVisualization.Charting.Series series1 = new System.Windows.Forms.DataVisualization.Charting.Series();
             System.Windows.Forms.DataVisualization.Charting.Series series2 = new System.Windows.Forms.DataVisualization.Charting.Series();
-            System.Windows.Forms.DataVisualization.Charting.Series series3 = new System.Windows.Forms.DataVisualization.Charting.Series();
-            System.Windows.Forms.DataVisualization.Charting.Series series4 = new System.Windows.Forms.DataVisualization.Charting.Series();
             this.startDacq = new System.Windows.Forms.Button();
             this.dspData = new System.Windows.Forms.DataVisualization.Charting.Chart();
             this.series0Channel = new System.Windows.Forms.ComboBox();
             this.series1Channel = new System.Windows.Forms.ComboBox();
-            this.series2Channel = new System.Windows.Forms.ComboBox();
-            this.series3Channel = new System.Windows.Forms.ComboBox();
             this.stopDacq = new System.Windows.Forms.Button();
-            this.cbChart3 = new System.Windows.Forms.CheckBox();
-            this.cbChart4 = new System.Windows.Forms.CheckBox();
             this.cbChart1 = new System.Windows.Forms.CheckBox();
             this.cbChart2 = new System.Windows.Forms.CheckBox();
-            this.btResetSettings = new System.Windows.Forms.Button();
             this.btnDeviceOK = new System.Windows.Forms.Button();
             this.dspSerial = new System.Windows.Forms.TextBox();
             this.rawSerial = new System.Windows.Forms.TextBox();
@@ -56,9 +49,10 @@
             this.StopDSP = new System.Windows.Forms.Button();
             this.UploadDSPBinary = new System.Windows.Forms.Button();
             this.SaveToFileCheckBox = new System.Windows.Forms.CheckBox();
-            this.DisplayInMicrovoltsCheckbox = new System.Windows.Forms.CheckBox();
             this.MaxAmplitudeTextBox = new System.Windows.Forms.TextBox();
             this.label2 = new System.Windows.Forms.Label();
+            this.DisplayInMicrovoltsChannel1 = new System.Windows.Forms.CheckBox();
+            this.DisplayInMicrovoltsChannel2 = new System.Windows.Forms.CheckBox();
             ((System.ComponentModel.ISupportInitialize)(this.dspData)).BeginInit();
             this.SuspendLayout();
             // 
@@ -88,18 +82,8 @@
             series2.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.FastLine;
             series2.Legend = "Legend1";
             series2.Name = "Chart 2";
-            series3.ChartArea = "ChartArea1";
-            series3.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.FastLine;
-            series3.Legend = "Legend1";
-            series3.Name = "Chart 3";
-            series4.ChartArea = "ChartArea1";
-            series4.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.FastLine;
-            series4.Legend = "Legend1";
-            series4.Name = "Chart 4";
             this.dspData.Series.Add(series1);
             this.dspData.Series.Add(series2);
-            this.dspData.Series.Add(series3);
-            this.dspData.Series.Add(series4);
             this.dspData.Size = new System.Drawing.Size(806, 376);
             this.dspData.TabIndex = 6;
             this.dspData.Text = "DSP Data";
@@ -122,24 +106,6 @@
             this.series1Channel.Size = new System.Drawing.Size(121, 21);
             this.series1Channel.TabIndex = 11;
             // 
-            // series2Channel
-            // 
-            this.series2Channel.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.series2Channel.FormattingEnabled = true;
-            this.series2Channel.Location = new System.Drawing.Point(308, 107);
-            this.series2Channel.Name = "series2Channel";
-            this.series2Channel.Size = new System.Drawing.Size(121, 21);
-            this.series2Channel.TabIndex = 13;
-            // 
-            // series3Channel
-            // 
-            this.series3Channel.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.series3Channel.FormattingEnabled = true;
-            this.series3Channel.Location = new System.Drawing.Point(308, 134);
-            this.series3Channel.Name = "series3Channel";
-            this.series3Channel.Size = new System.Drawing.Size(121, 21);
-            this.series3Channel.TabIndex = 15;
-            // 
             // stopDacq
             // 
             this.stopDacq.Location = new System.Drawing.Point(186, 70);
@@ -149,30 +115,6 @@
             this.stopDacq.Text = "Stop Measurment";
             this.stopDacq.UseVisualStyleBackColor = true;
             this.stopDacq.Click += new System.EventHandler(this.stopDacq_Click);
-            // 
-            // cbChart3
-            // 
-            this.cbChart3.AutoSize = true;
-            this.cbChart3.Checked = true;
-            this.cbChart3.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.cbChart3.Location = new System.Drawing.Point(239, 109);
-            this.cbChart3.Name = "cbChart3";
-            this.cbChart3.Size = new System.Drawing.Size(63, 17);
-            this.cbChart3.TabIndex = 20;
-            this.cbChart3.Text = "Chart 3:";
-            this.cbChart3.UseVisualStyleBackColor = true;
-            // 
-            // cbChart4
-            // 
-            this.cbChart4.AutoSize = true;
-            this.cbChart4.Checked = true;
-            this.cbChart4.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.cbChart4.Location = new System.Drawing.Point(239, 136);
-            this.cbChart4.Name = "cbChart4";
-            this.cbChart4.Size = new System.Drawing.Size(63, 17);
-            this.cbChart4.TabIndex = 21;
-            this.cbChart4.Text = "Chart 4:";
-            this.cbChart4.UseVisualStyleBackColor = true;
             // 
             // cbChart1
             // 
@@ -197,16 +139,6 @@
             this.cbChart2.TabIndex = 23;
             this.cbChart2.Text = "Chart 2:";
             this.cbChart2.UseVisualStyleBackColor = true;
-            // 
-            // btResetSettings
-            // 
-            this.btResetSettings.Location = new System.Drawing.Point(652, 127);
-            this.btResetSettings.Name = "btResetSettings";
-            this.btResetSettings.Size = new System.Drawing.Size(154, 23);
-            this.btResetSettings.TabIndex = 24;
-            this.btResetSettings.Text = "Reset Settings";
-            this.btResetSettings.UseVisualStyleBackColor = true;
-            this.btResetSettings.Click += new System.EventHandler(this.btResetSettings_Click);
             // 
             // btnDeviceOK
             // 
@@ -295,23 +227,13 @@
             this.SaveToFileCheckBox.Text = "Save to file";
             this.SaveToFileCheckBox.UseVisualStyleBackColor = true;
             // 
-            // DisplayInMicrovoltsCheckbox
-            // 
-            this.DisplayInMicrovoltsCheckbox.AutoSize = true;
-            this.DisplayInMicrovoltsCheckbox.Location = new System.Drawing.Point(446, 138);
-            this.DisplayInMicrovoltsCheckbox.Name = "DisplayInMicrovoltsCheckbox";
-            this.DisplayInMicrovoltsCheckbox.Size = new System.Drawing.Size(180, 17);
-            this.DisplayInMicrovoltsCheckbox.TabIndex = 37;
-            this.DisplayInMicrovoltsCheckbox.Text = "Display all channels in microvolts";
-            this.DisplayInMicrovoltsCheckbox.UseVisualStyleBackColor = true;
-            // 
             // MaxAmplitudeTextBox
             // 
             this.MaxAmplitudeTextBox.Location = new System.Drawing.Point(718, 8);
             this.MaxAmplitudeTextBox.Name = "MaxAmplitudeTextBox";
             this.MaxAmplitudeTextBox.Size = new System.Drawing.Size(100, 20);
             this.MaxAmplitudeTextBox.TabIndex = 38;
-            this.MaxAmplitudeTextBox.Text = "30000";
+            this.MaxAmplitudeTextBox.Text = "10";
             // 
             // label2
             // 
@@ -320,16 +242,37 @@
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(97, 13);
             this.label2.TabIndex = 39;
-            this.label2.Text = "Max amplitude (nA)";
+            this.label2.Text = "Max amplitude (μA)";
+            // 
+            // DisplayInMicrovoltsChannel1
+            // 
+            this.DisplayInMicrovoltsChannel1.AutoSize = true;
+            this.DisplayInMicrovoltsChannel1.Location = new System.Drawing.Point(215, 110);
+            this.DisplayInMicrovoltsChannel1.Name = "DisplayInMicrovoltsChannel1";
+            this.DisplayInMicrovoltsChannel1.Size = new System.Drawing.Size(121, 17);
+            this.DisplayInMicrovoltsChannel1.TabIndex = 37;
+            this.DisplayInMicrovoltsChannel1.Text = "Display in microvolts";
+            this.DisplayInMicrovoltsChannel1.UseVisualStyleBackColor = true;
+            // 
+            // DisplayInMicrovoltsChannel2
+            // 
+            this.DisplayInMicrovoltsChannel2.AutoSize = true;
+            this.DisplayInMicrovoltsChannel2.Location = new System.Drawing.Point(215, 136);
+            this.DisplayInMicrovoltsChannel2.Name = "DisplayInMicrovoltsChannel2";
+            this.DisplayInMicrovoltsChannel2.Size = new System.Drawing.Size(121, 17);
+            this.DisplayInMicrovoltsChannel2.TabIndex = 40;
+            this.DisplayInMicrovoltsChannel2.Text = "Display in microvolts";
+            this.DisplayInMicrovoltsChannel2.UseVisualStyleBackColor = true;
             // 
             // Dacq
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(830, 553);
+            this.Controls.Add(this.DisplayInMicrovoltsChannel2);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.MaxAmplitudeTextBox);
-            this.Controls.Add(this.DisplayInMicrovoltsCheckbox);
+            this.Controls.Add(this.DisplayInMicrovoltsChannel1);
             this.Controls.Add(this.SaveToFileCheckBox);
             this.Controls.Add(this.StopDSP);
             this.Controls.Add(this.UploadDSPBinary);
@@ -340,14 +283,9 @@
             this.Controls.Add(this.rawSerial);
             this.Controls.Add(this.label8);
             this.Controls.Add(this.label7);
-            this.Controls.Add(this.btResetSettings);
             this.Controls.Add(this.cbChart2);
             this.Controls.Add(this.cbChart1);
-            this.Controls.Add(this.cbChart4);
-            this.Controls.Add(this.cbChart3);
             this.Controls.Add(this.stopDacq);
-            this.Controls.Add(this.series3Channel);
-            this.Controls.Add(this.series2Channel);
             this.Controls.Add(this.series1Channel);
             this.Controls.Add(this.series0Channel);
             this.Controls.Add(this.dspData);
@@ -365,14 +303,9 @@
         private System.Windows.Forms.DataVisualization.Charting.Chart dspData;
         private System.Windows.Forms.ComboBox series0Channel;
         private System.Windows.Forms.ComboBox series1Channel;
-        private System.Windows.Forms.ComboBox series2Channel;
-        private System.Windows.Forms.ComboBox series3Channel;
         private System.Windows.Forms.Button stopDacq;
-        private System.Windows.Forms.CheckBox cbChart3;
-        private System.Windows.Forms.CheckBox cbChart4;
         private System.Windows.Forms.CheckBox cbChart1;
         private System.Windows.Forms.CheckBox cbChart2;
-        private System.Windows.Forms.Button btResetSettings;
         private System.Windows.Forms.Button btnDeviceOK;
         private System.Windows.Forms.TextBox dspSerial;
         private System.Windows.Forms.TextBox rawSerial;
@@ -383,9 +316,10 @@
         private System.Windows.Forms.Button StopDSP;
         private System.Windows.Forms.Button UploadDSPBinary;
         private System.Windows.Forms.CheckBox SaveToFileCheckBox;
-        private System.Windows.Forms.CheckBox DisplayInMicrovoltsCheckbox;
         private System.Windows.Forms.TextBox MaxAmplitudeTextBox;
         private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.CheckBox DisplayInMicrovoltsChannel1;
+        private System.Windows.Forms.CheckBox DisplayInMicrovoltsChannel2;
     }
 }
 
