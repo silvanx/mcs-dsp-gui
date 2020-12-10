@@ -150,7 +150,7 @@ interrupt void interrupt6(void)
 	const int ratio_T_controller_T_s = T_controller * f_s;  //5 * 18 / 1000 * f_s;
 
 	// Define SetPoint being the target beta ARV 
-    const float SetPoint = 3500;                     //set SetPoint randomly to be 5mV ie 5000uV
+    const float SetPoint = threshold;                     //set SetPoint randomly to be 5mV ie 5000uV
 
     // Define array that remembers previous inputs and outputs for the sake of filtering
     static double xPrevious1[LOWPASS_LENGTH];
@@ -536,7 +536,7 @@ interrupt void interrupt6(void)
         
         // Relate the pulse index to the memory segment index assoicated with it 
         if (magnitude > SetPoint){
-            seg = 14;
+            seg = 15;
         }
         else {
             seg = 0;
@@ -556,7 +556,7 @@ interrupt void interrupt6(void)
 	    WRITE_REGISTER(IFB_AUX_OUT, aux_value);
      }
 
-MonitorData[0] = xCurrent;
+MonitorData[0] = threshold;
 MonitorData[1] = yCurrent1;
 MonitorData[2] = decimated1;
 MonitorData[3] = yCurrent2;

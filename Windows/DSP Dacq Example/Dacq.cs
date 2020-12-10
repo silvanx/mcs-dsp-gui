@@ -32,6 +32,7 @@ namespace MCS_USB_Windows_Forms_Application1
         int Samplerate = 20000;
 
         int maxAmplitudeValue = 10;
+        uint stimThresholdValue = 100000;
 
         // for W2100
         private int other_receiver = 0;
@@ -341,14 +342,8 @@ namespace MCS_USB_Windows_Forms_Application1
             double multiplierSeries0 = 1;
             double multiplierSeries1 = 1;
 
-            if (DisplayInMicrovoltsChannel1.Checked)
-            {
-                if (series0Channel.SelectedIndex < Channels) multiplierSeries0 = 0.381;
-            }
-            if (DisplayInMicrovoltsChannel2.Checked)
-            {
-                if (series1Channel.SelectedIndex < Channels) multiplierSeries1 = 0.381;
-            }
+            if (DisplayInMicrovoltsChannel1.Checked) multiplierSeries0 = 0.381;
+            if (DisplayInMicrovoltsChannel2.Checked) multiplierSeries1 = 0.381;
 
             int min = int.MaxValue;
             int max = int.MinValue;
@@ -498,6 +493,8 @@ namespace MCS_USB_Windows_Forms_Application1
             CMcsUsbFactoryNet factorydev = new CMcsUsbFactoryNet();
             if (factorydev.Connect(port, LockMask) == 0)
             {
+                uint stimThresholdDigits = (uint)Math.Floor((float)stimThresholdValue / 0.381);
+                factorydev.WriteRegister(0x1000, stimThresholdDigits);
                 string FirmwareFile;
                 FirmwareFile = System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location);
                 FirmwareFile += @"\..\..\..\..\DSP\FB_W2100_SCU_MEA256\Release\";
@@ -522,6 +519,15 @@ namespace MCS_USB_Windows_Forms_Application1
             else if (maxAmplitudeValue > 300 || maxAmplitudeValue <= 0)
             {
                 MessageBox.Show("Max amplitude has to be between 0 and 300 μA");
+            }
+
+            if (!uint.TryParse(StimThresholdTextBox.Text, out stimThresholdValue))
+            {
+                MessageBox.Show("Max amplitude has to be a positive integer");
+            }
+            else if (stimThresholdValue > 100000 || stimThresholdValue < 0)
+            {
+                MessageBox.Show("Stimulation threshold has to be between 0 and 100000 μV");
             }
 
             if (DspPort != null || RawPort != null)

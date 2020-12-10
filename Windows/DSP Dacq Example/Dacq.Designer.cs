@@ -28,10 +28,10 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea1 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
-            System.Windows.Forms.DataVisualization.Charting.Legend legend1 = new System.Windows.Forms.DataVisualization.Charting.Legend();
-            System.Windows.Forms.DataVisualization.Charting.Series series1 = new System.Windows.Forms.DataVisualization.Charting.Series();
-            System.Windows.Forms.DataVisualization.Charting.Series series2 = new System.Windows.Forms.DataVisualization.Charting.Series();
+            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea3 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+            System.Windows.Forms.DataVisualization.Charting.Legend legend3 = new System.Windows.Forms.DataVisualization.Charting.Legend();
+            System.Windows.Forms.DataVisualization.Charting.Series series5 = new System.Windows.Forms.DataVisualization.Charting.Series();
+            System.Windows.Forms.DataVisualization.Charting.Series series6 = new System.Windows.Forms.DataVisualization.Charting.Series();
             this.startDacq = new System.Windows.Forms.Button();
             this.dspData = new System.Windows.Forms.DataVisualization.Charting.Chart();
             this.series0Channel = new System.Windows.Forms.ComboBox();
@@ -53,6 +53,8 @@
             this.label2 = new System.Windows.Forms.Label();
             this.DisplayInMicrovoltsChannel1 = new System.Windows.Forms.CheckBox();
             this.DisplayInMicrovoltsChannel2 = new System.Windows.Forms.CheckBox();
+            this.label3 = new System.Windows.Forms.Label();
+            this.StimThresholdTextBox = new System.Windows.Forms.TextBox();
             ((System.ComponentModel.ISupportInitialize)(this.dspData)).BeginInit();
             this.SuspendLayout();
             // 
@@ -68,22 +70,22 @@
             // 
             // dspData
             // 
-            chartArea1.Name = "ChartArea1";
-            this.dspData.ChartAreas.Add(chartArea1);
-            legend1.Name = "Legend1";
-            this.dspData.Legends.Add(legend1);
+            chartArea3.Name = "ChartArea1";
+            this.dspData.ChartAreas.Add(chartArea3);
+            legend3.Name = "Legend1";
+            this.dspData.Legends.Add(legend3);
             this.dspData.Location = new System.Drawing.Point(12, 165);
             this.dspData.Name = "dspData";
-            series1.ChartArea = "ChartArea1";
-            series1.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.FastLine;
-            series1.Legend = "Legend1";
-            series1.Name = "Chart 1";
-            series2.ChartArea = "ChartArea1";
-            series2.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.FastLine;
-            series2.Legend = "Legend1";
-            series2.Name = "Chart 2";
-            this.dspData.Series.Add(series1);
-            this.dspData.Series.Add(series2);
+            series5.ChartArea = "ChartArea1";
+            series5.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.FastLine;
+            series5.Legend = "Legend1";
+            series5.Name = "Chart 1";
+            series6.ChartArea = "ChartArea1";
+            series6.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.FastLine;
+            series6.Legend = "Legend1";
+            series6.Name = "Chart 2";
+            this.dspData.Series.Add(series5);
+            this.dspData.Series.Add(series6);
             this.dspData.Size = new System.Drawing.Size(806, 376);
             this.dspData.TabIndex = 6;
             this.dspData.Text = "DSP Data";
@@ -199,7 +201,7 @@
             // 
             // StopDSP
             // 
-            this.StopDSP.Location = new System.Drawing.Point(634, 81);
+            this.StopDSP.Location = new System.Drawing.Point(634, 105);
             this.StopDSP.Name = "StopDSP";
             this.StopDSP.Size = new System.Drawing.Size(184, 40);
             this.StopDSP.TabIndex = 35;
@@ -209,7 +211,7 @@
             // 
             // UploadDSPBinary
             // 
-            this.UploadDSPBinary.Location = new System.Drawing.Point(634, 35);
+            this.UploadDSPBinary.Location = new System.Drawing.Point(634, 59);
             this.UploadDSPBinary.Name = "UploadDSPBinary";
             this.UploadDSPBinary.Size = new System.Drawing.Size(184, 40);
             this.UploadDSPBinary.TabIndex = 34;
@@ -264,11 +266,30 @@
             this.DisplayInMicrovoltsChannel2.Text = "Display in microvolts";
             this.DisplayInMicrovoltsChannel2.UseVisualStyleBackColor = true;
             // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Location = new System.Drawing.Point(617, 36);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(95, 13);
+            this.label3.TabIndex = 42;
+            this.label3.Text = "Stim threshold (μV)";
+            // 
+            // StimThresholdTextBox
+            // 
+            this.StimThresholdTextBox.Location = new System.Drawing.Point(718, 33);
+            this.StimThresholdTextBox.Name = "StimThresholdTextBox";
+            this.StimThresholdTextBox.Size = new System.Drawing.Size(100, 20);
+            this.StimThresholdTextBox.TabIndex = 41;
+            this.StimThresholdTextBox.Text = "100000";
+            // 
             // Dacq
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(830, 553);
+            this.Controls.Add(this.label3);
+            this.Controls.Add(this.StimThresholdTextBox);
             this.Controls.Add(this.DisplayInMicrovoltsChannel2);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.MaxAmplitudeTextBox);
@@ -320,6 +341,8 @@
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.CheckBox DisplayInMicrovoltsChannel1;
         private System.Windows.Forms.CheckBox DisplayInMicrovoltsChannel2;
+        private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.TextBox StimThresholdTextBox;
     }
 }
 
