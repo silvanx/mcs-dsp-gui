@@ -464,15 +464,23 @@ interrupt void interrupt6(void)
 	decimationCounter1++;
 
     filtered_state_value = abs(yPrevious3[0]);
-	double magnitude = 0;
+	double inf_norm = 0;
+	double beta_power = 0;
+	double total_power = 0;
 	for (i = 0; i < BANDPASS_LENGTH; i++)
 	{
-		if (abs(yPrevious3[i]) > magnitude) magnitude = abs(yPrevious3[i]);
+		if (abs(yPrevious3[i]) > inf_norm) inf_norm = abs(yPrevious3[i]);
+		beta_power += (1 / BANDPASS_LENGTH) * yPrevious3[i] * yPrevious3[i];
+		total_power += (1 / BANDPASS_LENGTH) * xPrevious3[i] * xPrevious3[i];
 	}
 
+	double relative_power_beta = beta_power / total_power;
+
+	double magnitude = inf_norm;
+
 	// If we're about to update the controller but we're currently stimulating, delay the controller update by 400 us
-    if (timestamp == (ratio_T_controller_T_s - 1)  && (HS_Data_p[1][0] & 1) * 1000) {
-            timestamp == ratio_T_controller_T_s - (int) (0.0004 * f_s);
+    if (timestamp == ratio_T_controller_T_s - 1  && (HS_Data_p[1][0] & 1) * 1000) {
+            timestamp = ratio_T_controller_T_s - (int) (0.0004 * f_s);
     }
 
     // Increment timestamp each function call and call controller when T_controller elapsed i.e. when timestamp ==	ratio_T_controller_T_s
