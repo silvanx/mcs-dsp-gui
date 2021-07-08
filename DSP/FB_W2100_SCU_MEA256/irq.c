@@ -19,6 +19,7 @@ Uint32 aux_value = 0;
 #define DATA_HEADER_SIZE 1
 #define LOWPASS_LENGTH 4
 #define BANDPASS_LENGTH 7
+#define POWER_SEGMENT_LENGTH 50
 
 void toggleLED()
 {
@@ -159,6 +160,10 @@ interrupt void interrupt6(void)
 	static double yPrevious2[LOWPASS_LENGTH];
 	static double xPrevious3[BANDPASS_LENGTH];
 	static double yPrevious3[BANDPASS_LENGTH];
+	static double unfiltered_beta_history[POWER_SEGMENT_LENGTH];
+	static double filtered_beta_history[POWER_SEGMENT_LENGTH];
+
+	static int history_index = 0;
     
 	// Define a variable that is true just the first run
     static int first_run = 1; 
@@ -466,22 +471,29 @@ interrupt void interrupt6(void)
 		    decimated2 = yCurrent2;
 			filter(b3, a3, BANDPASS_LENGTH, xPrevious3, yPrevious3, decimated2);
 			yCurrent3 = yPrevious3[0];
+
+			unfiltered_beta_history[history_index] = decimated2;
+			filtered_beta_history[history_index] = yCurrent3;
+			history_index = (history_index + 1) % POWER_SEGMENT_LENGTH;
 		}
 		decimationCounter2++;
 	}
 	decimationCounter1++;
 
     filtered_state_value = abs(yPrevious3[0]);
-	inf_norm = 0;
+
+    inf_norm = 0;
 	beta_power = 0;
 	total_power = 0;
-	power_estimate_length = BANDPASS_LENGTH;
+	power_estimate_length = POWER_SEGMENT_LENGTH;
 
-	for (i = 0; i < BANDPASS_LENGTH; i++)
+	for (i = 0; i < POWER_SEGMENT_LENGTH; i++)
 	{
-		if (abs(yPrevious3[i]) > inf_norm) inf_norm = abs(yPrevious3[i]);
-		beta_power += (1.0 / power_estimate_length) * yPrevious3[i] * yPrevious3[i];
-		total_power += (1.0 / power_estimate_length) * xPrevious3[i] * xPrevious3[i];
+		if (abs(filtered_beta_history[i]) > inf_norm)
+		    inf_norm = abs(filtered_beta_history[i]);
+
+		beta_power += (1.0 / power_estimate_length) * filtered_beta_history[i] * filtered_beta_history[i];
+		total_power += (1.0 / power_estimate_length) * unfiltered_beta_history[i] * unfiltered_beta_history[i];
 	}
 
 	relative_beta_power = beta_power / total_power;
