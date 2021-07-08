@@ -19,11 +19,7 @@ Uint32 aux_value = 0;
 #define DATA_HEADER_SIZE 1
 #define LOWPASS_LENGTH 4
 #define BANDPASS_LENGTH 7
-<<<<<<< HEAD
 #define POWER_SEGMENT_LENGTH 50
-=======
-#define BETA_SMOOTHING_LENGTH 50
->>>>>>> df1da42464740b8ddb62d84e3560d03fe8004566
 
 void toggleLED()
 {
@@ -160,21 +156,16 @@ interrupt void interrupt6(void)
     // Define array that remembers previous inputs and outputs for the sake of filtering
     static double xPrevious1[LOWPASS_LENGTH];
     static double yPrevious1[LOWPASS_LENGTH];
-	static double xPrevious2[LOWPASS_LENGTH];
-	static double yPrevious2[LOWPASS_LENGTH];
-	static double xPrevious3[BANDPASS_LENGTH];
-	static double yPrevious3[BANDPASS_LENGTH];
-<<<<<<< HEAD
-	static double unfiltered_beta_history[POWER_SEGMENT_LENGTH];
-	static double filtered_beta_history[POWER_SEGMENT_LENGTH];
-
-	static int history_index = 0;
-=======
-
-	static double relativeBetaPastValues[BETA_SMOOTHING_LENGTH];
->>>>>>> df1da42464740b8ddb62d84e3560d03fe8004566
+    static double xPrevious2[LOWPASS_LENGTH];
+    static double yPrevious2[LOWPASS_LENGTH];
+    static double xPrevious3[BANDPASS_LENGTH];
+    static double yPrevious3[BANDPASS_LENGTH];
+    static double unfiltered_beta_history[POWER_SEGMENT_LENGTH];
+    static double filtered_beta_history[POWER_SEGMENT_LENGTH];
     
-	// Define a variable that is true just the first run
+    static int history_index = 0;
+    
+    // Define a variable that is true just the first run
     static int first_run = 1; 
 
     // Define the upper and lower bounds for the controller output (i.e. DBS amplitude)
@@ -210,9 +201,9 @@ interrupt void interrupt6(void)
 			yPrevious3[i] = 0;
 			xPrevious3[i] = 0;
 		}
-
-		for (i = 0; i < BETA_SMOOTHING_LENGTH; i++) {
-			relativeBetaPastValues[i] = 0;
+		for (i=0; i < POWER_SEGMENT_LENGTH; i++) {
+		    filtered_beta_history[i] = 0;
+		    unfiltered_beta_history[i] = 0;
 		}
 
 
@@ -252,7 +243,6 @@ interrupt void interrupt6(void)
 	double beta_power;
 	double total_power;
 	static double relative_beta_power = 0;
-	static int relative_beta_array_index = 0;
 	
     
 	// Define counter for function run
@@ -510,13 +500,9 @@ interrupt void interrupt6(void)
 		total_power += (1.0 / power_estimate_length) * unfiltered_beta_history[i] * unfiltered_beta_history[i];
 	}
 
-	double old_relative_beta_value = relativeBetaPastValues[relative_beta_array_index];
-	double new_relative_beta_value = beta_power / total_power;
+	relative_beta_power = 100.0 * beta_power / total_power;
 
-	relativeBetaPastValues[relative_beta_array_index++ % BETA_SMOOTHING_LENGTH] = new_relative_beta_value;
-	relative_beta_power += (new_relative_beta_value - old_relative_beta_value) / BETA_SMOOTHING_LENGTH;
-
-	double magnitude = inf_norm;
+	double magnitude = relative_beta_power;
 
 	// If we're about to update the controller but we're currently stimulating, delay the controller update by 400 us
     if (timestamp == ratio_T_controller_T_s - 1  && (HS_Data_p[1][0] & 1) * 1000) {
@@ -614,8 +600,8 @@ MonitorData[6] = filtered_state_value;
 MonitorData[7] = magnitude;
 MonitorData[8] = beta_power;
 MonitorData[9] = total_power;
-MonitorData[10] = 10 * new_relative_beta_value;
-MonitorData[11] = 10 * relative_beta_power;
+MonitorData[10] = relative_beta_power;
+MonitorData[11] = pulse[5];
 MonitorData[12] = pulse[6];
 MonitorData[13] = pulse[7];
 MonitorData[14] = pulse[8];
