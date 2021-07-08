@@ -225,10 +225,11 @@ interrupt void interrupt6(void)
 	static double yCurrent2 = 0;
 	static double decimated2 = 0;
 	static double yCurrent3 = 0;
-	static double filtered_state_value = 0;]
+	static double filtered_state_value = 0;
 	static int decimationCounter1 = 0;
 	static int decimationCounter2 = 0;
 
+	int power_estimate_length;
 	double inf_norm;
 	double beta_power;
 	double total_power;
