@@ -19,7 +19,11 @@ Uint32 aux_value = 0;
 #define DATA_HEADER_SIZE 1
 #define LOWPASS_LENGTH 4
 #define BANDPASS_LENGTH 7
+<<<<<<< HEAD
 #define POWER_SEGMENT_LENGTH 50
+=======
+#define BETA_SMOOTHING_LENGTH 50
+>>>>>>> df1da42464740b8ddb62d84e3560d03fe8004566
 
 void toggleLED()
 {
@@ -160,10 +164,15 @@ interrupt void interrupt6(void)
 	static double yPrevious2[LOWPASS_LENGTH];
 	static double xPrevious3[BANDPASS_LENGTH];
 	static double yPrevious3[BANDPASS_LENGTH];
+<<<<<<< HEAD
 	static double unfiltered_beta_history[POWER_SEGMENT_LENGTH];
 	static double filtered_beta_history[POWER_SEGMENT_LENGTH];
 
 	static int history_index = 0;
+=======
+
+	static double relativeBetaPastValues[BETA_SMOOTHING_LENGTH];
+>>>>>>> df1da42464740b8ddb62d84e3560d03fe8004566
     
 	// Define a variable that is true just the first run
     static int first_run = 1; 
@@ -202,6 +211,10 @@ interrupt void interrupt6(void)
 			xPrevious3[i] = 0;
 		}
 
+		for (i = 0; i < BETA_SMOOTHING_LENGTH; i++) {
+			relativeBetaPastValues[i] = 0;
+		}
+
 
         // Not anymore the first run (thus, this if statement will be run only in the first call of interrupt6 function)
         first_run = 0;
@@ -238,7 +251,8 @@ interrupt void interrupt6(void)
 	double inf_norm;
 	double beta_power;
 	double total_power;
-	double relative_beta_power;
+	static double relative_beta_power = 0;
+	static int relative_beta_array_index = 0;
 	
     
 	// Define counter for function run
@@ -496,7 +510,11 @@ interrupt void interrupt6(void)
 		total_power += (1.0 / power_estimate_length) * unfiltered_beta_history[i] * unfiltered_beta_history[i];
 	}
 
-	relative_beta_power = beta_power / total_power;
+	double old_relative_beta_value = relativeBetaPastValues[relative_beta_array_index];
+	double new_relative_beta_value = beta_power / total_power;
+
+	relativeBetaPastValues[relative_beta_array_index++ % BETA_SMOOTHING_LENGTH] = new_relative_beta_value;
+	relative_beta_power += (new_relative_beta_value - old_relative_beta_value) / BETA_SMOOTHING_LENGTH;
 
 	double magnitude = inf_norm;
 
@@ -596,8 +614,8 @@ MonitorData[6] = filtered_state_value;
 MonitorData[7] = magnitude;
 MonitorData[8] = beta_power;
 MonitorData[9] = total_power;
-MonitorData[10] = relative_beta_power;
-MonitorData[11] = pulse[5];
+MonitorData[10] = 10 * new_relative_beta_value;
+MonitorData[11] = 10 * relative_beta_power;
 MonitorData[12] = pulse[6];
 MonitorData[13] = pulse[7];
 MonitorData[14] = pulse[8];
