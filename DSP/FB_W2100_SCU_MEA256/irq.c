@@ -225,12 +225,19 @@ interrupt void interrupt6(void)
 	static double yCurrent2 = 0;
 	static double decimated2 = 0;
 	static double yCurrent3 = 0;
-	static double filtered_state_value = 0;
+	static double filtered_state_value = 0;]
 	static int decimationCounter1 = 0;
 	static int decimationCounter2 = 0;
+
+	double inf_norm;
+	double beta_power;
+	double total_power;
+	double relative_beta_power;
+	
     
 	// Define counter for function run
 	static int timestamp = 0; // exists only in this function but is created only once on the first function call (i.e. static)
+	static double timestamp_global;
 	static int segment = 0;
 	static int crossing_detected = 0;
 	
@@ -429,7 +436,7 @@ interrupt void interrupt6(void)
     // Calculate current beta ARV (differential recording)
     // xCurrent = abs(HS_Data_p[0][2] - HS_Data_p[0][0]); // NB: In uV
 	// Calculate current beta ARV (single electrode for testing with signal generator)
-	xCurrent = HS_Data_p[0][2];
+	xCurrent = 0.25 * (HS_Data_p[0][0] + HS_Data_p[0][1] + HS_Data_p[0][2] + HS_Data_p[0][3]);
     
 	// Hardcoded filter parameters
 	// First downsampling (Butterworth, lowpass, cutoff 0.1 (normalized))
@@ -464,17 +471,19 @@ interrupt void interrupt6(void)
 	decimationCounter1++;
 
     filtered_state_value = abs(yPrevious3[0]);
-	double inf_norm = 0;
-	double beta_power = 0;
-	double total_power = 0;
+	inf_norm = 0;
+	beta_power = 0;
+	total_power = 0;
+	power_estimate_length = BANDPASS_LENGTH;
+
 	for (i = 0; i < BANDPASS_LENGTH; i++)
 	{
 		if (abs(yPrevious3[i]) > inf_norm) inf_norm = abs(yPrevious3[i]);
-		beta_power += (1 / BANDPASS_LENGTH) * yPrevious3[i] * yPrevious3[i];
-		total_power += (1 / BANDPASS_LENGTH) * xPrevious3[i] * xPrevious3[i];
+		beta_power += (1.0 / power_estimate_length) * yPrevious3[i] * yPrevious3[i];
+		total_power += (1.0 / power_estimate_length) * xPrevious3[i] * xPrevious3[i];
 	}
 
-	double relative_power_beta = beta_power / total_power;
+	relative_beta_power = beta_power / total_power;
 
 	double magnitude = inf_norm;
 
@@ -574,12 +583,7 @@ MonitorData[6] = filtered_state_value;
 MonitorData[7] = magnitude;
 MonitorData[8] = beta_power;
 MonitorData[9] = total_power;
-MonitorData[10] = relative_power_beta;
-//MonitorData[6] = pulse[0];
-//MonitorData[7] = pulse[1];
-//MonitorData[8] = pulse[2];
-//MonitorData[9] = pulse[3];
-//MonitorData[10] = pulse[4];
+MonitorData[10] = relative_beta_power;
 MonitorData[11] = pulse[5];
 MonitorData[12] = pulse[6];
 MonitorData[13] = pulse[7];
