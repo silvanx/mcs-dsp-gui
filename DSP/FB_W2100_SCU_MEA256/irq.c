@@ -500,95 +500,46 @@ interrupt void interrupt6(void)
 		total_power += (1.0 / power_estimate_length) * unfiltered_beta_history[i] * unfiltered_beta_history[i];
 	}
 
-	relative_beta_power = 100.0 * beta_power / total_power;
+	relative_beta_power = 1000.0 * beta_power / total_power;
 
 	double magnitude = relative_beta_power;
 
 	// If we're about to update the controller but we're currently stimulating, delay the controller update by 400 us
-    if (timestamp == ratio_T_controller_T_s - 1  && (HS_Data_p[1][0] & 1) * 1000) {
-            timestamp = ratio_T_controller_T_s - (int) (0.0004 * f_s);
-    }
+    // if (timestamp == ratio_T_controller_T_s - 1  && (HS_Data_p[1][0] & 1) * 1000) {
+    //         timestamp = ratio_T_controller_T_s - (int) (0.0004 * f_s);
+    // }
 
     // Increment timestamp each function call and call controller when T_controller elapsed i.e. when timestamp ==	ratio_T_controller_T_s
     if (++timestamp ==	ratio_T_controller_T_s)
     {
         // set AUX output to 1
-        aux_value |= 1;
-	    WRITE_REGISTER(IFB_AUX_OUT, aux_value); 
+        //aux_value |= 1;
+	    //WRITE_REGISTER(IFB_AUX_OUT, aux_value); 
         
         // reset timestamp counter
         timestamp=0;
         
-        // Calculate current beta ARV (differential recording)
-//        state_value = abs(HS_Data_p[0][2] - HS_Data_p[0][0]); // NB: In uV
-
-        // Calculate Error - if SetPoint > 0.0,
-        // then normalize error with respect to SetPoint
-//        if (SetPoint==0)
-//        {
-//            error = state_value - SetPoint;                     //in uV
-//            increment = 0.0;
-//        }
-//        else
-//        {
-//            error = (state_value - SetPoint) / SetPoint;        //in uV
-//            if (error>0)
-//                increment = delta_DBS_amp;
-//            else
-//                increment = -1*delta_DBS_amp;
-//        }
-
-        // Bound the controller output (between MinValue - MaxValue)
-//        if ( OutputValue + increment > MaxValue )
-//            OutputValue = MaxValue;
-//        else if ( OutputValue + increment < MinValue )
-//            OutputValue = MinValue;
-//        else
-//            OutputValue = OutputValue + increment;
-        
-        // Determine the pulse closest to OutputValue (and its index)
-        // Set randomly the index of the pulse closest to OutputValue to be 0
-//        stim_index = 0;
-
-        // Calculate the difference between OutputValue and pulse of index stim_index
-//        pulse_amp_diff = abs(pulse[stim_index] - OutputValue);
-
-        // Pick the stimulation pulse of amplitude closest to OutputValue
-        // Loop around all 16 pulses
-//        for (c = 1; c < 16; c++)
-//        {
-//            // Check if this pulse is the closest to OuputValue
-//            if ( abs(pulse[c] - OutputValue) < pulse_amp_diff)
-//            {
-//                // Update the index of the closest pulse to OutputValue
-////                stim_index = c;
-//
-//                // Update the difference between OutputValue and pulse of index stim_index
-//                pulse_amp_diff = abs(pulse[c] - OutputValue);
-//            }
-//        }
-        
         // Relate the pulse index to the memory segment index assoicated with it 
-        if (magnitude > SetPoint){
+        if (magnitude > threshold){
             seg = 15;
         }
         else {
             seg = 0;
         }
-
-        if (seg == 0) {
-            // Turn off stimulation if stim_index = 0
-            WRITE_REGISTER(0x9A80, 0);
-        }
-        else {
-            // Update stimulation pulse
-            WRITE_REGISTER(0x9A80, 0x1000 * seg +  0x100); // Trigger Channel 1
-        }
         
         // Set AUX 1 output value to zero
-        aux_value &= 0;
-	    WRITE_REGISTER(IFB_AUX_OUT, aux_value);
+        //aux_value &= 0;
+	    //WRITE_REGISTER(IFB_AUX_OUT, aux_value);
      }
+
+    if (seg == 0) {
+        // Turn off stimulation if stim_index = 0
+        WRITE_REGISTER(0x9A80, 0);
+    }
+    else {
+        // Update stimulation pulse
+        WRITE_REGISTER(0x9A80, 0x1000 * seg +  0x100); // Trigger Channel 1
+    }
 
 MonitorData[0] = threshold;
 MonitorData[1] = yCurrent1;
@@ -601,8 +552,8 @@ MonitorData[7] = magnitude;
 MonitorData[8] = beta_power;
 MonitorData[9] = total_power;
 MonitorData[10] = relative_beta_power;
-MonitorData[11] = pulse[5];
-MonitorData[12] = pulse[6];
+MonitorData[11] = seg;
+MonitorData[12] = 8;
 MonitorData[13] = pulse[7];
 MonitorData[14] = pulse[8];
 MonitorData[15] = pulse[9];
