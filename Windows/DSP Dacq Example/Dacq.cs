@@ -496,7 +496,9 @@ namespace MCS_USB_Windows_Forms_Application1
             CMcsUsbFactoryNet factorydev = new CMcsUsbFactoryNet();
             if (factorydev.Connect(port, LockMask) == 0)
             {
-                uint stimThresholdDigits = (uint)Math.Floor((float)stimThresholdValue / 0.381);
+                // uint stimThresholdDigits = (uint)Math.Floor((float)stimThresholdValue / 0.381);
+                uint stimThresholdDigits = (uint)Math.Floor((float)stimThresholdValue);
+                
                 factorydev.WriteRegister(0x1000, stimThresholdDigits);
                 string FirmwareFile;
                 FirmwareFile = System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location);
@@ -528,9 +530,9 @@ namespace MCS_USB_Windows_Forms_Application1
             {
                 MessageBox.Show("Max amplitude has to be a positive integer");
             }
-            else if (stimThresholdValue > 100000 || stimThresholdValue < 0)
+            else if (stimThresholdValue < 0)
             {
-                MessageBox.Show("Stimulation threshold has to be between 0 and 100000 μV");
+                MessageBox.Show("Stimulation threshold has to be positive");
             }
 
             if (DspPort != null || RawPort != null)
