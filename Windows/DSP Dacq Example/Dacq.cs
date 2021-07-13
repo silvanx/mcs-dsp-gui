@@ -34,6 +34,8 @@ namespace MCS_USB_Windows_Forms_Application1
         int maxAmplitudeValue = 10;
         uint stimThresholdValue = 100000;
 
+        bool RandomStimOn = false;
+
         // for W2100
         private int other_receiver = 0;
         private bool w2100_hs_samling = false;
@@ -711,27 +713,40 @@ namespace MCS_USB_Windows_Forms_Application1
                 mea.Disconnect();
             }
 
+            Random random = new Random();
+            int maxOn = 1266;
+            int maxOff = 21855;
+
             CMcsUsbFactoryNet factorydev = new CMcsUsbFactoryNet(); // Create object of class CMcsUsbFactoryNet (provides firmware upgrade and register access capabilities)
             bool stimOn = false;
-            for (int i = 0; i < 10; i++)
+            int sleepTime = 0;
+            if (factorydev.Connect(port, LockMask) == 0) // if connect call returns zero, connect has been successful
             {
-                if (factorydev.Connect(port, LockMask) == 0) // if connect call returns zero, connect has been successful
+                while (RandomStimOn)
                 {
-                    //factorydev.Coldstart(CFirmwareDestinationNet.MCU1);
                     if (stimOn)
                     {
                         factorydev.WriteRegister(0x9A80, 0);
                         stimOn = false;
+                        sleepTime = random.Next(1, maxOff);
                     } 
                     else
                     {
                         factorydev.WriteRegister(0x9A80, 0x1000 * 15 + 0x100);
                         stimOn = true;
+                        sleepTime = random.Next(1, maxOn);
                     }
-                    factorydev.Disconnect();
+                    Thread.Sleep(1000);
                 }
-                Thread.Sleep(1000);
+                factorydev.WriteRegister(0x9A80, 0);
+                factorydev.Disconnect();
+                MessageBox.Show("Random Stim Finished");
             }
+        }
+
+        private void StopRandomStimButton_Click(object sender, EventArgs e)
+        {
+            RandomStimOn = false;
         }
     }
 }
