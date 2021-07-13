@@ -1,6 +1,8 @@
 {
   "ExpandedNodes": [
     "",
+    "\\DSP",
+    "\\DSP\\FB_W2100_SCU_MEA256",
     "\\Windows",
     "\\Windows\\DSP Dacq Example",
     "\\Windows\\McsUsbNet"

@@ -593,6 +593,14 @@ namespace MCS_USB_Windows_Forms_Application1
 
         private void StartRandomStimButton_Click(object sender, EventArgs e)
         {
+            if (!int.TryParse(MaxAmplitudeTextBox.Text, out maxAmplitudeValue))
+            {
+                MessageBox.Show("Max amplitude has to be an integer");
+            }
+            else if (maxAmplitudeValue > 300 || maxAmplitudeValue <= 0)
+            {
+                MessageBox.Show("Max amplitude has to be between 0 and 300 μA");
+            }
             if (DspPort != null || RawPort != null)
             {
                 CMcsUsbListEntryNet port = DspPort;
