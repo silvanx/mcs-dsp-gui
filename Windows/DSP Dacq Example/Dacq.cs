@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 using System.Threading;
+using System.Threading.Tasks;
 using System.Diagnostics;
 using System.IO;
 using System.Runtime.CompilerServices;
@@ -610,7 +611,8 @@ namespace MCS_USB_Windows_Forms_Application1
                 {
                     port = RawPort;
                 }
-                BeginInvoke(new RandomOnOffStimulationAction(RandomOnOffStimulation), port);
+                Task.Run(() => RandomOnOffStimulation(port));
+                //BeginInvoke(new RandomOnOffStimulationAction(RandomOnOffStimulation), port);
             }
             else
             {
@@ -638,11 +640,11 @@ namespace MCS_USB_Windows_Forms_Application1
             int delta_DBS_amp = (MaxValue - MinValue) / 16;    // in nA
 
             other_receiver = 0;
-            if (((CMcsUsbListEntryNet)cbDeviceList.SelectedItem).SerialNumber.EndsWith("-B"))
+            if (port.SerialNumber.EndsWith("-B"))
             {
                 other_receiver = 4; // bit 0/1 select the timeslot of: bit 2/3 = 0 receiver according to USB port, 1 receiver A, 2 receiver B
             }
-            uint status = mea.Connect((CMcsUsbListEntryNet)cbDeviceList.SelectedItem, 63);
+            uint status = mea.Connect(port, 63);
 
 
             if (status == 0 && mea.GetDeviceId().IdProduct == ProductIdEnumNet.W2100)
@@ -715,13 +717,17 @@ namespace MCS_USB_Windows_Forms_Application1
 
             Random random = new Random();
             int maxOn = 1266;
-            int maxOff = 21855;
+            int maxOff = 4000;
+
+            double lambdaOn = 472.22;
+            double lambdaOff = 3062.28;
 
             CMcsUsbFactoryNet factorydev = new CMcsUsbFactoryNet(); // Create object of class CMcsUsbFactoryNet (provides firmware upgrade and register access capabilities)
             bool stimOn = false;
-            int sleepTime = 0;
+            double sleepTime = 0;
             if (factorydev.Connect(port, LockMask) == 0) // if connect call returns zero, connect has been successful
             {
+                RandomStimOn = true;
                 while (RandomStimOn)
                 {
                     if (stimOn)
@@ -729,14 +735,18 @@ namespace MCS_USB_Windows_Forms_Application1
                         factorydev.WriteRegister(0x9A80, 0);
                         stimOn = false;
                         sleepTime = random.Next(1, maxOff);
+                        //sleepTime = -1000 * Math.Log(1 - random.NextDouble()) / lambdaOff;
                     } 
                     else
                     {
                         factorydev.WriteRegister(0x9A80, 0x1000 * 15 + 0x100);
                         stimOn = true;
+                        //sleepTime = -1000 * Math.Log(1 - random.NextDouble()) / lambdaOn;
                         sleepTime = random.Next(1, maxOn);
                     }
-                    Thread.Sleep(1000);
+                    Debug.Write(sleepTime.ToString());
+                    Debug.Write("\n");
+                    Thread.Sleep(Convert.ToInt32(sleepTime));
                 }
                 factorydev.WriteRegister(0x9A80, 0);
                 factorydev.Disconnect();
