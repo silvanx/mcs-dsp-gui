@@ -634,7 +634,104 @@ namespace MCS_USB_Windows_Forms_Application1
 
             // Define the step between pulses amplitude
             int delta_DBS_amp = (MaxValue - MinValue) / 16;    // in nA
-            MessageBox.Show(delta_DBS_amp.ToString());
+
+            other_receiver = 0;
+            if (((CMcsUsbListEntryNet)cbDeviceList.SelectedItem).SerialNumber.EndsWith("-B"))
+            {
+                other_receiver = 4; // bit 0/1 select the timeslot of: bit 2/3 = 0 receiver according to USB port, 1 receiver A, 2 receiver B
+            }
+            uint status = mea.Connect((CMcsUsbListEntryNet)cbDeviceList.SelectedItem, 63);
+
+
+            if (status == 0 && mea.GetDeviceId().IdProduct == ProductIdEnumNet.W2100)
+            {
+                mea.SetDataMode(DataModeEnumNet.Signed_32bit, 0);
+
+                mea.SetNumberOfAnalogChannels(Channels, 0, Channels, AnalogChannels, 0); // Read raw data
+
+                try
+                {
+                    mea.SetSamplerate(Samplerate, 1, 0);
+                }
+                catch (CUsbExceptionNet)
+                {
+                    Samplerate = mea.GetSamplerate(0);
+                }
+
+                CW2100_FunctionNet func = new CW2100_FunctionNet(mea);
+                w2100_hs_samling = func.GetHeadstageSamplingActive(other_receiver + 0);
+                func.SetHeadstageSamplingActive(false, other_receiver + 0);
+
+                // Send Stimulation pattern
+                bool first = true;
+                int preplegth = 0;
+                CW2100_StimulatorFunctionNet stim = new CW2100_StimulatorFunctionNet(mea);
+                stim.SelectTimeSlot(other_receiver + 0);
+                // Different strength
+                // Define the amplitude vector of the 3 segments of the biphasic pulse (in nA)
+                int[] ampl = new[] { 10000, -10000, 0 };
+
+                // Define the duraion vector of the 3 segments of the biphasic pulse (in us)
+                ulong[] dur = new ulong[] { 100, 100, 7492 };
+
+                // Define each pulse
+                for (int i = 0; i < 16; i++)
+                {
+                    // Define the amplitude (nA) of each of the 3 segments
+                    ampl[0] = delta_DBS_amp * (i + 1);
+                    ampl[1] = -delta_DBS_amp * (i + 1);
+
+                    // Define the duration (us) of each of the 3 segments
+                    //dur[0] = (ulong)pulse_on_phase_dur;
+                    //dur[1] = (ulong)pulse_on_phase_dur;
+                    //dur[2] = (ulong)pulse_off_phase_dur;
+
+                    // choose, if global repeat is desired
+                    // Define the associated pulse
+                    CStimulusFunctionNet.StimulusDeviceDataAndUnrolledData prep = stim.PrepareData(0, ampl, dur, STG_DestinationEnumNet.channeldata_current, 1);
+
+                    // Check the available memory in the headstage  
+                    if (first)
+                    {
+                        first = false;
+                        preplegth = prep.DeviceDataLength;
+                    }
+
+                    // Check that the pulse fits into the designated memory
+                    Debug.Assert(preplegth == prep.DeviceDataLength);
+                    Debug.Assert(prep.DeviceDataLength <= 15);
+
+                    // Store pulse into designated memory
+                    stim.SendPreparedData(0x10 * i + 0, prep, STG_DestinationEnumNet.channeldata_current);
+                }
+                func.SetHeadstageSamplingActive(true, other_receiver + 0);
+            }
+            if (startDacq.Enabled)
+            {
+                mea.Disconnect();
+            }
+
+            CMcsUsbFactoryNet factorydev = new CMcsUsbFactoryNet(); // Create object of class CMcsUsbFactoryNet (provides firmware upgrade and register access capabilities)
+            bool stimOn = false;
+            for (int i = 0; i < 10; i++)
+            {
+                if (factorydev.Connect(port, LockMask) == 0) // if connect call returns zero, connect has been successful
+                {
+                    //factorydev.Coldstart(CFirmwareDestinationNet.MCU1);
+                    if (stimOn)
+                    {
+                        factorydev.WriteRegister(0x9A80, 0);
+                        stimOn = false;
+                    } 
+                    else
+                    {
+                        factorydev.WriteRegister(0x9A80, 0x1000 * 15 + 0x100);
+                        stimOn = true;
+                    }
+                    factorydev.Disconnect();
+                }
+                Thread.Sleep(1000);
+            }
         }
     }
 }
