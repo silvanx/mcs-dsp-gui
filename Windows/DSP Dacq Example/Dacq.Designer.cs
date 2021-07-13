@@ -28,10 +28,10 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea1 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
-            System.Windows.Forms.DataVisualization.Charting.Legend legend1 = new System.Windows.Forms.DataVisualization.Charting.Legend();
-            System.Windows.Forms.DataVisualization.Charting.Series series1 = new System.Windows.Forms.DataVisualization.Charting.Series();
-            System.Windows.Forms.DataVisualization.Charting.Series series2 = new System.Windows.Forms.DataVisualization.Charting.Series();
+            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea2 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+            System.Windows.Forms.DataVisualization.Charting.Legend legend2 = new System.Windows.Forms.DataVisualization.Charting.Legend();
+            System.Windows.Forms.DataVisualization.Charting.Series series3 = new System.Windows.Forms.DataVisualization.Charting.Series();
+            System.Windows.Forms.DataVisualization.Charting.Series series4 = new System.Windows.Forms.DataVisualization.Charting.Series();
             this.startDacq = new System.Windows.Forms.Button();
             this.dspData = new System.Windows.Forms.DataVisualization.Charting.Chart();
             this.series0Channel = new System.Windows.Forms.ComboBox();
@@ -55,7 +55,13 @@
             this.DisplayInMicrovoltsChannel2 = new System.Windows.Forms.CheckBox();
             this.label3 = new System.Windows.Forms.Label();
             this.StimThresholdTextBox = new System.Windows.Forms.TextBox();
+            this.label4 = new System.Windows.Forms.Label();
+            this.label5 = new System.Windows.Forms.Label();
+            this.maxYChartInput = new System.Windows.Forms.TextBox();
+            this.minYChartInput = new System.Windows.Forms.TextBox();
+            this.groupBox1 = new System.Windows.Forms.GroupBox();
             ((System.ComponentModel.ISupportInitialize)(this.dspData)).BeginInit();
+            this.groupBox1.SuspendLayout();
             this.SuspendLayout();
             // 
             // startDacq
@@ -71,23 +77,23 @@
             // 
             // dspData
             // 
-            chartArea1.Name = "ChartArea1";
-            this.dspData.ChartAreas.Add(chartArea1);
-            legend1.Name = "Legend1";
-            this.dspData.Legends.Add(legend1);
+            chartArea2.Name = "ChartArea1";
+            this.dspData.ChartAreas.Add(chartArea2);
+            legend2.Name = "Legend1";
+            this.dspData.Legends.Add(legend2);
             this.dspData.Location = new System.Drawing.Point(18, 254);
             this.dspData.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.dspData.Name = "dspData";
-            series1.ChartArea = "ChartArea1";
-            series1.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.FastLine;
-            series1.Legend = "Legend1";
-            series1.Name = "Chart 1";
-            series2.ChartArea = "ChartArea1";
-            series2.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.FastLine;
-            series2.Legend = "Legend1";
-            series2.Name = "Chart 2";
-            this.dspData.Series.Add(series1);
-            this.dspData.Series.Add(series2);
+            series3.ChartArea = "ChartArea1";
+            series3.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.FastLine;
+            series3.Legend = "Legend1";
+            series3.Name = "Chart 1";
+            series4.ChartArea = "ChartArea1";
+            series4.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.FastLine;
+            series4.Legend = "Legend1";
+            series4.Name = "Chart 2";
+            this.dspData.Series.Add(series3);
+            this.dspData.Series.Add(series4);
             this.dspData.Size = new System.Drawing.Size(1209, 578);
             this.dspData.TabIndex = 6;
             this.dspData.Text = "DSP Data";
@@ -293,7 +299,7 @@
             this.label3.Location = new System.Drawing.Point(926, 55);
             this.label3.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(133, 24);
+            this.label3.Size = new System.Drawing.Size(111, 20);
             this.label3.TabIndex = 42;
             this.label3.Text = "Stim threshold";
             // 
@@ -306,11 +312,57 @@
             this.StimThresholdTextBox.TabIndex = 41;
             this.StimThresholdTextBox.Text = "100000";
             // 
+            // label4
+            // 
+            this.label4.AutoSize = true;
+            this.label4.Location = new System.Drawing.Point(48, 36);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(38, 20);
+            this.label4.TabIndex = 43;
+            this.label4.Text = "max";
+            // 
+            // label5
+            // 
+            this.label5.AutoSize = true;
+            this.label5.Location = new System.Drawing.Point(52, 76);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(34, 20);
+            this.label5.TabIndex = 44;
+            this.label5.Text = "min";
+            // 
+            // maxYChartInput
+            // 
+            this.maxYChartInput.Location = new System.Drawing.Point(98, 36);
+            this.maxYChartInput.Name = "maxYChartInput";
+            this.maxYChartInput.Size = new System.Drawing.Size(116, 26);
+            this.maxYChartInput.TabIndex = 45;
+            // 
+            // minYChartInput
+            // 
+            this.minYChartInput.Location = new System.Drawing.Point(98, 76);
+            this.minYChartInput.Name = "minYChartInput";
+            this.minYChartInput.Size = new System.Drawing.Size(116, 26);
+            this.minYChartInput.TabIndex = 46;
+            // 
+            // groupBox1
+            // 
+            this.groupBox1.Controls.Add(this.minYChartInput);
+            this.groupBox1.Controls.Add(this.maxYChartInput);
+            this.groupBox1.Controls.Add(this.label5);
+            this.groupBox1.Controls.Add(this.label4);
+            this.groupBox1.Location = new System.Drawing.Point(670, 131);
+            this.groupBox1.Name = "groupBox1";
+            this.groupBox1.Size = new System.Drawing.Size(240, 115);
+            this.groupBox1.TabIndex = 47;
+            this.groupBox1.TabStop = false;
+            this.groupBox1.Text = "Vertical plot limits";
+            // 
             // Dacq
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1245, 851);
+            this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.label3);
             this.Controls.Add(this.StimThresholdTextBox);
             this.Controls.Add(this.DisplayInMicrovoltsChannel2);
@@ -338,6 +390,8 @@
             this.Name = "Dacq";
             this.Text = "Form1";
             ((System.ComponentModel.ISupportInitialize)(this.dspData)).EndInit();
+            this.groupBox1.ResumeLayout(false);
+            this.groupBox1.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -367,6 +421,11 @@
         private System.Windows.Forms.CheckBox DisplayInMicrovoltsChannel2;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.TextBox StimThresholdTextBox;
+        private System.Windows.Forms.Label label4;
+        private System.Windows.Forms.Label label5;
+        private System.Windows.Forms.TextBox maxYChartInput;
+        private System.Windows.Forms.TextBox minYChartInput;
+        private System.Windows.Forms.GroupBox groupBox1;
     }
 }
 

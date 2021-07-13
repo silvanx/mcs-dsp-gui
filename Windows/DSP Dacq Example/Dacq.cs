@@ -358,7 +358,23 @@ namespace MCS_USB_Windows_Forms_Application1
                 if (cbChart1.Checked) AddPoint(0, i, multiplierSeries0 * data[i * TotalChannels + series0Channel.SelectedIndex], ref min, ref max);
                 if (cbChart2.Checked) AddPoint(1, i, multiplierSeries1 * data[i * TotalChannels + series1Channel.SelectedIndex], ref min, ref max);
             }
+
+            if (!String.IsNullOrEmpty(minYChartInput.Text))
+            {
+                if (Int32.TryParse(minYChartInput.Text, out int minYValue))
+                {
+                    min = minYValue;
+                }
+            }
             
+            if(!String.IsNullOrEmpty(maxYChartInput.Text))
+            {
+                if (Int32.TryParse(maxYChartInput.Text, out int maxYValue))
+                {
+                    max = maxYValue;
+                }
+            }
+
             if (min < max)
             {
                 dspData.ChartAreas[0].AxisY.Minimum = min;
