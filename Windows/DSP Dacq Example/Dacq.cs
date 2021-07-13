@@ -604,6 +604,15 @@ namespace MCS_USB_Windows_Forms_Application1
             {
                 MessageBox.Show("Max amplitude has to be between 0 and 300 μA");
             }
+            if (!int.TryParse(PercentageOnInputBox.Text, out int PercentageStimOn))
+            {
+                MessageBox.Show("Percentage has to be an integer");
+            }
+            else if (PercentageStimOn > 99 || PercentageStimOn < 0)
+            {
+                MessageBox.Show("Percentage has to be between 0 and 99");
+            }
+
             if (DspPort != null || RawPort != null)
             {
                 CMcsUsbListEntryNet port = DspPort;
@@ -611,6 +620,8 @@ namespace MCS_USB_Windows_Forms_Application1
                 {
                     port = RawPort;
                 }
+                PercentageOnInputBox.Enabled = false;
+                StopRandomStimButton.Enabled = true;
                 Task.Run(() => RandomOnOffStimulation(port));
                 //BeginInvoke(new RandomOnOffStimulationAction(RandomOnOffStimulation), port);
             }
@@ -624,8 +635,6 @@ namespace MCS_USB_Windows_Forms_Application1
 
         void RandomOnOffStimulation(CMcsUsbListEntryNet port)
         {
-            PercentageOnInputBox.Enabled = false;
-            StopRandomStimButton.Enabled = true;
             int PercentageStimOn = Int32.Parse(PercentageOnInputBox.Text);
 
             // Define stimulation frequency and period
@@ -723,9 +732,6 @@ namespace MCS_USB_Windows_Forms_Application1
             int maxOn = 220;
             int maxOff = Convert.ToInt32(maxOn * (100 - PercentageStimOn) / PercentageStimOn);
 
-            double lambdaOn = 472.22;
-            double lambdaOff = 3062.28;
-
             CMcsUsbFactoryNet factorydev = new CMcsUsbFactoryNet(); // Create object of class CMcsUsbFactoryNet (provides firmware upgrade and register access capabilities)
             bool stimOn = false;
             double sleepTime = 0;
@@ -739,7 +745,6 @@ namespace MCS_USB_Windows_Forms_Application1
                         factorydev.WriteRegister(0x9A80, 0);
                         stimOn = false;
                         sleepTime = random.Next(1, maxOff);
-                        //sleepTime = -1000 * Math.Log(1 - random.NextDouble()) / lambdaOff;
                     } 
                     else
                     {
@@ -748,14 +753,10 @@ namespace MCS_USB_Windows_Forms_Application1
                         //sleepTime = -1000 * Math.Log(1 - random.NextDouble()) / lambdaOn;
                         sleepTime = random.Next(1, maxOn);
                     }
-                    Debug.Write(sleepTime.ToString());
-                    Debug.Write("\n");
                     Thread.Sleep(Convert.ToInt32(sleepTime));
                 }
                 factorydev.WriteRegister(0x9A80, 0);
                 factorydev.Disconnect();
-                StopRandomStimButton.Enabled = false;
-                PercentageOnInputBox.Enabled = true;
                 MessageBox.Show("Random Stim Finished");
             }
         }
@@ -763,6 +764,8 @@ namespace MCS_USB_Windows_Forms_Application1
         private void StopRandomStimButton_Click(object sender, EventArgs e)
         {
             RandomStimOn = false;
+            StopRandomStimButton.Enabled = false;
+            PercentageOnInputBox.Enabled = true;
         }
     }
 }
