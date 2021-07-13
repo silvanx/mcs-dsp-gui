@@ -590,5 +590,43 @@ namespace MCS_USB_Windows_Forms_Application1
                 MessageBox.Show("No port available");
             }
         }
+
+        private void StartRandomStimButton_Click(object sender, EventArgs e)
+        {
+            if (DspPort != null || RawPort != null)
+            {
+                CMcsUsbListEntryNet port = DspPort;
+                if (port == null)
+                {
+                    port = RawPort;
+                }
+                BeginInvoke(new RandomOnOffStimulationAction(RandomOnOffStimulation), port);
+            }
+            else
+            {
+                MessageBox.Show("No port available");
+            }
+        }
+
+        delegate void RandomOnOffStimulationAction(CMcsUsbListEntryNet port);
+
+        void RandomOnOffStimulation(CMcsUsbListEntryNet port)
+        {
+            // Define stimulation frequency and period
+            int f_stim = 130;
+            int T_stim = (int)((1.0 / f_stim) * 10E6);       // in us
+
+            // Define on and off phases of stimulation pulse    (in us)
+            int pulse_on_phase_dur = 60;
+            int pulse_off_phase_dur = T_stim - 2 * pulse_on_phase_dur;
+
+            // Define the upper and lower bounds for the controller output
+            int MaxValue = maxAmplitudeValue * 1000;                //in nA
+            const int MinValue = 0;                     //in nA
+
+            // Define the step between pulses amplitude
+            int delta_DBS_amp = (MaxValue - MinValue) / 16;    // in nA
+            MessageBox.Show(delta_DBS_amp.ToString());
+        }
     }
 }

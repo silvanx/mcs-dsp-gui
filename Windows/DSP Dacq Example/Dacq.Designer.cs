@@ -28,10 +28,10 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea2 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
-            System.Windows.Forms.DataVisualization.Charting.Legend legend2 = new System.Windows.Forms.DataVisualization.Charting.Legend();
-            System.Windows.Forms.DataVisualization.Charting.Series series3 = new System.Windows.Forms.DataVisualization.Charting.Series();
-            System.Windows.Forms.DataVisualization.Charting.Series series4 = new System.Windows.Forms.DataVisualization.Charting.Series();
+            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea1 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+            System.Windows.Forms.DataVisualization.Charting.Legend legend1 = new System.Windows.Forms.DataVisualization.Charting.Legend();
+            System.Windows.Forms.DataVisualization.Charting.Series series1 = new System.Windows.Forms.DataVisualization.Charting.Series();
+            System.Windows.Forms.DataVisualization.Charting.Series series2 = new System.Windows.Forms.DataVisualization.Charting.Series();
             this.startDacq = new System.Windows.Forms.Button();
             this.dspData = new System.Windows.Forms.DataVisualization.Charting.Chart();
             this.series0Channel = new System.Windows.Forms.ComboBox();
@@ -60,6 +60,7 @@
             this.maxYChartInput = new System.Windows.Forms.TextBox();
             this.minYChartInput = new System.Windows.Forms.TextBox();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.StartRandomStimButton = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.dspData)).BeginInit();
             this.groupBox1.SuspendLayout();
             this.SuspendLayout();
@@ -77,24 +78,24 @@
             // 
             // dspData
             // 
-            chartArea2.Name = "ChartArea1";
-            this.dspData.ChartAreas.Add(chartArea2);
-            legend2.Name = "Legend1";
-            this.dspData.Legends.Add(legend2);
+            chartArea1.Name = "ChartArea1";
+            this.dspData.ChartAreas.Add(chartArea1);
+            legend1.Name = "Legend1";
+            this.dspData.Legends.Add(legend1);
             this.dspData.Location = new System.Drawing.Point(18, 254);
             this.dspData.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.dspData.Name = "dspData";
-            series3.ChartArea = "ChartArea1";
-            series3.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.FastLine;
-            series3.Legend = "Legend1";
-            series3.Name = "Chart 1";
-            series4.ChartArea = "ChartArea1";
-            series4.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.FastLine;
-            series4.Legend = "Legend1";
-            series4.Name = "Chart 2";
-            this.dspData.Series.Add(series3);
-            this.dspData.Series.Add(series4);
-            this.dspData.Size = new System.Drawing.Size(1209, 578);
+            series1.ChartArea = "ChartArea1";
+            series1.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.FastLine;
+            series1.Legend = "Legend1";
+            series1.Name = "Chart 1";
+            series2.ChartArea = "ChartArea1";
+            series2.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.FastLine;
+            series2.Legend = "Legend1";
+            series2.Name = "Chart 2";
+            this.dspData.Series.Add(series1);
+            this.dspData.Series.Add(series2);
+            this.dspData.Size = new System.Drawing.Size(1428, 578);
             this.dspData.TabIndex = 6;
             this.dspData.Text = "DSP Data";
             // 
@@ -221,7 +222,7 @@
             // 
             // StopDSP
             // 
-            this.StopDSP.Location = new System.Drawing.Point(951, 162);
+            this.StopDSP.Location = new System.Drawing.Point(1170, 165);
             this.StopDSP.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.StopDSP.Name = "StopDSP";
             this.StopDSP.Size = new System.Drawing.Size(276, 62);
@@ -232,12 +233,12 @@
             // 
             // UploadDSPBinary
             // 
-            this.UploadDSPBinary.Location = new System.Drawing.Point(951, 91);
+            this.UploadDSPBinary.Location = new System.Drawing.Point(1170, 94);
             this.UploadDSPBinary.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.UploadDSPBinary.Name = "UploadDSPBinary";
             this.UploadDSPBinary.Size = new System.Drawing.Size(276, 62);
             this.UploadDSPBinary.TabIndex = 34;
-            this.UploadDSPBinary.Text = "Upload DSP Binary";
+            this.UploadDSPBinary.Text = "Threshold ON/OFF";
             this.UploadDSPBinary.UseVisualStyleBackColor = true;
             this.UploadDSPBinary.Click += new System.EventHandler(this.UploadDSPBinary_Click);
             // 
@@ -254,17 +255,17 @@
             // 
             // MaxAmplitudeTextBox
             // 
-            this.MaxAmplitudeTextBox.Location = new System.Drawing.Point(1077, 12);
+            this.MaxAmplitudeTextBox.Location = new System.Drawing.Point(1324, 15);
             this.MaxAmplitudeTextBox.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.MaxAmplitudeTextBox.Name = "MaxAmplitudeTextBox";
-            this.MaxAmplitudeTextBox.Size = new System.Drawing.Size(148, 26);
+            this.MaxAmplitudeTextBox.Size = new System.Drawing.Size(120, 26);
             this.MaxAmplitudeTextBox.TabIndex = 38;
             this.MaxAmplitudeTextBox.Text = "10";
             // 
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(922, 17);
+            this.label2.Location = new System.Drawing.Point(1176, 20);
             this.label2.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(145, 20);
@@ -296,7 +297,7 @@
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(926, 55);
+            this.label3.Location = new System.Drawing.Point(1180, 58);
             this.label3.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(111, 20);
@@ -305,17 +306,17 @@
             // 
             // StimThresholdTextBox
             // 
-            this.StimThresholdTextBox.Location = new System.Drawing.Point(1077, 51);
+            this.StimThresholdTextBox.Location = new System.Drawing.Point(1324, 54);
             this.StimThresholdTextBox.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.StimThresholdTextBox.Name = "StimThresholdTextBox";
-            this.StimThresholdTextBox.Size = new System.Drawing.Size(148, 26);
+            this.StimThresholdTextBox.Size = new System.Drawing.Size(120, 26);
             this.StimThresholdTextBox.TabIndex = 41;
             this.StimThresholdTextBox.Text = "100000";
             // 
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(48, 36);
+            this.label4.Location = new System.Drawing.Point(48, 28);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(38, 20);
             this.label4.TabIndex = 43;
@@ -324,7 +325,7 @@
             // label5
             // 
             this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(52, 76);
+            this.label5.Location = new System.Drawing.Point(52, 60);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(34, 20);
             this.label5.TabIndex = 44;
@@ -332,14 +333,14 @@
             // 
             // maxYChartInput
             // 
-            this.maxYChartInput.Location = new System.Drawing.Point(98, 36);
+            this.maxYChartInput.Location = new System.Drawing.Point(98, 28);
             this.maxYChartInput.Name = "maxYChartInput";
             this.maxYChartInput.Size = new System.Drawing.Size(116, 26);
             this.maxYChartInput.TabIndex = 45;
             // 
             // minYChartInput
             // 
-            this.minYChartInput.Location = new System.Drawing.Point(98, 76);
+            this.minYChartInput.Location = new System.Drawing.Point(98, 60);
             this.minYChartInput.Name = "minYChartInput";
             this.minYChartInput.Size = new System.Drawing.Size(116, 26);
             this.minYChartInput.TabIndex = 46;
@@ -350,18 +351,30 @@
             this.groupBox1.Controls.Add(this.maxYChartInput);
             this.groupBox1.Controls.Add(this.label5);
             this.groupBox1.Controls.Add(this.label4);
-            this.groupBox1.Location = new System.Drawing.Point(670, 131);
+            this.groupBox1.Location = new System.Drawing.Point(510, 158);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(240, 115);
+            this.groupBox1.Size = new System.Drawing.Size(240, 90);
             this.groupBox1.TabIndex = 47;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Vertical plot limits";
+            // 
+            // StartRandomStimButton
+            // 
+            this.StartRandomStimButton.Location = new System.Drawing.Point(886, 94);
+            this.StartRandomStimButton.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.StartRandomStimButton.Name = "StartRandomStimButton";
+            this.StartRandomStimButton.Size = new System.Drawing.Size(276, 62);
+            this.StartRandomStimButton.TabIndex = 48;
+            this.StartRandomStimButton.Text = "Random ON/OFF";
+            this.StartRandomStimButton.UseVisualStyleBackColor = true;
+            this.StartRandomStimButton.Click += new System.EventHandler(this.StartRandomStimButton_Click);
             // 
             // Dacq
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1245, 851);
+            this.ClientSize = new System.Drawing.Size(1459, 851);
+            this.Controls.Add(this.StartRandomStimButton);
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.label3);
             this.Controls.Add(this.StimThresholdTextBox);
@@ -426,6 +439,7 @@
         private System.Windows.Forms.TextBox maxYChartInput;
         private System.Windows.Forms.TextBox minYChartInput;
         private System.Windows.Forms.GroupBox groupBox1;
+        private System.Windows.Forms.Button StartRandomStimButton;
     }
 }
 
