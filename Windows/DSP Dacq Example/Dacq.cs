@@ -624,6 +624,10 @@ namespace MCS_USB_Windows_Forms_Application1
 
         void RandomOnOffStimulation(CMcsUsbListEntryNet port)
         {
+            PercentageOnInputBox.Enabled = false;
+            StopRandomStimButton.Enabled = true;
+            int PercentageStimOn = Int32.Parse(PercentageOnInputBox.Text);
+
             // Define stimulation frequency and period
             int f_stim = 130;
             int T_stim = (int)((1.0 / f_stim) * 10E6);       // in us
@@ -716,8 +720,8 @@ namespace MCS_USB_Windows_Forms_Application1
             }
 
             Random random = new Random();
-            int maxOn = 1266;
-            int maxOff = 4000;
+            int maxOn = 220;
+            int maxOff = Convert.ToInt32(maxOn * (100 - PercentageStimOn) / PercentageStimOn);
 
             double lambdaOn = 472.22;
             double lambdaOff = 3062.28;
@@ -750,6 +754,8 @@ namespace MCS_USB_Windows_Forms_Application1
                 }
                 factorydev.WriteRegister(0x9A80, 0);
                 factorydev.Disconnect();
+                StopRandomStimButton.Enabled = false;
+                PercentageOnInputBox.Enabled = true;
                 MessageBox.Show("Random Stim Finished");
             }
         }

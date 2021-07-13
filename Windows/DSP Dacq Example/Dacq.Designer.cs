@@ -62,6 +62,8 @@
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.StartRandomStimButton = new System.Windows.Forms.Button();
             this.StopRandomStimButton = new System.Windows.Forms.Button();
+            this.label6 = new System.Windows.Forms.Label();
+            this.PercentageOnInputBox = new System.Windows.Forms.TextBox();
             ((System.ComponentModel.ISupportInitialize)(this.dspData)).BeginInit();
             this.groupBox1.SuspendLayout();
             this.SuspendLayout();
@@ -314,7 +316,7 @@
             // maxYChartInput
             // 
             this.maxYChartInput.Location = new System.Drawing.Point(65, 18);
-            this.maxYChartInput.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.maxYChartInput.Margin = new System.Windows.Forms.Padding(2);
             this.maxYChartInput.Name = "maxYChartInput";
             this.maxYChartInput.Size = new System.Drawing.Size(79, 20);
             this.maxYChartInput.TabIndex = 45;
@@ -322,7 +324,7 @@
             // minYChartInput
             // 
             this.minYChartInput.Location = new System.Drawing.Point(65, 39);
-            this.minYChartInput.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.minYChartInput.Margin = new System.Windows.Forms.Padding(2);
             this.minYChartInput.Name = "minYChartInput";
             this.minYChartInput.Size = new System.Drawing.Size(79, 20);
             this.minYChartInput.TabIndex = 46;
@@ -334,9 +336,9 @@
             this.groupBox1.Controls.Add(this.label5);
             this.groupBox1.Controls.Add(this.label4);
             this.groupBox1.Location = new System.Drawing.Point(340, 103);
-            this.groupBox1.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.groupBox1.Margin = new System.Windows.Forms.Padding(2);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Padding = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.groupBox1.Padding = new System.Windows.Forms.Padding(2);
             this.groupBox1.Size = new System.Drawing.Size(160, 68);
             this.groupBox1.TabIndex = 47;
             this.groupBox1.TabStop = false;
@@ -354,6 +356,7 @@
             // 
             // StopRandomStimButton
             // 
+            this.StopRandomStimButton.Enabled = false;
             this.StopRandomStimButton.Location = new System.Drawing.Point(591, 107);
             this.StopRandomStimButton.Name = "StopRandomStimButton";
             this.StopRandomStimButton.Size = new System.Drawing.Size(184, 40);
@@ -362,11 +365,30 @@
             this.StopRandomStimButton.UseVisualStyleBackColor = true;
             this.StopRandomStimButton.Click += new System.EventHandler(this.StopRandomStimButton_Click);
             // 
+            // label6
+            // 
+            this.label6.AutoSize = true;
+            this.label6.Location = new System.Drawing.Point(637, 15);
+            this.label6.Name = "label6";
+            this.label6.Size = new System.Drawing.Size(103, 13);
+            this.label6.TabIndex = 50;
+            this.label6.Text = "Percentage time ON";
+            // 
+            // PercentageOnInputBox
+            // 
+            this.PercentageOnInputBox.Location = new System.Drawing.Point(661, 35);
+            this.PercentageOnInputBox.Name = "PercentageOnInputBox";
+            this.PercentageOnInputBox.Size = new System.Drawing.Size(53, 20);
+            this.PercentageOnInputBox.TabIndex = 51;
+            this.PercentageOnInputBox.Text = "15";
+            // 
             // Dacq
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(974, 585);
+            this.Controls.Add(this.PercentageOnInputBox);
+            this.Controls.Add(this.label6);
             this.Controls.Add(this.StopRandomStimButton);
             this.Controls.Add(this.StartRandomStimButton);
             this.Controls.Add(this.groupBox1);
@@ -434,6 +456,8 @@
         private System.Windows.Forms.GroupBox groupBox1;
         private System.Windows.Forms.Button StartRandomStimButton;
         private System.Windows.Forms.Button StopRandomStimButton;
+        private System.Windows.Forms.Label label6;
+        private System.Windows.Forms.TextBox PercentageOnInputBox;
     }
 }
 
