@@ -23,6 +23,8 @@
 extern int threshold;
 extern int deadtime;
 
+extern float StimProportionalGain;
+
 extern int StimAmplitude;
 extern int StimDuration;
 extern int StimRepeats;

@@ -57,6 +57,7 @@ extern Uint32 ChannelsPerSweepConfigured;
 #define MAILBOX_DURATION  0x0c
 #define MAILBOX_REPEATS   0x10
 #define MAILBOX_STEPSIZE  0x14
+#define MAILBOX_PROPORTIONAL_GAIN 0x18
 
 
 

@@ -28,10 +28,10 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea1 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
-            System.Windows.Forms.DataVisualization.Charting.Legend legend1 = new System.Windows.Forms.DataVisualization.Charting.Legend();
-            System.Windows.Forms.DataVisualization.Charting.Series series1 = new System.Windows.Forms.DataVisualization.Charting.Series();
-            System.Windows.Forms.DataVisualization.Charting.Series series2 = new System.Windows.Forms.DataVisualization.Charting.Series();
+            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea2 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+            System.Windows.Forms.DataVisualization.Charting.Legend legend2 = new System.Windows.Forms.DataVisualization.Charting.Legend();
+            System.Windows.Forms.DataVisualization.Charting.Series series3 = new System.Windows.Forms.DataVisualization.Charting.Series();
+            System.Windows.Forms.DataVisualization.Charting.Series series4 = new System.Windows.Forms.DataVisualization.Charting.Series();
             this.startDacq = new System.Windows.Forms.Button();
             this.dspData = new System.Windows.Forms.DataVisualization.Charting.Chart();
             this.series0Channel = new System.Windows.Forms.ComboBox();
@@ -64,6 +64,8 @@
             this.StopRandomStimButton = new System.Windows.Forms.Button();
             this.label6 = new System.Windows.Forms.Label();
             this.PercentageOnInputBox = new System.Windows.Forms.TextBox();
+            this.ProportionalGainInput = new System.Windows.Forms.TextBox();
+            this.label9 = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.dspData)).BeginInit();
             this.groupBox1.SuspendLayout();
             this.SuspendLayout();
@@ -80,22 +82,22 @@
             // 
             // dspData
             // 
-            chartArea1.Name = "ChartArea1";
-            this.dspData.ChartAreas.Add(chartArea1);
-            legend1.Name = "Legend1";
-            this.dspData.Legends.Add(legend1);
-            this.dspData.Location = new System.Drawing.Point(12, 165);
+            chartArea2.Name = "ChartArea1";
+            this.dspData.ChartAreas.Add(chartArea2);
+            legend2.Name = "Legend1";
+            this.dspData.Legends.Add(legend2);
+            this.dspData.Location = new System.Drawing.Point(12, 198);
             this.dspData.Name = "dspData";
-            series1.ChartArea = "ChartArea1";
-            series1.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.FastLine;
-            series1.Legend = "Legend1";
-            series1.Name = "Chart 1";
-            series2.ChartArea = "ChartArea1";
-            series2.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.FastLine;
-            series2.Legend = "Legend1";
-            series2.Name = "Chart 2";
-            this.dspData.Series.Add(series1);
-            this.dspData.Series.Add(series2);
+            series3.ChartArea = "ChartArea1";
+            series3.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.FastLine;
+            series3.Legend = "Legend1";
+            series3.Name = "Chart 1";
+            series4.ChartArea = "ChartArea1";
+            series4.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.FastLine;
+            series4.Legend = "Legend1";
+            series4.Name = "Chart 2";
+            this.dspData.Series.Add(series3);
+            this.dspData.Series.Add(series4);
             this.dspData.Size = new System.Drawing.Size(952, 376);
             this.dspData.TabIndex = 6;
             this.dspData.Text = "DSP Data";
@@ -211,7 +213,7 @@
             // 
             // StopDSP
             // 
-            this.StopDSP.Location = new System.Drawing.Point(780, 107);
+            this.StopDSP.Location = new System.Drawing.Point(780, 132);
             this.StopDSP.Name = "StopDSP";
             this.StopDSP.Size = new System.Drawing.Size(184, 40);
             this.StopDSP.TabIndex = 35;
@@ -221,7 +223,7 @@
             // 
             // UploadDSPBinary
             // 
-            this.UploadDSPBinary.Location = new System.Drawing.Point(780, 61);
+            this.UploadDSPBinary.Location = new System.Drawing.Point(780, 86);
             this.UploadDSPBinary.Name = "UploadDSPBinary";
             this.UploadDSPBinary.Size = new System.Drawing.Size(184, 40);
             this.UploadDSPBinary.TabIndex = 34;
@@ -241,7 +243,7 @@
             // 
             // MaxAmplitudeTextBox
             // 
-            this.MaxAmplitudeTextBox.Location = new System.Drawing.Point(883, 10);
+            this.MaxAmplitudeTextBox.Location = new System.Drawing.Point(883, 35);
             this.MaxAmplitudeTextBox.Name = "MaxAmplitudeTextBox";
             this.MaxAmplitudeTextBox.Size = new System.Drawing.Size(81, 20);
             this.MaxAmplitudeTextBox.TabIndex = 38;
@@ -250,7 +252,7 @@
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(784, 13);
+            this.label2.Location = new System.Drawing.Point(784, 38);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(97, 13);
             this.label2.TabIndex = 39;
@@ -279,7 +281,7 @@
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(787, 38);
+            this.label3.Location = new System.Drawing.Point(784, 63);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(73, 13);
             this.label3.TabIndex = 42;
@@ -287,7 +289,7 @@
             // 
             // StimThresholdTextBox
             // 
-            this.StimThresholdTextBox.Location = new System.Drawing.Point(883, 35);
+            this.StimThresholdTextBox.Location = new System.Drawing.Point(883, 60);
             this.StimThresholdTextBox.Name = "StimThresholdTextBox";
             this.StimThresholdTextBox.Size = new System.Drawing.Size(81, 20);
             this.StimThresholdTextBox.TabIndex = 41;
@@ -346,7 +348,7 @@
             // 
             // StartRandomStimButton
             // 
-            this.StartRandomStimButton.Location = new System.Drawing.Point(591, 61);
+            this.StartRandomStimButton.Location = new System.Drawing.Point(591, 86);
             this.StartRandomStimButton.Name = "StartRandomStimButton";
             this.StartRandomStimButton.Size = new System.Drawing.Size(184, 40);
             this.StartRandomStimButton.TabIndex = 48;
@@ -357,7 +359,7 @@
             // StopRandomStimButton
             // 
             this.StopRandomStimButton.Enabled = false;
-            this.StopRandomStimButton.Location = new System.Drawing.Point(591, 107);
+            this.StopRandomStimButton.Location = new System.Drawing.Point(591, 132);
             this.StopRandomStimButton.Name = "StopRandomStimButton";
             this.StopRandomStimButton.Size = new System.Drawing.Size(184, 40);
             this.StopRandomStimButton.TabIndex = 49;
@@ -368,7 +370,7 @@
             // label6
             // 
             this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(637, 15);
+            this.label6.Location = new System.Drawing.Point(637, 40);
             this.label6.Name = "label6";
             this.label6.Size = new System.Drawing.Size(103, 13);
             this.label6.TabIndex = 50;
@@ -376,17 +378,36 @@
             // 
             // PercentageOnInputBox
             // 
-            this.PercentageOnInputBox.Location = new System.Drawing.Point(661, 35);
+            this.PercentageOnInputBox.Location = new System.Drawing.Point(661, 60);
             this.PercentageOnInputBox.Name = "PercentageOnInputBox";
             this.PercentageOnInputBox.Size = new System.Drawing.Size(53, 20);
             this.PercentageOnInputBox.TabIndex = 51;
             this.PercentageOnInputBox.Text = "15";
+            // 
+            // ProportionalGainInput
+            // 
+            this.ProportionalGainInput.Location = new System.Drawing.Point(883, 9);
+            this.ProportionalGainInput.Name = "ProportionalGainInput";
+            this.ProportionalGainInput.Size = new System.Drawing.Size(81, 20);
+            this.ProportionalGainInput.TabIndex = 52;
+            this.ProportionalGainInput.Text = "0";
+            // 
+            // label9
+            // 
+            this.label9.AutoSize = true;
+            this.label9.Location = new System.Drawing.Point(784, 12);
+            this.label9.Name = "label9";
+            this.label9.Size = new System.Drawing.Size(86, 13);
+            this.label9.TabIndex = 53;
+            this.label9.Text = "Proportional gain";
             // 
             // Dacq
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(974, 585);
+            this.Controls.Add(this.label9);
+            this.Controls.Add(this.ProportionalGainInput);
             this.Controls.Add(this.PercentageOnInputBox);
             this.Controls.Add(this.label6);
             this.Controls.Add(this.StopRandomStimButton);
@@ -458,6 +479,8 @@
         private System.Windows.Forms.Button StopRandomStimButton;
         private System.Windows.Forms.Label label6;
         private System.Windows.Forms.TextBox PercentageOnInputBox;
+        private System.Windows.Forms.TextBox ProportionalGainInput;
+        private System.Windows.Forms.Label label9;
     }
 }
 

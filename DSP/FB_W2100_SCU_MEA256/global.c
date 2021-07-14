@@ -3,6 +3,8 @@
 int threshold;
 int deadtime;
 
+float StimProportionalGain;
+
 int StimAmplitude;
 int StimDuration;
 int StimRepeats;

@@ -128,6 +128,10 @@ interrupt void interrupt8(void)
             update_waveform = 1;
         }
         break;
+
+    case MAILBOX_PROPORTIONAL_GAIN:
+        StimProportionalGain = reg_value;
+        break;
 	}
 
 	if (update_waveform)
@@ -520,13 +524,55 @@ interrupt void interrupt6(void)
         timestamp=0;
         
         // Relate the pulse index to the memory segment index assoicated with it 
-        if (magnitude > threshold){
-            seg = 15;
+        if (StimProportionalGain > 0)
+        {
+            if (threshold > 0)
+            {
+                error = (magnitude - threshold) / threshold;
+            }
+            else
+            {
+                error = magnitude;
+            }
+            float stimulation_output = (StimProportionalGain / 1000) * error;
+
+            if (stimulation_output > MaxValue)
+            {
+                OutputValue = MaxValue;
+            }
+            else if (stimulation_output < MinValue)
+            {
+                OutputValue = MinValue;
+            }
+            else
+            {
+                OutputValue = stimulation_output;
+            }
+
+            stim_index = 0;
+            pulse_amp_diff = abs(pulse[0] - OutputValue);
+            for (c = 1; c < 16; c++)
+            {
+                if (abs(pulse[c] - OutputValue) < pulse_amp_diff)
+                {
+                    stim_index = c;
+                    pulse_amp_diff = abs(pulse[c] - OutputValue);
+                }
+            }
+            seg = stim_index;
+
         }
-        else {
-            seg = 0;
+        else
+        {
+            if (magnitude > threshold){
+                seg = 15;
+            }
+            else {
+                seg = 0;
+            }
         }
         
+
         // Set AUX 1 output value to zero
         //aux_value &= 0;
 	    //WRITE_REGISTER(IFB_AUX_OUT, aux_value);
@@ -553,8 +599,8 @@ MonitorData[8] = beta_power;
 MonitorData[9] = total_power;
 MonitorData[10] = relative_beta_power;
 MonitorData[11] = seg;
-MonitorData[12] = 8;
-MonitorData[13] = pulse[7];
+MonitorData[12] = MaxValue;
+MonitorData[13] = StimProportionalGain;
 MonitorData[14] = pulse[8];
 MonitorData[15] = pulse[9];
 MonitorData[16] = pulse[10];

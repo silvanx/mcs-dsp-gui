@@ -34,6 +34,8 @@ namespace MCS_USB_Windows_Forms_Application1
 
         int maxAmplitudeValue = 10;
         uint stimThresholdValue = 100000;
+        float proportionalGain = 0;
+
 
         bool RandomStimOn = false;
 
@@ -517,8 +519,13 @@ namespace MCS_USB_Windows_Forms_Application1
             {
                 // uint stimThresholdDigits = (uint)Math.Floor((float)stimThresholdValue / 0.381);
                 uint stimThresholdDigits = (uint)Math.Floor((float)stimThresholdValue);
+                uint maxAmplitude = (uint)MaxValue;
                 
                 factorydev.WriteRegister(0x1000, stimThresholdDigits);
+                factorydev.WriteRegister(0x1008, maxAmplitude);
+                uint propGainModified = (uint)Math.Floor(proportionalGain * 1000);
+                factorydev.WriteRegister(0x1018, propGainModified);
+
                 string FirmwareFile;
                 FirmwareFile = System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location);
                 FirmwareFile += @"\..\..\..\..\DSP\FB_W2100_SCU_MEA256\Release\";
@@ -552,6 +559,11 @@ namespace MCS_USB_Windows_Forms_Application1
             else if (stimThresholdValue < 0)
             {
                 MessageBox.Show("Stimulation threshold has to be positive");
+            }
+
+            if(! float.TryParse(ProportionalGainInput.Text, out proportionalGain))
+            {
+                MessageBox.Show("Proportional Gain should be a number with maximum 3 decimal places");
             }
 
             if (DspPort != null || RawPort != null)

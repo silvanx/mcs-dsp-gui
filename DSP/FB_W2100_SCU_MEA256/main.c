@@ -49,6 +49,7 @@ void main()
 	threshold = initFromMailbox(MAILBOX_THRSHOLD, 0);
 	deadtime  = initFromMailbox(MAILBOX_DEADTIME, 0);
 
+	StimProportionalGain = initFromMailbox(MAILBOX_PROPORTIONAL_GAIN, 0.0);
 	StimAmplitude = initFromMailbox(MAILBOX_AMPLITUDE, 100);
 	StimDuration  = initFromMailbox(MAILBOX_DURATION, 5);
 	StimRepeats   = initFromMailbox(MAILBOX_REPEATS, 1);
