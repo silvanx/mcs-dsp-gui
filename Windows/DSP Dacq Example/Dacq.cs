@@ -209,6 +209,11 @@ namespace MCS_USB_Windows_Forms_Application1
 
         private void startDacq_Click(object sender, EventArgs e)
         {
+            if (cbDeviceList.SelectedItem == null)
+            {
+                MessageBox.Show("No device selected!");
+                return;
+            }
 
             startDacq.Enabled = false;
             stopDacq.Enabled = true;
@@ -270,6 +275,7 @@ namespace MCS_USB_Windows_Forms_Application1
                 MessageBox.Show(CMcsUsbNet.GetErrorText(status));
                 startDacq.Enabled = true;
                 stopDacq.Enabled = false;
+                SaveToFileCheckBox.Enabled = true;
             }
         }
 
@@ -771,6 +777,7 @@ namespace MCS_USB_Windows_Forms_Application1
             if (Int32.TryParse(minYChartInput.Text, out int minY))
             {
                 minYValue = minY;
+                dspData.ChartAreas[0].AxisY.Minimum = minYValue.Value - 5;
             }
             else
             {
@@ -779,6 +786,7 @@ namespace MCS_USB_Windows_Forms_Application1
             if (Int32.TryParse(maxYChartInput.Text, out int maxY))
             {
                 maxYValue = maxY;
+                dspData.ChartAreas[0].AxisY.Maximum = maxYValue.Value - 5;
             }
             else
             {
