@@ -361,43 +361,28 @@ namespace MCS_USB_Windows_Forms_Application1
 
             int min = int.MaxValue;
             int max = int.MinValue;
+
             // the chart can not handle every datapoint
             //for (int i = 0; i < Samplerate; i += 1) // show each data point
             //for (int i = 0; i < Samplerate / 5; i += 20) // show only 1/10 data points
             for (int i = 0; i < Samplerate; i += 100) // show only each 100th data points
             {
-                if (cbChart1.Checked) AddPoint(0, i, multiplierSeries0 * data[i * TotalChannels + series0Channel.SelectedIndex], ref min, ref max);
-                if (cbChart2.Checked) AddPoint(1, i, multiplierSeries1 * data[i * TotalChannels + series1Channel.SelectedIndex], ref min, ref max);
+                if (cbChart1.Checked)
+                {
+                    AddPoint(0, i, multiplierSeries0 * data[i * TotalChannels + series0Channel.SelectedIndex], ref min, ref max);
+                }
+                if (cbChart2.Checked)
+                {
+                    AddPoint(1, i, multiplierSeries1 * data[i * TotalChannels + series1Channel.SelectedIndex], ref min, ref max);
+                }
             }
 
-            if (minYValue.HasValue)
+            if (min <= max)
             {
-                min = minYValue.Value;
-                
-            }
-            
-            if(maxYValue.HasValue)
-            {
-                max = maxYValue.Value;
+                dspData.ChartAreas[0].AxisY.Minimum = (minYValue ?? min) - 5;
+                dspData.ChartAreas[0].AxisY.Maximum = (maxYValue ?? max) + 5;
             }
 
-            if (min < max)
-            {
-                dspData.ChartAreas[0].AxisY.Minimum = min;
-                dspData.ChartAreas[0].AxisY.Maximum = max;
-            }
-            else if (min == max)
-            {
-                dspData.ChartAreas[0].AxisY.Minimum = min - 5;
-                dspData.ChartAreas[0].AxisY.Maximum = max + 5;
-            }
-        }
-
-        private void AddPoint(int series, int i, int data, ref int min, ref int max)
-        {
-            dspData.Series[series].Points.AddXY((double) i / Samplerate, (double) data);
-            if (data < min) min = data;
-            if (data > max) max = data;
         }
 
         private void AddPoint(int series, int i, double data, ref int min, ref int max)
