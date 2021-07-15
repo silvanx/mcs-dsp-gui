@@ -36,6 +36,8 @@ namespace MCS_USB_Windows_Forms_Application1
         uint stimThresholdValue = 100000;
         float proportionalGain = 0;
 
+        int? minYValue = null;
+        int? maxYValue = null;
 
         bool RandomStimOn = false;
 
@@ -364,20 +366,15 @@ namespace MCS_USB_Windows_Forms_Application1
                 if (cbChart2.Checked) AddPoint(1, i, multiplierSeries1 * data[i * TotalChannels + series1Channel.SelectedIndex], ref min, ref max);
             }
 
-            if (!String.IsNullOrEmpty(minYChartInput.Text))
+            if (minYValue.HasValue)
             {
-                if (Int32.TryParse(minYChartInput.Text, out int minYValue))
-                {
-                    min = minYValue;
-                }
+                min = minYValue.Value;
+                
             }
             
-            if(!String.IsNullOrEmpty(maxYChartInput.Text))
+            if(maxYValue.HasValue)
             {
-                if (Int32.TryParse(maxYChartInput.Text, out int maxYValue))
-                {
-                    max = maxYValue;
-                }
+                max = maxYValue.Value;
             }
 
             if (min < max)
@@ -778,6 +775,26 @@ namespace MCS_USB_Windows_Forms_Application1
             RandomStimOn = false;
             StopRandomStimButton.Enabled = false;
             PercentageOnInputBox.Enabled = true;
+        }
+
+        private void ApplyYLimitChangesButton_Click(object sender, EventArgs e)
+        {
+            if (Int32.TryParse(minYChartInput.Text, out int minY))
+            {
+                minYValue = minY;
+            }
+            else
+            {
+                minYValue = null;
+            }
+            if (Int32.TryParse(maxYChartInput.Text, out int maxY))
+            {
+                maxYValue = maxY;
+            }
+            else
+            {
+                maxYValue = null;
+            }
         }
     }
 }

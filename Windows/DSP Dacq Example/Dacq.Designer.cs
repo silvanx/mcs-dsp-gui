@@ -60,6 +60,7 @@
             this.maxYChartInput = new System.Windows.Forms.TextBox();
             this.minYChartInput = new System.Windows.Forms.TextBox();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.ApplyYLimitChangesButton = new System.Windows.Forms.Button();
             this.StartRandomStimButton = new System.Windows.Forms.Button();
             this.StopRandomStimButton = new System.Windows.Forms.Button();
             this.label6 = new System.Windows.Forms.Label();
@@ -298,7 +299,7 @@
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(32, 18);
+            this.label4.Location = new System.Drawing.Point(7, 18);
             this.label4.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(26, 13);
@@ -308,7 +309,7 @@
             // label5
             // 
             this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(35, 39);
+            this.label5.Location = new System.Drawing.Point(10, 39);
             this.label5.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(23, 13);
@@ -317,7 +318,7 @@
             // 
             // maxYChartInput
             // 
-            this.maxYChartInput.Location = new System.Drawing.Point(65, 18);
+            this.maxYChartInput.Location = new System.Drawing.Point(40, 18);
             this.maxYChartInput.Margin = new System.Windows.Forms.Padding(2);
             this.maxYChartInput.Name = "maxYChartInput";
             this.maxYChartInput.Size = new System.Drawing.Size(79, 20);
@@ -325,7 +326,7 @@
             // 
             // minYChartInput
             // 
-            this.minYChartInput.Location = new System.Drawing.Point(65, 39);
+            this.minYChartInput.Location = new System.Drawing.Point(40, 39);
             this.minYChartInput.Margin = new System.Windows.Forms.Padding(2);
             this.minYChartInput.Name = "minYChartInput";
             this.minYChartInput.Size = new System.Drawing.Size(79, 20);
@@ -333,6 +334,7 @@
             // 
             // groupBox1
             // 
+            this.groupBox1.Controls.Add(this.ApplyYLimitChangesButton);
             this.groupBox1.Controls.Add(this.minYChartInput);
             this.groupBox1.Controls.Add(this.maxYChartInput);
             this.groupBox1.Controls.Add(this.label5);
@@ -341,10 +343,20 @@
             this.groupBox1.Margin = new System.Windows.Forms.Padding(2);
             this.groupBox1.Name = "groupBox1";
             this.groupBox1.Padding = new System.Windows.Forms.Padding(2);
-            this.groupBox1.Size = new System.Drawing.Size(160, 68);
+            this.groupBox1.Size = new System.Drawing.Size(203, 68);
             this.groupBox1.TabIndex = 47;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Vertical plot limits";
+            // 
+            // ApplyYLimitChangesButton
+            // 
+            this.ApplyYLimitChangesButton.Location = new System.Drawing.Point(124, 37);
+            this.ApplyYLimitChangesButton.Name = "ApplyYLimitChangesButton";
+            this.ApplyYLimitChangesButton.Size = new System.Drawing.Size(75, 23);
+            this.ApplyYLimitChangesButton.TabIndex = 47;
+            this.ApplyYLimitChangesButton.Text = "Apply";
+            this.ApplyYLimitChangesButton.UseVisualStyleBackColor = true;
+            this.ApplyYLimitChangesButton.Click += new System.EventHandler(this.ApplyYLimitChangesButton_Click);
             // 
             // StartRandomStimButton
             // 
@@ -481,6 +493,7 @@
         private System.Windows.Forms.TextBox PercentageOnInputBox;
         private System.Windows.Forms.TextBox ProportionalGainInput;
         private System.Windows.Forms.Label label9;
+        private System.Windows.Forms.Button ApplyYLimitChangesButton;
     }
 }
 
