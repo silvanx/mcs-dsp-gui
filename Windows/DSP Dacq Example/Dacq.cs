@@ -313,6 +313,10 @@ namespace MCS_USB_Windows_Forms_Application1
                     row.Add(data[i * TotalChannels + Channels + AnalogChannels + 8].ToString());
                     row.Add(data[i * TotalChannels + Channels + AnalogChannels + 9].ToString());
                     row.Add(data[i * TotalChannels + Channels + AnalogChannels + 10].ToString());
+                    row.Add(data[i * TotalChannels + Channels + AnalogChannels + 11].ToString());
+                    row.Add(data[i * TotalChannels + Channels + AnalogChannels + 12].ToString());
+                    row.Add(data[i * TotalChannels + Channels + AnalogChannels + 13].ToString());
+                    row.Add(data[i * TotalChannels + Channels + AnalogChannels + 14].ToString());
                     string rowString = string.Join(", ", row);
                     contents.Add(rowString);
                 }
