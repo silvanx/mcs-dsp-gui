@@ -109,7 +109,7 @@ interrupt void interrupt8(void)
         if (StimDuration != reg_value)
         {
             StimDuration    = reg_value;
-            update_waveform = 1;
+            // update_waveform = 1;
         }
         break;
 
@@ -117,7 +117,7 @@ interrupt void interrupt8(void)
         if (StimRepeats != reg_value)
         {
             StimRepeats   = reg_value;
-            update_waveform = 1;
+            // update_waveform = 1;
         }
         break;
 
@@ -125,7 +125,7 @@ interrupt void interrupt8(void)
         if (StimStepsize != reg_value)
         {
             StimStepsize  = reg_value;
-            update_waveform = 1;
+            // update_waveform = 1;
         }
         break;
 
