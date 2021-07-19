@@ -173,7 +173,7 @@ interrupt void interrupt6(void)
     static int first_run = 1; 
 
     // Define the upper and lower bounds for the controller output (i.e. DBS amplitude)
-    const float MaxValue = 300;                     //in uA
+    const float MaxValue = StimAmplitude;                     //in uA
     const float MinValue = 0;                       //in uA
 
     // Define the step between pulses amplitude
@@ -247,6 +247,7 @@ interrupt void interrupt6(void)
 	double beta_power;
 	double total_power;
 	static double relative_beta_power = 0;
+    static float stimulation_output;
 	
     
 	// Define counter for function run
@@ -534,7 +535,7 @@ interrupt void interrupt6(void)
             {
                 error = magnitude;
             }
-            float stimulation_output = (StimProportionalGain / 1000) * error;
+            stimulation_output = (StimProportionalGain / 1000) * error;
 
             if (stimulation_output > MaxValue)
             {
@@ -602,12 +603,12 @@ MonitorData[11] = seg;
 MonitorData[12] = MaxValue;
 MonitorData[13] = StimProportionalGain;
 MonitorData[14] = OutputValue;
-MonitorData[15] = pulse[9];
-MonitorData[16] = pulse[10];
-MonitorData[17] = pulse[11];
-MonitorData[18] = pulse[12];
-MonitorData[19] = pulse[13];
-MonitorData[20] = pulse[14];
+MonitorData[15] = stimulation_output;
+MonitorData[16] = delta_DBS_amp;
+MonitorData[17] = pulse[0];
+MonitorData[18] = pulse[5];
+MonitorData[19] = pulse[10];
+MonitorData[20] = pulse[15];
 MonitorData[21] = pulse[15];
 
 /*
