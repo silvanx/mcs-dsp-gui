@@ -173,14 +173,14 @@ interrupt void interrupt6(void)
     static int first_run = 1; 
 
     // Define the upper and lower bounds for the controller output (i.e. DBS amplitude)
-    const float MaxValue = StimAmplitude;                     //in uA
+    const float MaxValue = StimAmplitude / 1000;                     //in uA
     const float MinValue = 0;                       //in uA
 
     // Define the step between pulses amplitude
     const float delta_DBS_amp = ( MaxValue - MinValue ) / 15;
 
     // Define vector to store the amplitude of the stimulation pulses
-    static float pulse[16] = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15};
+    static float pulse[16] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
 
     // Define dummy variable
     static int c = 0;
@@ -191,7 +191,7 @@ interrupt void interrupt6(void)
     {
         for (c = 0; c < 16; c++)
         {
-            pulse[c] = pulse[c] * delta_DBS_amp;
+            pulse[c] = c * delta_DBS_amp;
         }
 
         // These should be zero anyway, since the arrays are declared static but better safe than sorry
