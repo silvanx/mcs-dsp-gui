@@ -513,6 +513,10 @@ interrupt void interrupt6(void)
     // Increment timestamp each function call and call controller when T_controller elapsed i.e. when timestamp ==	ratio_T_controller_T_s
     if (++timestamp ==	ratio_T_controller_T_s)
     {
+        for (c = 0; c < 16; c++)
+        {
+            pulse[c] = c * delta_DBS_amp;
+        }
         // set AUX output to 1
         //aux_value |= 1;
 	    //WRITE_REGISTER(IFB_AUX_OUT, aux_value); 
@@ -544,11 +548,6 @@ interrupt void interrupt6(void)
             else
             {
                 OutputValue = stimulation_output;
-            }
-
-            for (c = 0; c < 16; c++)
-            {
-                pulse[c] = c * delta_DBS_amp;
             }
 
             stim_index = 0;
