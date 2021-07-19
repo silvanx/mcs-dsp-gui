@@ -189,10 +189,6 @@ interrupt void interrupt6(void)
     // Multiply pulse vector by delta_DBS_amp to get the vector assoicated with the amplitude of the stimulation pulses
     if (first_run)
     {
-        for (c = 0; c < 16; c++)
-        {
-            pulse[c] = c * delta_DBS_amp;
-        }
 
         // These should be zero anyway, since the arrays are declared static but better safe than sorry
         for (i = 0; i < LOWPASS_LENGTH; i++) {
@@ -548,6 +544,11 @@ interrupt void interrupt6(void)
             else
             {
                 OutputValue = stimulation_output;
+            }
+
+            for (c = 0; c < 16; c++)
+            {
+                pulse[c] = c * delta_DBS_amp;
             }
 
             stim_index = 0;
