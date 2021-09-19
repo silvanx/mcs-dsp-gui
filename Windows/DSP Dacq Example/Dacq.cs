@@ -41,6 +41,8 @@ namespace MCS_USB_Windows_Forms_Application1
 
         bool RandomStimOn = false;
 
+        string RecordingFilename = null;
+
         // for W2100
         private int other_receiver = 0;
         private bool w2100_hs_samling = false;
@@ -219,6 +221,12 @@ namespace MCS_USB_Windows_Forms_Application1
             stopDacq.Enabled = true;
             SaveToFileCheckBox.Enabled = false;
 
+            if (SaveToFileCheckBox.Checked)
+            {
+                string DateTimeNow = DateTime.Now.ToString("yyyy-MM-ddTHH-mm-ss");
+                RecordingFilename = DateTimeNow + "-data.txt";
+            }
+
             other_receiver = 0;
             if (((CMcsUsbListEntryNet) cbDeviceList.SelectedItem).SerialNumber.EndsWith("-B"))
             {
@@ -282,6 +290,7 @@ namespace MCS_USB_Windows_Forms_Application1
         private void stopDacq_Click(object sender, EventArgs e)
         {
             SaveToFileCheckBox.Enabled = true;
+            RecordingFilename = null;
             if (mea.GetDeviceId().IdProduct == ProductIdEnumNet.W2100)
             {
                 CW2100_FunctionNet func = new CW2100_FunctionNet(mea);
@@ -302,33 +311,22 @@ namespace MCS_USB_Windows_Forms_Application1
         {
             if (SaveToFileCheckBox.Checked)
             {
-                List<string> contents = new List<string>();
-                for (int i = 0; i < numFrames; i += 1)
+                using (BinaryWriter writer = new BinaryWriter(File.Open(file, FileMode.Append, FileAccess.Write, FileShare.None)))
                 {
-                    List<string> row = new List<string>();
-                    row.Add(data[i * TotalChannels + 0].ToString());
-                    row.Add(data[i * TotalChannels + 1].ToString());
-                    row.Add(data[i * TotalChannels + 2].ToString());
-                    row.Add(data[i * TotalChannels + 3].ToString());
-                    row.Add(data[i * TotalChannels + Channels + AnalogChannels + 0].ToString());
-                    row.Add(data[i * TotalChannels + Channels + AnalogChannels + 1].ToString());
-                    row.Add(data[i * TotalChannels + Channels + AnalogChannels + 2].ToString());
-                    row.Add(data[i * TotalChannels + Channels + AnalogChannels + 3].ToString());
-                    row.Add(data[i * TotalChannels + Channels + AnalogChannels + 4].ToString());
-                    row.Add(data[i * TotalChannels + Channels + AnalogChannels + 5].ToString());
-                    row.Add(data[i * TotalChannels + Channels + AnalogChannels + 6].ToString());
-                    row.Add(data[i * TotalChannels + Channels + AnalogChannels + 7].ToString());
-                    row.Add(data[i * TotalChannels + Channels + AnalogChannels + 8].ToString());
-                    row.Add(data[i * TotalChannels + Channels + AnalogChannels + 9].ToString());
-                    row.Add(data[i * TotalChannels + Channels + AnalogChannels + 10].ToString());
-                    row.Add(data[i * TotalChannels + Channels + AnalogChannels + 11].ToString());
-                    row.Add(data[i * TotalChannels + Channels + AnalogChannels + 12].ToString());
-                    row.Add(data[i * TotalChannels + Channels + AnalogChannels + 13].ToString());
-                    row.Add(data[i * TotalChannels + Channels + AnalogChannels + 14].ToString());
-                    string rowString = string.Join(", ", row);
-                    contents.Add(rowString);
+                    for (int i = 0; i < numFrames; i += 1)
+                    {
+                        // Save the four recording channels
+                        for (int j = 0; j < 4; j++)
+                        {
+                            writer.Write(data[i * TotalChannels + j]);
+                        }
+                        // Save MonitorData
+                        for (int j = 0; j < 22; j++)
+                        {
+                            writer.Write(data[i * TotalChannels + Channels + AnalogChannels + j]);
+                        }
+                    }
                 }
-                File.AppendAllLines(file, contents);
             }
         }
 
@@ -342,7 +340,7 @@ namespace MCS_USB_Windows_Forms_Application1
                 int[] rawData = mea.ChannelBlock_ReadFramesI32(0, numFrames, out int frames_read);
                 int[] data = new int[Samplerate * TotalChannels];
                 Array.Copy(rawData, (numFrames - Samplerate) * TotalChannels, data, 0, Samplerate * TotalChannels);
-                this.Invoke((MethodInvoker)delegate { SaveDataToFile(rawData, "data.txt", numFrames); });
+                this.Invoke((MethodInvoker)delegate { SaveDataToFile(rawData, RecordingFilename, numFrames); });
                 BeginInvoke(new DisplayDataAction(DisplayData), data);
                 Thread.Sleep(250);
             }
