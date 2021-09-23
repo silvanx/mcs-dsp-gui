@@ -451,7 +451,8 @@ namespace MCS_USB_Windows_Forms_Application1
             {
                 other_receiver = 4; // bit 0/1 select the timeslot of: bit 2/3 = 0 receiver according to USB port, 1 receiver A, 2 receiver B
             }
-            uint status = mea.Connect((CMcsUsbListEntryNet)cbDeviceList.SelectedItem, 63);
+            //uint status = mea.Connect((CMcsUsbListEntryNet)cbDeviceList.SelectedItem, 63);
+            uint status = mea.Connect(port, 63);
             if (status == 0 && mea.GetDeviceId().IdProduct == ProductIdEnumNet.W2100)
             {
                 mea.SetDataMode(DataModeEnumNet.Signed_32bit, 0);
@@ -481,8 +482,8 @@ namespace MCS_USB_Windows_Forms_Application1
                 int[] ampl = new[] { 10000, -10000, 0 };
 
                 // Define the duraion vector of the 3 segments of the biphasic pulse (in us)
-                //// ulong[] dur = new ulong[] { 100, 100, 7492 };
-                ulong[] dur = new ulong[] { 80, 80, 7600 };
+                ulong[] dur = new ulong[] { 100, 100, 7492 };
+                // ulong[] dur = new ulong[] { 80, 80, 7600 };
 
                 // Define each pulse
                 for (int i = 0; i < 16; i++)
