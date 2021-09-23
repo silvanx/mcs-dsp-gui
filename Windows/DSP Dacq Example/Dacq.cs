@@ -224,7 +224,7 @@ namespace MCS_USB_Windows_Forms_Application1
             if (SaveToFileCheckBox.Checked)
             {
                 string DateTimeNow = DateTime.Now.ToString("yyyy-MM-ddTHH-mm-ss");
-                RecordingFilename = DateTimeNow + "-data.txt";
+                RecordingFilename = DateTimeNow + "-data.bin";
             }
 
             other_receiver = 0;
