@@ -518,8 +518,8 @@ interrupt void interrupt6(void)
             pulse[c] = c * delta_DBS_amp;
         }
         // set AUX output to 1
-        //aux_value |= 1;
-	    //WRITE_REGISTER(IFB_AUX_OUT, aux_value); 
+        aux_value |= 1;
+	    WRITE_REGISTER(IFB_AUX_OUT, aux_value); 
         
         // reset timestamp counter
         timestamp=0;
@@ -575,8 +575,8 @@ interrupt void interrupt6(void)
         
 
         // Set AUX 1 output value to zero
-        //aux_value &= 0;
-	    //WRITE_REGISTER(IFB_AUX_OUT, aux_value);
+        aux_value &= 0;
+	    WRITE_REGISTER(IFB_AUX_OUT, aux_value);
      }
 
     if (seg == 0) {
