@@ -347,7 +347,7 @@ namespace MCS_USB_Windows_Forms_Application1
                 {
                     if (data[i] > 10e6 || data[i] < -10e6)
                     {
-                        data[i] = (data[i - TotalChannels] + data[i] + TotalChannels) / 2;
+                        data[i] = (data[i - TotalChannels] + data[i + TotalChannels]) / 2;
                     }
                 }
                 BeginInvoke(new DisplayDataAction(DisplayData), data);
