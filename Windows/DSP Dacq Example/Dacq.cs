@@ -338,10 +338,10 @@ namespace MCS_USB_Windows_Forms_Application1
             if (numFrames >= Samplerate)
             {
                 int[] rawData = mea.ChannelBlock_ReadFramesI32(0, numFrames, out int frames_read);
-                int[] data = new int[Samplerate * TotalChannels];
-                Array.Copy(rawData, (numFrames - Samplerate) * TotalChannels, data, 0, Samplerate * TotalChannels);
-                this.Invoke((MethodInvoker)delegate { SaveDataToFile(rawData, RecordingFilename, numFrames); });
-                BeginInvoke(new DisplayDataAction(DisplayData), data);
+                int[] data = new int[numFrames * TotalChannels];
+                Array.Copy(rawData, 0, data, 0, Samplerate * TotalChannels);
+                this.Invoke((MethodInvoker)delegate { SaveDataToFile(data, RecordingFilename, numFrames); });
+                BeginInvoke(new DisplayDataAction(DisplayData), rawData);
                 Thread.Sleep(250);
             }
             else
