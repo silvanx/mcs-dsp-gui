@@ -61,7 +61,7 @@ namespace MCS_USB_Windows_Forms_Application1
 
             startDacq.Enabled = true;
             stopDacq.Enabled = false;
-
+            
             mea.ChannelDataEvent += new OnChannelData(mea_ChannelDataEvent);
         }
 
@@ -806,6 +806,12 @@ namespace MCS_USB_Windows_Forms_Application1
             {
                 maxYValue = null;
             }
+        }
+
+        private void OpenDebugFormButton_Click(object sender, EventArgs e)
+        {
+            Form DebugForm = new DebugControlsForm();
+            DebugForm.Show();
         }
     }
 }
