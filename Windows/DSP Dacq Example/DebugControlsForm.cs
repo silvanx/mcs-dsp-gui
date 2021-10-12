@@ -39,14 +39,16 @@ namespace MCS_USB_Windows_Forms_Application1
 
         private void Button1_Click(object sender, EventArgs e)
         {
-            debugOutputBox.AppendText("** Testing mea.connect() without Lock Mask\n");
-            uint status = this.mea.Connect(parentForm.selectedUsbDevice);
-            debugOutputBox.AppendText("STATUS: " + status.ToString() + "\n");
-            this.mea.Disconnect();
-            debugOutputBox.AppendText("** Testing mea.connect() with Lock Mask = 63\n");
+            uint status;
+            debugOutputBox.AppendText("**Trying mea.connect() with Lock Mask = 63\n");
             status = this.mea.Connect(parentForm.selectedUsbDevice, 63);
-            debugOutputBox.AppendText("STATUS: " + status.ToString() + "\n");
-            this.mea.Disconnect();
+            if (status == 0)
+            {
+                debugOutputBox.AppendText("Connected!\n");
+            } else
+            {
+                debugOutputBox.AppendText("Connection ERROR: " + CMcsUsbNet.GetErrorText(status) + "\n");
+            }
         }
 
         private void Button2_Click(object sender, EventArgs e)
@@ -88,6 +90,12 @@ namespace MCS_USB_Windows_Forms_Application1
             {
                 debugOutputBox.AppendText("COULD NOT CONNECT TO MEA\n");
             }
+        }
+
+        private void MeaDisconnectButton_Click(object sender, EventArgs e)
+        {
+            this.mea.Disconnect();
+            debugOutputBox.AppendText("Disconnected!\n")
         }
     }
 }
