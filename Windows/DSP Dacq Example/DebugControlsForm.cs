@@ -33,13 +33,25 @@ namespace MCS_USB_Windows_Forms_Application1
             debugOutputBox.AppendText("USB Device list contains " + this.usbDeviceList.Count.ToString() + " entries\n");
             if (this.usbDeviceList.Count > 0)
             {
-                debugOutputBox.AppendText("Selected USB device: " + parentForm.selectedUsbDevice.SerialNumber);
+                debugOutputBox.AppendText("Selected USB device: " + parentForm.selectedUsbDevice.SerialNumber + "\n");
             }
         }
 
-        private void button1_Click(object sender, EventArgs e)
+        private void Button1_Click(object sender, EventArgs e)
         {
-            debugOutputBox.AppendText("Button 1 clicked \n");
+            debugOutputBox.AppendText("** Testing mea.connect() without Lock Mask\n");
+            uint status = this.mea.Connect(parentForm.selectedUsbDevice);
+            debugOutputBox.AppendText("STATUS: " + status.ToString() + "\n");
+            this.mea.Disconnect();
+            debugOutputBox.AppendText("** Testing mea.connect() with Lock Mask = 63\n");
+            status = this.mea.Connect(parentForm.selectedUsbDevice, 63);
+            debugOutputBox.AppendText("STATUS: " + status.ToString() + "\n");
+            this.mea.Disconnect();
+        }
+
+        private void Button2_Click(object sender, EventArgs e)
+        {
+
         }
     }
 }

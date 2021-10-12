@@ -31,12 +31,8 @@ namespace MCS_USB_Windows_Forms_Application1
         {
             this.panel1 = new System.Windows.Forms.Panel();
             this.debugOutputBox = new System.Windows.Forms.RichTextBox();
-            this.button1 = new System.Windows.Forms.Button();
-            this.button2 = new System.Windows.Forms.Button();
-            this.button3 = new System.Windows.Forms.Button();
-            this.button4 = new System.Windows.Forms.Button();
-            this.button5 = new System.Windows.Forms.Button();
-            this.button6 = new System.Windows.Forms.Button();
+            this.meaConnectTestButton = new System.Windows.Forms.Button();
+            this.meaParamsTestButton = new System.Windows.Forms.Button();
             this.panel1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -65,72 +61,33 @@ namespace MCS_USB_Windows_Forms_Application1
             this.debugOutputBox.TabIndex = 0;
             this.debugOutputBox.Text = "";
             // 
-            // button1
+            // meaConnectTestButton
             // 
-            this.button1.Location = new System.Drawing.Point(604, 12);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(90, 32);
-            this.button1.TabIndex = 1;
-            this.button1.Text = "button1";
-            this.button1.UseVisualStyleBackColor = true;
-            this.button1.Click += new System.EventHandler(this.button1_Click);
+            this.meaConnectTestButton.Location = new System.Drawing.Point(604, 12);
+            this.meaConnectTestButton.Name = "meaConnectTestButton";
+            this.meaConnectTestButton.Size = new System.Drawing.Size(184, 32);
+            this.meaConnectTestButton.TabIndex = 1;
+            this.meaConnectTestButton.Text = "MEA Connect";
+            this.meaConnectTestButton.UseVisualStyleBackColor = true;
+            this.meaConnectTestButton.Click += new System.EventHandler(this.Button1_Click);
             // 
-            // button2
+            // meaParamsTestButton
             // 
-            this.button2.Location = new System.Drawing.Point(700, 12);
-            this.button2.Name = "button2";
-            this.button2.Size = new System.Drawing.Size(90, 32);
-            this.button2.TabIndex = 2;
-            this.button2.Text = "button2";
-            this.button2.UseVisualStyleBackColor = true;
-            // 
-            // button3
-            // 
-            this.button3.Location = new System.Drawing.Point(604, 50);
-            this.button3.Name = "button3";
-            this.button3.Size = new System.Drawing.Size(90, 32);
-            this.button3.TabIndex = 3;
-            this.button3.Text = "button3";
-            this.button3.UseVisualStyleBackColor = true;
-            // 
-            // button4
-            // 
-            this.button4.Location = new System.Drawing.Point(700, 50);
-            this.button4.Name = "button4";
-            this.button4.Size = new System.Drawing.Size(90, 32);
-            this.button4.TabIndex = 4;
-            this.button4.Text = "button4";
-            this.button4.UseVisualStyleBackColor = true;
-            // 
-            // button5
-            // 
-            this.button5.Location = new System.Drawing.Point(604, 88);
-            this.button5.Name = "button5";
-            this.button5.Size = new System.Drawing.Size(90, 32);
-            this.button5.TabIndex = 5;
-            this.button5.Text = "button5";
-            this.button5.UseVisualStyleBackColor = true;
-            // 
-            // button6
-            // 
-            this.button6.Location = new System.Drawing.Point(700, 88);
-            this.button6.Name = "button6";
-            this.button6.Size = new System.Drawing.Size(90, 32);
-            this.button6.TabIndex = 6;
-            this.button6.Text = "button6";
-            this.button6.UseVisualStyleBackColor = true;
+            this.meaParamsTestButton.Location = new System.Drawing.Point(604, 50);
+            this.meaParamsTestButton.Name = "meaParamsTestButton";
+            this.meaParamsTestButton.Size = new System.Drawing.Size(184, 32);
+            this.meaParamsTestButton.TabIndex = 2;
+            this.meaParamsTestButton.Text = "MEA Params";
+            this.meaParamsTestButton.UseVisualStyleBackColor = true;
+            this.meaParamsTestButton.Click += new System.EventHandler(this.Button2_Click);
             // 
             // DebugControlsForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(800, 450);
-            this.Controls.Add(this.button6);
-            this.Controls.Add(this.button5);
-            this.Controls.Add(this.button4);
-            this.Controls.Add(this.button3);
-            this.Controls.Add(this.button2);
-            this.Controls.Add(this.button1);
+            this.Controls.Add(this.meaParamsTestButton);
+            this.Controls.Add(this.meaConnectTestButton);
             this.Controls.Add(this.panel1);
             this.Name = "DebugControlsForm";
             this.Text = "Debug Controls";
@@ -144,11 +101,7 @@ namespace MCS_USB_Windows_Forms_Application1
 
         private System.Windows.Forms.Panel panel1;
         private System.Windows.Forms.RichTextBox debugOutputBox;
-        private System.Windows.Forms.Button button1;
-        private System.Windows.Forms.Button button2;
-        private System.Windows.Forms.Button button3;
-        private System.Windows.Forms.Button button4;
-        private System.Windows.Forms.Button button5;
-        private System.Windows.Forms.Button button6;
+        private System.Windows.Forms.Button meaConnectTestButton;
+        private System.Windows.Forms.Button meaParamsTestButton;
     }
 }
