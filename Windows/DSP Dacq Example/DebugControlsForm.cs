@@ -51,7 +51,43 @@ namespace MCS_USB_Windows_Forms_Application1
 
         private void Button2_Click(object sender, EventArgs e)
         {
+            string meaConnectionStatus = "";
+            if (this.mea.IsConnected())
+            {
+                meaConnectionStatus = "CONNECTED";
+            } else
+            {
+                meaConnectionStatus = "DISCONNECTED";
+            }
+            debugOutputBox.AppendText("** MEA " + meaConnectionStatus + "\n");
+        }
 
+        private void MeaParamsButton_Click(object sender, EventArgs e)
+        {
+            uint status = this.mea.Connect(parentForm.selectedUsbDevice);
+            if (status == 0)
+            {
+                debugOutputBox.AppendText("** MEA PARAMS:\n");
+                string headstagePresentString = "??";
+                
+                if (this.mea.GetHeadstagePresent(1))
+                {
+                    headstagePresentString = "NO";
+                }
+                else
+                {
+                    headstagePresentString = "YES";
+                }
+                int meaSamplerate = this.mea.GetSamplerate(0);
+
+                debugOutputBox.AppendText("\tHeadstage present: " + headstagePresentString + "\n");
+                debugOutputBox.AppendText("\tSamplerate: " + meaSamplerate.ToString() + "\n");
+                this.mea.Disconnect();
+            }
+            else
+            {
+                debugOutputBox.AppendText("COULD NOT CONNECT TO MEA\n");
+            }
         }
     }
 }
