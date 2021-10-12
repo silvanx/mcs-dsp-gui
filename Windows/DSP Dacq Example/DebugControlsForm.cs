@@ -95,7 +95,7 @@ namespace MCS_USB_Windows_Forms_Application1
         private void MeaDisconnectButton_Click(object sender, EventArgs e)
         {
             this.mea.Disconnect();
-            debugOutputBox.AppendText("Disconnected!\n")
+            debugOutputBox.AppendText("Disconnected!\n");
         }
     }
 }

@@ -46,10 +46,10 @@ namespace MCS_USB_Windows_Forms_Application1
             this.panel1.AutoSize = true;
             this.panel1.BackColor = System.Drawing.SystemColors.MenuHighlight;
             this.panel1.Controls.Add(this.debugOutputBox);
-            this.panel1.Location = new System.Drawing.Point(12, 12);
-            this.panel1.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.panel1.Location = new System.Drawing.Point(9, 10);
+            this.panel1.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(587, 426);
+            this.panel1.Size = new System.Drawing.Size(440, 346);
             this.panel1.TabIndex = 0;
             // 
             // debugOutputBox
@@ -58,19 +58,20 @@ namespace MCS_USB_Windows_Forms_Application1
             this.debugOutputBox.Cursor = System.Windows.Forms.Cursors.Arrow;
             this.debugOutputBox.Dock = System.Windows.Forms.DockStyle.Fill;
             this.debugOutputBox.Location = new System.Drawing.Point(0, 0);
-            this.debugOutputBox.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.debugOutputBox.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.debugOutputBox.Name = "debugOutputBox";
             this.debugOutputBox.ReadOnly = true;
-            this.debugOutputBox.Size = new System.Drawing.Size(587, 426);
+            this.debugOutputBox.Size = new System.Drawing.Size(440, 346);
             this.debugOutputBox.TabIndex = 0;
             this.debugOutputBox.Text = "";
             // 
             // meaConnectTestButton
             // 
-            this.meaConnectTestButton.Location = new System.Drawing.Point(604, 12);
-            this.meaConnectTestButton.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.meaConnectTestButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.meaConnectTestButton.Location = new System.Drawing.Point(453, 10);
+            this.meaConnectTestButton.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.meaConnectTestButton.Name = "meaConnectTestButton";
-            this.meaConnectTestButton.Size = new System.Drawing.Size(184, 32);
+            this.meaConnectTestButton.Size = new System.Drawing.Size(138, 26);
             this.meaConnectTestButton.TabIndex = 1;
             this.meaConnectTestButton.Text = "MEA Connect";
             this.meaConnectTestButton.UseVisualStyleBackColor = true;
@@ -78,10 +79,11 @@ namespace MCS_USB_Windows_Forms_Application1
             // 
             // meaParamsTestButton
             // 
-            this.meaParamsTestButton.Location = new System.Drawing.Point(604, 84);
-            this.meaParamsTestButton.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.meaParamsTestButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.meaParamsTestButton.Location = new System.Drawing.Point(453, 68);
+            this.meaParamsTestButton.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.meaParamsTestButton.Name = "meaParamsTestButton";
-            this.meaParamsTestButton.Size = new System.Drawing.Size(184, 32);
+            this.meaParamsTestButton.Size = new System.Drawing.Size(138, 26);
             this.meaParamsTestButton.TabIndex = 2;
             this.meaParamsTestButton.Text = "MEA Connection Status";
             this.meaParamsTestButton.UseVisualStyleBackColor = true;
@@ -89,10 +91,11 @@ namespace MCS_USB_Windows_Forms_Application1
             // 
             // MeaParamsButton
             // 
-            this.MeaParamsButton.Location = new System.Drawing.Point(604, 121);
-            this.MeaParamsButton.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.MeaParamsButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.MeaParamsButton.Location = new System.Drawing.Point(453, 98);
+            this.MeaParamsButton.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.MeaParamsButton.Name = "MeaParamsButton";
-            this.MeaParamsButton.Size = new System.Drawing.Size(184, 32);
+            this.MeaParamsButton.Size = new System.Drawing.Size(138, 26);
             this.MeaParamsButton.TabIndex = 3;
             this.MeaParamsButton.Text = "MEA Params";
             this.MeaParamsButton.UseVisualStyleBackColor = true;
@@ -100,10 +103,11 @@ namespace MCS_USB_Windows_Forms_Application1
             // 
             // MeaDisconnectButton
             // 
-            this.MeaDisconnectButton.Location = new System.Drawing.Point(604, 48);
-            this.MeaDisconnectButton.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.MeaDisconnectButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.MeaDisconnectButton.Location = new System.Drawing.Point(453, 39);
+            this.MeaDisconnectButton.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.MeaDisconnectButton.Name = "MeaDisconnectButton";
-            this.MeaDisconnectButton.Size = new System.Drawing.Size(184, 32);
+            this.MeaDisconnectButton.Size = new System.Drawing.Size(138, 26);
             this.MeaDisconnectButton.TabIndex = 4;
             this.MeaDisconnectButton.Text = "MEA Disconnect";
             this.MeaDisconnectButton.UseVisualStyleBackColor = true;
@@ -111,15 +115,15 @@ namespace MCS_USB_Windows_Forms_Application1
             // 
             // DebugControlsForm
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(800, 450);
+            this.ClientSize = new System.Drawing.Size(600, 366);
             this.Controls.Add(this.MeaDisconnectButton);
             this.Controls.Add(this.MeaParamsButton);
             this.Controls.Add(this.meaParamsTestButton);
             this.Controls.Add(this.meaConnectTestButton);
             this.Controls.Add(this.panel1);
-            this.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.Name = "DebugControlsForm";
             this.Text = "Debug Controls";
             this.panel1.ResumeLayout(false);
