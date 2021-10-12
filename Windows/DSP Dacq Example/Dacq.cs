@@ -47,6 +47,10 @@ namespace MCS_USB_Windows_Forms_Application1
         private int other_receiver = 0;
         private bool w2100_hs_samling = false;
 
+        public string selectedUsbDevice
+        {
+            get { return (string) cbDeviceList.SelectedItem; }
+        }
 
         CMcsUsbListNet UsbDeviceList = new CMcsUsbListNet(DeviceEnumNet.MCS_DEVICE_USB);
         CMeaUSBDeviceNet mea = new CMeaUSBDeviceNet();
@@ -810,7 +814,7 @@ namespace MCS_USB_Windows_Forms_Application1
 
         private void OpenDebugFormButton_Click(object sender, EventArgs e)
         {
-            Form DebugForm = new DebugControlsForm();
+            Form DebugForm = new DebugControlsForm(this, mea, UsbDeviceList);
             DebugForm.Show();
         }
     }
