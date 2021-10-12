@@ -33,7 +33,7 @@ namespace MCS_USB_Windows_Forms_Application1
             debugOutputBox.AppendText("USB Device list contains " + this.usbDeviceList.Count.ToString() + " entries\n");
             if (this.usbDeviceList.Count > 0)
             {
-                debugOutputBox.AppendText("Selected USB device: " + parentForm.selectedUsbDevice.ToString());
+                debugOutputBox.AppendText("Selected USB device: " + parentForm.selectedUsbDevice.SerialNumber);
             }
         }
 

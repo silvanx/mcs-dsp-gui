@@ -47,9 +47,9 @@ namespace MCS_USB_Windows_Forms_Application1
         private int other_receiver = 0;
         private bool w2100_hs_samling = false;
 
-        public string selectedUsbDevice
+        public CMcsUsbListEntryNet selectedUsbDevice
         {
-            get { return (string) cbDeviceList.SelectedItem; }
+            get { return (CMcsUsbListEntryNet) cbDeviceList.SelectedItem; }
         }
 
         CMcsUsbListNet UsbDeviceList = new CMcsUsbListNet(DeviceEnumNet.MCS_DEVICE_USB);
