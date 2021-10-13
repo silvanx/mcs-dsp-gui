@@ -484,8 +484,8 @@ namespace MCS_USB_Windows_Forms_Application1
                 int[] ampl = new[] { 10000, -10000, 0 };
 
                 // Define the duraion vector of the 3 segments of the biphasic pulse (in us)
-                ulong[] dur = new ulong[] { 100, 100, 7492 };
-                // ulong[] dur = new ulong[] { 80, 80, 7600 };
+                // ulong[] dur = new ulong[] { 100, 100, 7492 };
+                ulong[] dur = new ulong[] { 80, 80, 7600 };
 
                 // Define each pulse
                 for (int i = 0; i < 16; i++)

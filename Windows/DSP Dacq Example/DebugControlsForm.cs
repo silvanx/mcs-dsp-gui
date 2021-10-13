@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using Mcs.Usb;
+using System.Diagnostics;
 
 namespace MCS_USB_Windows_Forms_Application1
 {
@@ -216,6 +217,73 @@ namespace MCS_USB_Windows_Forms_Application1
                     CW2100_FunctionNet func = new CW2100_FunctionNet(this.mea);
                     func.SetHeadstageSamplingActive(true, receiver + 0);
                     debugLog("**Set HS Sampling Inactive");
+                }
+                catch (Exception ex)
+                {
+                    debugLog("Exception caught: " + ex.ToString());
+                }
+            }
+        }
+
+        private void UploadStimParamsButton_Click(object sender, EventArgs e)
+        {
+            if (parentForm.selectedUsbDevice == null)
+            {
+                debugLog("No USB device selected!");
+            }
+            else
+            {
+                try
+                {
+                    int receiver = 0;
+                    if (((CMcsUsbListEntryNet)parentForm.selectedUsbDevice).SerialNumber.EndsWith("-B"))
+                    {
+                        receiver = 4; // bit 0/1 select the timeslot of: bit 2/3 = 0 receiver according to USB port, 1 receiver A, 2 receiver B
+                    }
+                    CW2100_FunctionNet func = new CW2100_FunctionNet(this.mea);
+                    int preplegth = 0;
+                    CW2100_StimulatorFunctionNet stim = new CW2100_StimulatorFunctionNet(mea);
+                    stim.SelectTimeSlot(receiver + 0);
+                    debugLog("Selected TimeSlot: " + stim.GetTimeSlot().ToString());
+
+                    int[] ampl = new[] { 10000, -10000, 0 };
+                    ulong[] dur = new ulong[] { 80, 80, 7600 };
+
+                    // Define each pulse
+                    for (int i = 0; i < 16; i++)
+                    {
+                        // Define the amplitude (nA) of each of the 3 segments
+                        ampl[0] = 1000 * Int32.Parse(MaxAmplitudeTextBox.Text) * (i + 1);
+                        ampl[1] = -1000 * Int32.Parse(MaxAmplitudeTextBox.Text) * (i + 1);
+
+                        // Define the duration (us) of each of the 3 segments
+                        dur[0] = (ulong) Convert.ToUInt64(PulseWidthTextBox.Text);
+                        dur[1] = (ulong) Convert.ToUInt64(PulseWidthTextBox.Text);
+                        dur[2] = (ulong) Convert.ToUInt64(PauseWidthTextBox.Text);
+
+                        debugLog("Amplitude:");
+                        debugLog(String.Join(", ", ampl.Select(p => p.ToString()).ToArray()));
+                        debugLog("Duration:");
+                        debugLog(String.Join(", ", dur.Select(p => p.ToString()).ToArray()));
+
+                        // Define the associated pulse
+                        CStimulusFunctionNet.StimulusDeviceDataAndUnrolledData prep = stim.PrepareData(0, ampl, dur, STG_DestinationEnumNet.channeldata_current, 1);
+                        debugLog("Prepared Data:");
+                        debugLog(prep.ToString());
+                        // Check the available memory in the headstage  
+                        if (i == 0)
+                        {
+                            preplegth = prep.DeviceDataLength;
+                        }
+
+                        // Check that the pulse fits into the designated memory
+                        Debug.Assert(preplegth == prep.DeviceDataLength);
+                        Debug.Assert(prep.DeviceDataLength <= 15);
+
+                        debugLog(String.Format("Storing pulse {0} into memory", i));
+                        // Store pulse into designated memory
+                        stim.SendPreparedData(0x10 * i + 0, prep, STG_DestinationEnumNet.channeldata_current);
+                    }
                 }
                 catch (Exception ex)
                 {

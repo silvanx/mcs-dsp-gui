@@ -58,8 +58,20 @@ namespace MCS_USB_Windows_Forms_Application1
             this.GetHeadstageSamplingButton = new System.Windows.Forms.Button();
             this.HeadstageSamplingOnButton = new System.Windows.Forms.Button();
             this.HeadstageSamplingOffButton = new System.Windows.Forms.Button();
+            this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.label4 = new System.Windows.Forms.Label();
+            this.label3 = new System.Windows.Forms.Label();
+            this.label2 = new System.Windows.Forms.Label();
+            this.PulseWidthTextBox = new System.Windows.Forms.TextBox();
+            this.PauseWidthTextBox = new System.Windows.Forms.TextBox();
+            this.MaxAmplitudeTextBox = new System.Windows.Forms.TextBox();
+            this.UploadStimParamsButton = new System.Windows.Forms.Button();
+            this.label5 = new System.Windows.Forms.Label();
+            this.label6 = new System.Windows.Forms.Label();
+            this.label7 = new System.Windows.Forms.Label();
             this.panel1.SuspendLayout();
             this.groupBox1.SuspendLayout();
+            this.groupBox2.SuspendLayout();
             this.SuspendLayout();
             // 
             // panel1
@@ -426,11 +438,119 @@ namespace MCS_USB_Windows_Forms_Application1
             this.HeadstageSamplingOffButton.UseVisualStyleBackColor = true;
             this.HeadstageSamplingOffButton.Click += new System.EventHandler(this.HeadstageSamplingOffButton_Click);
             // 
+            // groupBox2
+            // 
+            this.groupBox2.Controls.Add(this.label7);
+            this.groupBox2.Controls.Add(this.label6);
+            this.groupBox2.Controls.Add(this.label5);
+            this.groupBox2.Controls.Add(this.label4);
+            this.groupBox2.Controls.Add(this.label3);
+            this.groupBox2.Controls.Add(this.label2);
+            this.groupBox2.Controls.Add(this.PulseWidthTextBox);
+            this.groupBox2.Controls.Add(this.PauseWidthTextBox);
+            this.groupBox2.Controls.Add(this.MaxAmplitudeTextBox);
+            this.groupBox2.Controls.Add(this.UploadStimParamsButton);
+            this.groupBox2.Location = new System.Drawing.Point(560, 68);
+            this.groupBox2.Name = "groupBox2";
+            this.groupBox2.Size = new System.Drawing.Size(138, 129);
+            this.groupBox2.TabIndex = 10;
+            this.groupBox2.TabStop = false;
+            this.groupBox2.Text = "Upload Stim Params";
+            // 
+            // label4
+            // 
+            this.label4.AutoSize = true;
+            this.label4.Location = new System.Drawing.Point(22, 74);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(37, 13);
+            this.label4.TabIndex = 17;
+            this.label4.Text = "Pause";
+            // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Location = new System.Drawing.Point(1, 48);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(58, 13);
+            this.label3.TabIndex = 16;
+            this.label3.Text = "Pulsewidth";
+            // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Location = new System.Drawing.Point(6, 22);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(53, 13);
+            this.label2.TabIndex = 15;
+            this.label2.Text = "Max Ampl";
+            // 
+            // PulseWidthTextBox
+            // 
+            this.PulseWidthTextBox.Location = new System.Drawing.Point(61, 45);
+            this.PulseWidthTextBox.Name = "PulseWidthTextBox";
+            this.PulseWidthTextBox.Size = new System.Drawing.Size(46, 20);
+            this.PulseWidthTextBox.TabIndex = 14;
+            this.PulseWidthTextBox.Text = "80";
+            // 
+            // PauseWidthTextBox
+            // 
+            this.PauseWidthTextBox.Location = new System.Drawing.Point(61, 71);
+            this.PauseWidthTextBox.Name = "PauseWidthTextBox";
+            this.PauseWidthTextBox.Size = new System.Drawing.Size(46, 20);
+            this.PauseWidthTextBox.TabIndex = 13;
+            this.PauseWidthTextBox.Text = "7600";
+            // 
+            // MaxAmplitudeTextBox
+            // 
+            this.MaxAmplitudeTextBox.Location = new System.Drawing.Point(61, 19);
+            this.MaxAmplitudeTextBox.Name = "MaxAmplitudeTextBox";
+            this.MaxAmplitudeTextBox.Size = new System.Drawing.Size(46, 20);
+            this.MaxAmplitudeTextBox.TabIndex = 12;
+            this.MaxAmplitudeTextBox.Text = "10";
+            // 
+            // UploadStimParamsButton
+            // 
+            this.UploadStimParamsButton.Location = new System.Drawing.Point(58, 99);
+            this.UploadStimParamsButton.Name = "UploadStimParamsButton";
+            this.UploadStimParamsButton.Size = new System.Drawing.Size(75, 23);
+            this.UploadStimParamsButton.TabIndex = 11;
+            this.UploadStimParamsButton.Text = "Upload";
+            this.UploadStimParamsButton.UseVisualStyleBackColor = true;
+            this.UploadStimParamsButton.Click += new System.EventHandler(this.UploadStimParamsButton_Click);
+            // 
+            // label5
+            // 
+            this.label5.AutoSize = true;
+            this.label5.Location = new System.Drawing.Point(112, 22);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(20, 13);
+            this.label5.TabIndex = 12;
+            this.label5.Text = "uA";
+            // 
+            // label6
+            // 
+            this.label6.AutoSize = true;
+            this.label6.Location = new System.Drawing.Point(112, 48);
+            this.label6.Name = "label6";
+            this.label6.Size = new System.Drawing.Size(18, 13);
+            this.label6.TabIndex = 18;
+            this.label6.Text = "us";
+            // 
+            // label7
+            // 
+            this.label7.AutoSize = true;
+            this.label7.Location = new System.Drawing.Point(112, 74);
+            this.label7.Name = "label7";
+            this.label7.Size = new System.Drawing.Size(18, 13);
+            this.label7.TabIndex = 19;
+            this.label7.Text = "us";
+            // 
             // DebugControlsForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(705, 366);
+            this.Controls.Add(this.groupBox2);
             this.Controls.Add(this.HeadstageSamplingOffButton);
             this.Controls.Add(this.HeadstageSamplingOnButton);
             this.Controls.Add(this.GetHeadstageSamplingButton);
@@ -447,6 +567,8 @@ namespace MCS_USB_Windows_Forms_Application1
             this.panel1.ResumeLayout(false);
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
+            this.groupBox2.ResumeLayout(false);
+            this.groupBox2.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -483,5 +605,16 @@ namespace MCS_USB_Windows_Forms_Application1
         private System.Windows.Forms.Button GetHeadstageSamplingButton;
         private System.Windows.Forms.Button HeadstageSamplingOnButton;
         private System.Windows.Forms.Button HeadstageSamplingOffButton;
+        private System.Windows.Forms.GroupBox groupBox2;
+        private System.Windows.Forms.Label label4;
+        private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.TextBox PulseWidthTextBox;
+        private System.Windows.Forms.TextBox PauseWidthTextBox;
+        private System.Windows.Forms.TextBox MaxAmplitudeTextBox;
+        private System.Windows.Forms.Button UploadStimParamsButton;
+        private System.Windows.Forms.Label label7;
+        private System.Windows.Forms.Label label6;
+        private System.Windows.Forms.Label label5;
     }
 }
