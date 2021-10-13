@@ -22,6 +22,12 @@ namespace MCS_USB_Windows_Forms_Application1
             InitializeComponent();
         }
 
+        public void debugLog(string message)
+        {
+            string messageWithNewLine = message + "\n";
+            debugOutputBox.AppendText(messageWithNewLine);
+        }
+
         public DebugControlsForm(Dacq parentForm, CMeaUSBDeviceNet mea, CMcsUsbListNet usbDeviceList)
         {
             this.parentForm = parentForm;
@@ -29,25 +35,25 @@ namespace MCS_USB_Windows_Forms_Application1
             this.usbDeviceList = usbDeviceList;
             InitializeComponent();
 
-            debugOutputBox.AppendText("--- DEBUG WINDOW OPEN ---\n");
-            debugOutputBox.AppendText("USB Device list contains " + this.usbDeviceList.Count.ToString() + " entries\n");
+            debugLog("--- DEBUG WINDOW OPEN ---");
+            debugLog("USB Device list contains " + this.usbDeviceList.Count.ToString() + " entries");
             if (this.usbDeviceList.Count > 0)
             {
-                debugOutputBox.AppendText("Selected USB device: " + parentForm.selectedUsbDevice.SerialNumber + "\n");
+                debugLog("Selected USB device: " + parentForm.selectedUsbDevice.SerialNumber);
             }
         }
 
         private void Button1_Click(object sender, EventArgs e)
         {
             uint status;
-            debugOutputBox.AppendText("**Trying mea.connect() with Lock Mask = 63\n");
+            debugLog("**Connecting to MEA with Lock Mask = 63");
             status = this.mea.Connect(parentForm.selectedUsbDevice, 63);
             if (status == 0)
             {
-                debugOutputBox.AppendText("Connected!\n");
+                debugLog("Connected!");
             } else
             {
-                debugOutputBox.AppendText("Connection ERROR: " + CMcsUsbNet.GetErrorText(status) + "\n");
+                debugLog("Connection ERROR: " + CMcsUsbNet.GetErrorText(status));
             }
         }
 
@@ -61,7 +67,7 @@ namespace MCS_USB_Windows_Forms_Application1
             {
                 meaConnectionStatus = "DISCONNECTED";
             }
-            debugOutputBox.AppendText("** MEA " + meaConnectionStatus + "\n");
+            debugLog("** MEA " + meaConnectionStatus);
         }
 
         private void MeaParamsButton_Click(object sender, EventArgs e)
@@ -72,7 +78,7 @@ namespace MCS_USB_Windows_Forms_Application1
             uint status = this.mea.Connect(parentForm.selectedUsbDevice);
             if (status == 0)
             {
-                debugOutputBox.AppendText("** MEA PARAMS:\n");
+                debugLog("** MEA PARAMS:");
 
                 headstagePresentString = this.mea.GetHeadstagePresent(0) ? "YES" : "NO";
                 headstageActiveString = this.mea.GetHeadstageActive(0) ? "YES" : "NO";
@@ -81,21 +87,23 @@ namespace MCS_USB_Windows_Forms_Application1
 
                 CW2100_FunctionNet func = new CW2100_FunctionNet(this.mea);
 
-                debugOutputBox.AppendText("\tSamplerate: " + meaSamplerate.ToString() + "\n");
-                debugOutputBox.AppendText("\tHeadstage 0 present: " + headstagePresentString + "\n");
-                debugOutputBox.AppendText("\tHeadstage 0 active: " + headstageActiveString + "\n");
+                debugLog("\tSamplerate: " + meaSamplerate.ToString());
+                debugLog("\tHeadstage 0 present: " + headstagePresentString);
+                debugLog("\tHeadstage 0 active: " + headstageActiveString);
+                if (this.mea.GetHeadstagePresent(0))
+                    debugLog("\tHeadstage 0 ID: " + this.mea.GetHeadstageID(0));
                 this.mea.Disconnect();
             }
             else
             {
-                debugOutputBox.AppendText(CMcsUsbNet.GetErrorText(status) + "\n");
+                debugLog(CMcsUsbNet.GetErrorText(status));
             }
         }
 
         private void MeaDisconnectButton_Click(object sender, EventArgs e)
         {
             this.mea.Disconnect();
-            debugOutputBox.AppendText("Disconnected!\n");
+            debugLog("Disconnected!");
         }
     }
 }
