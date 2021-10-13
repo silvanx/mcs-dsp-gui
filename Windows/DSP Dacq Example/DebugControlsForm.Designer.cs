@@ -55,7 +55,7 @@ namespace MCS_USB_Windows_Forms_Application1
             this.radioButton3 = new System.Windows.Forms.RadioButton();
             this.radioButton2 = new System.Windows.Forms.RadioButton();
             this.radioButton1 = new System.Windows.Forms.RadioButton();
-            this.button1 = new System.Windows.Forms.Button();
+            this.GetHeadstageSamplingButton = new System.Windows.Forms.Button();
             this.panel1.SuspendLayout();
             this.groupBox1.SuspendLayout();
             this.SuspendLayout();
@@ -391,23 +391,25 @@ namespace MCS_USB_Windows_Forms_Application1
             this.radioButton1.UseVisualStyleBackColor = true;
             this.radioButton1.CheckedChanged += new System.EventHandler(this.radioButton_CheckedChanged);
             // 
-            // button1
+            // GetHeadstageSamplingButton
             // 
-            this.button1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.button1.Location = new System.Drawing.Point(560, 10);
-            this.button1.Margin = new System.Windows.Forms.Padding(2);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(138, 26);
-            this.button1.TabIndex = 7;
-            this.button1.Text = "button";
-            this.button1.UseVisualStyleBackColor = true;
+            this.GetHeadstageSamplingButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.GetHeadstageSamplingButton.Location = new System.Drawing.Point(560, 10);
+            this.GetHeadstageSamplingButton.Margin = new System.Windows.Forms.Padding(2);
+            this.GetHeadstageSamplingButton.Name = "GetHeadstageSamplingButton";
+            this.GetHeadstageSamplingButton.Size = new System.Drawing.Size(138, 26);
+            this.GetHeadstageSamplingButton.TabIndex = 7;
+            this.GetHeadstageSamplingButton.Text = "GetHeadstageSampling";
+            this.GetHeadstageSamplingButton.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText;
+            this.GetHeadstageSamplingButton.UseVisualStyleBackColor = true;
+            this.GetHeadstageSamplingButton.Click += new System.EventHandler(this.GetHeadstageSamplingButton_Click);
             // 
             // DebugControlsForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(705, 366);
-            this.Controls.Add(this.button1);
+            this.Controls.Add(this.GetHeadstageSamplingButton);
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.Read9A80RegisterButton);
             this.Controls.Add(this.MeaDisconnectButton);
@@ -454,6 +456,6 @@ namespace MCS_USB_Windows_Forms_Application1
         private System.Windows.Forms.RadioButton radioButton1;
         private System.Windows.Forms.Button Write9A80RegisterButton;
         private System.Windows.Forms.RadioButton radioButton17;
-        private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.Button GetHeadstageSamplingButton;
     }
 }

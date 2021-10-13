@@ -145,5 +145,23 @@ namespace MCS_USB_Windows_Forms_Application1
                 debugLog("Exception caught: " + ex.ToString());
             }
         }
+
+        private void GetHeadstageSamplingButton_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                CW2100_FunctionNet func = new CW2100_FunctionNet(this.mea);
+                int[] receivers = { 0, 4 };
+
+                foreach (int r in receivers)
+                {
+                    bool receiverSamplingActive = func.GetHeadstageSamplingActive(r + 0);
+                    debugLog(String.Format("Receiver {0}: Sampling {1}", r.ToString(), receiverSamplingActive ? "ACTIVE" : "INACTIVE"));
+                }
+            } catch (Exception ex)
+            {
+                debugLog("Exception caught: " + ex.ToString());
+            }
+        }
     }
 }
