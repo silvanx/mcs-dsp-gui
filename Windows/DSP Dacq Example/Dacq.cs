@@ -278,8 +278,8 @@ namespace MCS_USB_Windows_Forms_Application1
                 if (mea.GetDeviceId().IdProduct == ProductIdEnumNet.W2100)
                 {
                     CW2100_FunctionNet func = new CW2100_FunctionNet(mea);
-                    w2100_hs_samling = func.GetHeadstageSamplingActive(other_receiver + 0);
                     func.SetHeadstageSamplingActive(true, other_receiver + 0);
+                    w2100_hs_samling = func.GetHeadstageSamplingActive(other_receiver + 0);
                 }
             }
             else
@@ -298,7 +298,7 @@ namespace MCS_USB_Windows_Forms_Application1
             if (mea.GetDeviceId().IdProduct == ProductIdEnumNet.W2100)
             {
                 CW2100_FunctionNet func = new CW2100_FunctionNet(mea);
-                if (!w2100_hs_samling)
+                if (w2100_hs_samling)
                 {
                     func.SetHeadstageSamplingActive(false, other_receiver + 0);
                 }
