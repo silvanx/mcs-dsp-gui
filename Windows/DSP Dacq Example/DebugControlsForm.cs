@@ -16,6 +16,7 @@ namespace MCS_USB_Windows_Forms_Application1
         private Dacq parentForm = null;
         private CMeaUSBDeviceNet mea = null;
         private CMcsUsbListNet usbDeviceList = null;
+        private uint stimulationToSend = 0;
 
         public DebugControlsForm()
         {
@@ -26,6 +27,14 @@ namespace MCS_USB_Windows_Forms_Application1
         {
             string messageWithNewLine = message + "\n";
             debugOutputBox.AppendText(messageWithNewLine);
+        }
+
+        private void radioButton_CheckedChanged(object sender, EventArgs e)
+        {
+            if (((RadioButton)sender).Checked)
+            {
+                stimulationToSend = UInt32.Parse(((RadioButton)sender).Text);
+            }
         }
 
         public DebugControlsForm(Dacq parentForm, CMeaUSBDeviceNet mea, CMcsUsbListNet usbDeviceList)
@@ -123,7 +132,8 @@ namespace MCS_USB_Windows_Forms_Application1
         {
             try
             {
-                uint value = 0;
+                uint value = stimulationToSend == 0 ? 0 : 0x1000 * (stimulationToSend - 1) + 0x100;
+                debugLog(String.Format("Sending {0:X} to 0x9A80", value));
                 this.mea.WriteRegister(0x9A80, value);
             } catch (Exception ex)
             {

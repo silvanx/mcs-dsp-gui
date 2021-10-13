@@ -196,6 +196,7 @@ namespace MCS_USB_Windows_Forms_Application1
             this.radioButton17.TabStop = true;
             this.radioButton17.Text = "16";
             this.radioButton17.UseVisualStyleBackColor = true;
+            this.radioButton17.CheckedChanged += new System.EventHandler(this.radioButton_CheckedChanged);
             // 
             // radioButton16
             // 
@@ -207,6 +208,7 @@ namespace MCS_USB_Windows_Forms_Application1
             this.radioButton16.TabStop = true;
             this.radioButton16.Text = "15";
             this.radioButton16.UseVisualStyleBackColor = true;
+            this.radioButton16.CheckedChanged += new System.EventHandler(this.radioButton_CheckedChanged);
             // 
             // radioButton13
             // 
@@ -218,6 +220,7 @@ namespace MCS_USB_Windows_Forms_Application1
             this.radioButton13.TabStop = true;
             this.radioButton13.Text = "14";
             this.radioButton13.UseVisualStyleBackColor = true;
+            this.radioButton13.CheckedChanged += new System.EventHandler(this.radioButton_CheckedChanged);
             // 
             // radioButton14
             // 
@@ -229,6 +232,7 @@ namespace MCS_USB_Windows_Forms_Application1
             this.radioButton14.TabStop = true;
             this.radioButton14.Text = "13";
             this.radioButton14.UseVisualStyleBackColor = true;
+            this.radioButton14.CheckedChanged += new System.EventHandler(this.radioButton_CheckedChanged);
             // 
             // radioButton15
             // 
@@ -240,6 +244,7 @@ namespace MCS_USB_Windows_Forms_Application1
             this.radioButton15.TabStop = true;
             this.radioButton15.Text = "12";
             this.radioButton15.UseVisualStyleBackColor = true;
+            this.radioButton15.CheckedChanged += new System.EventHandler(this.radioButton_CheckedChanged);
             // 
             // radioButton10
             // 
@@ -251,6 +256,7 @@ namespace MCS_USB_Windows_Forms_Application1
             this.radioButton10.TabStop = true;
             this.radioButton10.Text = "11";
             this.radioButton10.UseVisualStyleBackColor = true;
+            this.radioButton10.CheckedChanged += new System.EventHandler(this.radioButton_CheckedChanged);
             // 
             // radioButton11
             // 
@@ -262,6 +268,7 @@ namespace MCS_USB_Windows_Forms_Application1
             this.radioButton11.TabStop = true;
             this.radioButton11.Text = "10";
             this.radioButton11.UseVisualStyleBackColor = true;
+            this.radioButton11.CheckedChanged += new System.EventHandler(this.radioButton_CheckedChanged);
             // 
             // radioButton12
             // 
@@ -273,6 +280,7 @@ namespace MCS_USB_Windows_Forms_Application1
             this.radioButton12.TabStop = true;
             this.radioButton12.Text = "9";
             this.radioButton12.UseVisualStyleBackColor = true;
+            this.radioButton12.CheckedChanged += new System.EventHandler(this.radioButton_CheckedChanged);
             // 
             // radioButton7
             // 
@@ -284,6 +292,7 @@ namespace MCS_USB_Windows_Forms_Application1
             this.radioButton7.TabStop = true;
             this.radioButton7.Text = "8";
             this.radioButton7.UseVisualStyleBackColor = true;
+            this.radioButton7.CheckedChanged += new System.EventHandler(this.radioButton_CheckedChanged);
             // 
             // radioButton8
             // 
@@ -295,6 +304,7 @@ namespace MCS_USB_Windows_Forms_Application1
             this.radioButton8.TabStop = true;
             this.radioButton8.Text = "7";
             this.radioButton8.UseVisualStyleBackColor = true;
+            this.radioButton8.CheckedChanged += new System.EventHandler(this.radioButton_CheckedChanged);
             // 
             // radioButton9
             // 
@@ -306,6 +316,7 @@ namespace MCS_USB_Windows_Forms_Application1
             this.radioButton9.TabStop = true;
             this.radioButton9.Text = "6";
             this.radioButton9.UseVisualStyleBackColor = true;
+            this.radioButton9.CheckedChanged += new System.EventHandler(this.radioButton_CheckedChanged);
             // 
             // radioButton4
             // 
@@ -317,6 +328,7 @@ namespace MCS_USB_Windows_Forms_Application1
             this.radioButton4.TabStop = true;
             this.radioButton4.Text = "5";
             this.radioButton4.UseVisualStyleBackColor = true;
+            this.radioButton4.CheckedChanged += new System.EventHandler(this.radioButton_CheckedChanged);
             // 
             // radioButton5
             // 
@@ -328,6 +340,7 @@ namespace MCS_USB_Windows_Forms_Application1
             this.radioButton5.TabStop = true;
             this.radioButton5.Text = "4";
             this.radioButton5.UseVisualStyleBackColor = true;
+            this.radioButton5.CheckedChanged += new System.EventHandler(this.radioButton_CheckedChanged);
             // 
             // radioButton6
             // 
@@ -339,6 +352,7 @@ namespace MCS_USB_Windows_Forms_Application1
             this.radioButton6.TabStop = true;
             this.radioButton6.Text = "3";
             this.radioButton6.UseVisualStyleBackColor = true;
+            this.radioButton6.CheckedChanged += new System.EventHandler(this.radioButton_CheckedChanged);
             // 
             // radioButton3
             // 
@@ -350,6 +364,7 @@ namespace MCS_USB_Windows_Forms_Application1
             this.radioButton3.TabStop = true;
             this.radioButton3.Text = "2";
             this.radioButton3.UseVisualStyleBackColor = true;
+            this.radioButton3.CheckedChanged += new System.EventHandler(this.radioButton_CheckedChanged);
             // 
             // radioButton2
             // 
@@ -361,6 +376,7 @@ namespace MCS_USB_Windows_Forms_Application1
             this.radioButton2.TabStop = true;
             this.radioButton2.Text = "1";
             this.radioButton2.UseVisualStyleBackColor = true;
+            this.radioButton2.CheckedChanged += new System.EventHandler(this.radioButton_CheckedChanged);
             // 
             // radioButton1
             // 
@@ -372,6 +388,7 @@ namespace MCS_USB_Windows_Forms_Application1
             this.radioButton1.TabStop = true;
             this.radioButton1.Text = "0";
             this.radioButton1.UseVisualStyleBackColor = true;
+            this.radioButton1.CheckedChanged += new System.EventHandler(this.radioButton_CheckedChanged);
             // 
             // DebugControlsForm
             // 
