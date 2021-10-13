@@ -27,6 +27,7 @@ namespace MCS_USB_Windows_Forms_Application1
         {
             string messageWithNewLine = message + "\n";
             debugOutputBox.AppendText(messageWithNewLine);
+            debugOutputBox.ScrollToCaret();
         }
 
         private void radioButton_CheckedChanged(object sender, EventArgs e)
