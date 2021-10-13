@@ -249,12 +249,17 @@ namespace MCS_USB_Windows_Forms_Application1
                     int[] ampl = new[] { 10000, -10000, 0 };
                     ulong[] dur = new ulong[] { 80, 80, 7600 };
 
+                    int maxAmplitude = 1000 * Int32.Parse(MaxAmplitudeTextBox.Text);
+                    int amplitudeDelta = (int)(maxAmplitude / 16);
+
+                    debugLog("Max amplitude: " + maxAmplitude.ToString() + "nA");
+                    debugLog("Amplitude delta: " + amplitudeDelta.ToString() + "nA");
                     // Define each pulse
                     for (int i = 0; i < 16; i++)
                     {
                         // Define the amplitude (nA) of each of the 3 segments
-                        ampl[0] = 1000 * Int32.Parse(MaxAmplitudeTextBox.Text) * (i + 1);
-                        ampl[1] = -1000 * Int32.Parse(MaxAmplitudeTextBox.Text) * (i + 1);
+                        ampl[0] = amplitudeDelta * (i + 1);
+                        ampl[1] = -amplitudeDelta * (i + 1);
 
                         // Define the duration (us) of each of the 3 segments
                         dur[0] = (ulong) Convert.ToUInt64(PulseWidthTextBox.Text);
