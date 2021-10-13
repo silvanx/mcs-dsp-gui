@@ -95,10 +95,14 @@ namespace MCS_USB_Windows_Forms_Application1
                 headstageActiveString = this.mea.GetHeadstageActive(0) ? "YES" : "NO";
 
                 int meaSamplerate = this.mea.GetSamplerate(0);
+                DataModeEnumNet meaDataMode = this.mea.GetDataMode(0);
 
-                CW2100_FunctionNet func = new CW2100_FunctionNet(this.mea);
+                int analogChannels, digitalChannels, checksumChannels, timestampChannels, channelsInBlock;
+                this.mea.GetChannelLayout(out analogChannels, out digitalChannels, out checksumChannels, out timestampChannels, out channelsInBlock, 0);
 
                 debugLog("\tSamplerate: " + meaSamplerate.ToString());
+                debugLog("\tData Mode: " + meaDataMode.ToString());
+                debugLog(String.Format("\tChannels: A{0} D{1} C{2} T{3} B{4}", analogChannels, digitalChannels, checksumChannels, timestampChannels, channelsInBlock));
                 debugLog("\tHeadstage 0 present: " + headstagePresentString);
                 debugLog("\tHeadstage 0 active: " + headstageActiveString);
                 if (this.mea.GetHeadstagePresent(0))

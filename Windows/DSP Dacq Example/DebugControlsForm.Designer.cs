@@ -55,6 +55,7 @@ namespace MCS_USB_Windows_Forms_Application1
             this.radioButton3 = new System.Windows.Forms.RadioButton();
             this.radioButton2 = new System.Windows.Forms.RadioButton();
             this.radioButton1 = new System.Windows.Forms.RadioButton();
+            this.button1 = new System.Windows.Forms.Button();
             this.panel1.SuspendLayout();
             this.groupBox1.SuspendLayout();
             this.SuspendLayout();
@@ -70,7 +71,7 @@ namespace MCS_USB_Windows_Forms_Application1
             this.panel1.Location = new System.Drawing.Point(9, 10);
             this.panel1.Margin = new System.Windows.Forms.Padding(2);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(440, 346);
+            this.panel1.Size = new System.Drawing.Size(401, 348);
             this.panel1.TabIndex = 0;
             // 
             // debugOutputBox
@@ -82,14 +83,14 @@ namespace MCS_USB_Windows_Forms_Application1
             this.debugOutputBox.Margin = new System.Windows.Forms.Padding(2);
             this.debugOutputBox.Name = "debugOutputBox";
             this.debugOutputBox.ReadOnly = true;
-            this.debugOutputBox.Size = new System.Drawing.Size(440, 346);
+            this.debugOutputBox.Size = new System.Drawing.Size(401, 348);
             this.debugOutputBox.TabIndex = 0;
             this.debugOutputBox.Text = "";
             // 
             // meaConnectTestButton
             // 
             this.meaConnectTestButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.meaConnectTestButton.Location = new System.Drawing.Point(453, 10);
+            this.meaConnectTestButton.Location = new System.Drawing.Point(418, 10);
             this.meaConnectTestButton.Margin = new System.Windows.Forms.Padding(2);
             this.meaConnectTestButton.Name = "meaConnectTestButton";
             this.meaConnectTestButton.Size = new System.Drawing.Size(138, 26);
@@ -101,7 +102,7 @@ namespace MCS_USB_Windows_Forms_Application1
             // meaParamsTestButton
             // 
             this.meaParamsTestButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.meaParamsTestButton.Location = new System.Drawing.Point(453, 68);
+            this.meaParamsTestButton.Location = new System.Drawing.Point(418, 68);
             this.meaParamsTestButton.Margin = new System.Windows.Forms.Padding(2);
             this.meaParamsTestButton.Name = "meaParamsTestButton";
             this.meaParamsTestButton.Size = new System.Drawing.Size(138, 26);
@@ -113,7 +114,7 @@ namespace MCS_USB_Windows_Forms_Application1
             // MeaParamsButton
             // 
             this.MeaParamsButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.MeaParamsButton.Location = new System.Drawing.Point(453, 97);
+            this.MeaParamsButton.Location = new System.Drawing.Point(418, 97);
             this.MeaParamsButton.Margin = new System.Windows.Forms.Padding(2);
             this.MeaParamsButton.Name = "MeaParamsButton";
             this.MeaParamsButton.Size = new System.Drawing.Size(138, 26);
@@ -125,7 +126,7 @@ namespace MCS_USB_Windows_Forms_Application1
             // MeaDisconnectButton
             // 
             this.MeaDisconnectButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.MeaDisconnectButton.Location = new System.Drawing.Point(453, 39);
+            this.MeaDisconnectButton.Location = new System.Drawing.Point(418, 39);
             this.MeaDisconnectButton.Margin = new System.Windows.Forms.Padding(2);
             this.MeaDisconnectButton.Name = "MeaDisconnectButton";
             this.MeaDisconnectButton.Size = new System.Drawing.Size(138, 26);
@@ -137,7 +138,7 @@ namespace MCS_USB_Windows_Forms_Application1
             // Read9A80RegisterButton
             // 
             this.Read9A80RegisterButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.Read9A80RegisterButton.Location = new System.Drawing.Point(453, 127);
+            this.Read9A80RegisterButton.Location = new System.Drawing.Point(418, 127);
             this.Read9A80RegisterButton.Margin = new System.Windows.Forms.Padding(2);
             this.Read9A80RegisterButton.Name = "Read9A80RegisterButton";
             this.Read9A80RegisterButton.Size = new System.Drawing.Size(138, 26);
@@ -167,7 +168,7 @@ namespace MCS_USB_Windows_Forms_Application1
             this.groupBox1.Controls.Add(this.radioButton3);
             this.groupBox1.Controls.Add(this.radioButton2);
             this.groupBox1.Controls.Add(this.radioButton1);
-            this.groupBox1.Location = new System.Drawing.Point(453, 156);
+            this.groupBox1.Location = new System.Drawing.Point(418, 156);
             this.groupBox1.Margin = new System.Windows.Forms.Padding(1);
             this.groupBox1.Name = "groupBox1";
             this.groupBox1.Padding = new System.Windows.Forms.Padding(1);
@@ -390,11 +391,23 @@ namespace MCS_USB_Windows_Forms_Application1
             this.radioButton1.UseVisualStyleBackColor = true;
             this.radioButton1.CheckedChanged += new System.EventHandler(this.radioButton_CheckedChanged);
             // 
+            // button1
+            // 
+            this.button1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.button1.Location = new System.Drawing.Point(560, 10);
+            this.button1.Margin = new System.Windows.Forms.Padding(2);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(138, 26);
+            this.button1.TabIndex = 7;
+            this.button1.Text = "button";
+            this.button1.UseVisualStyleBackColor = true;
+            // 
             // DebugControlsForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(600, 366);
+            this.ClientSize = new System.Drawing.Size(705, 366);
+            this.Controls.Add(this.button1);
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.Read9A80RegisterButton);
             this.Controls.Add(this.MeaDisconnectButton);
@@ -441,5 +454,6 @@ namespace MCS_USB_Windows_Forms_Application1
         private System.Windows.Forms.RadioButton radioButton1;
         private System.Windows.Forms.Button Write9A80RegisterButton;
         private System.Windows.Forms.RadioButton radioButton17;
+        private System.Windows.Forms.Button button1;
     }
 }
