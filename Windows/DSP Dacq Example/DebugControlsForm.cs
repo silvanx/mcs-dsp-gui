@@ -47,13 +47,21 @@ namespace MCS_USB_Windows_Forms_Application1
         {
             uint status;
             debugLog("**Connecting to MEA with Lock Mask = 63");
-            status = this.mea.Connect(parentForm.selectedUsbDevice, 63);
-            if (status == 0)
+            if (parentForm.selectedUsbDevice != null)
             {
-                debugLog("Connected!");
-            } else
+                status = this.mea.Connect(parentForm.selectedUsbDevice, 63);
+                if (status == 0)
+                {
+                    debugLog("Connected!");
+                }
+                else
+                {
+                    debugLog("Connection ERROR: " + CMcsUsbNet.GetErrorText(status));
+                }
+            }
+            else
             {
-                debugLog("Connection ERROR: " + CMcsUsbNet.GetErrorText(status));
+                debugLog("ERROR: No USB device selected");
             }
         }
 
@@ -104,6 +112,18 @@ namespace MCS_USB_Windows_Forms_Application1
         {
             this.mea.Disconnect();
             debugLog("Disconnected!");
+        }
+
+        private void Read9A80RegisterButton_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                uint value = this.mea.ReadRegister(0x9A80);
+                debugLog("Value in 0x9A80 register: " + value.ToString());
+            } catch (Exception ex)
+            {
+                debugLog("Exception caught: " + ex.ToString());
+            }
         }
     }
 }
