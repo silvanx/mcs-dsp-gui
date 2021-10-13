@@ -66,29 +66,29 @@ namespace MCS_USB_Windows_Forms_Application1
 
         private void MeaParamsButton_Click(object sender, EventArgs e)
         {
+            string headstagePresentString = "??";
+            string headstageActiveString = "??";
+
             uint status = this.mea.Connect(parentForm.selectedUsbDevice);
             if (status == 0)
             {
                 debugOutputBox.AppendText("** MEA PARAMS:\n");
-                string headstagePresentString = "??";
-                
-                if (this.mea.GetHeadstagePresent(1))
-                {
-                    headstagePresentString = "NO";
-                }
-                else
-                {
-                    headstagePresentString = "YES";
-                }
+
+                headstagePresentString = this.mea.GetHeadstagePresent(0) ? "YES" : "NO";
+                headstageActiveString = this.mea.GetHeadstageActive(0) ? "YES" : "NO";
+
                 int meaSamplerate = this.mea.GetSamplerate(0);
 
-                debugOutputBox.AppendText("\tHeadstage present: " + headstagePresentString + "\n");
+                CW2100_FunctionNet func = new CW2100_FunctionNet(this.mea);
+
                 debugOutputBox.AppendText("\tSamplerate: " + meaSamplerate.ToString() + "\n");
+                debugOutputBox.AppendText("\tHeadstage 0 present: " + headstagePresentString + "\n");
+                debugOutputBox.AppendText("\tHeadstage 0 active: " + headstageActiveString + "\n");
                 this.mea.Disconnect();
             }
             else
             {
-                debugOutputBox.AppendText("COULD NOT CONNECT TO MEA\n");
+                debugOutputBox.AppendText(CMcsUsbNet.GetErrorText(status) + "\n");
             }
         }
 
