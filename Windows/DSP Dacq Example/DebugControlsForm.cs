@@ -215,7 +215,7 @@ namespace MCS_USB_Windows_Forms_Application1
                         receiver = 4; // bit 0/1 select the timeslot of: bit 2/3 = 0 receiver according to USB port, 1 receiver A, 2 receiver B
                     }
                     CW2100_FunctionNet func = new CW2100_FunctionNet(this.mea);
-                    func.SetHeadstageSamplingActive(true, receiver + 0);
+                    func.SetHeadstageSamplingActive(false, receiver + 0);
                     debugLog("**Set HS Sampling Inactive");
                 }
                 catch (Exception ex)
