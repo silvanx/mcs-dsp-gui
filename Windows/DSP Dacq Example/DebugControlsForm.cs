@@ -148,19 +148,79 @@ namespace MCS_USB_Windows_Forms_Application1
 
         private void GetHeadstageSamplingButton_Click(object sender, EventArgs e)
         {
-            try
+            if (parentForm.selectedUsbDevice == null)
             {
-                CW2100_FunctionNet func = new CW2100_FunctionNet(this.mea);
-                int[] receivers = { 0, 4 };
-
-                foreach (int r in receivers)
+                debugLog("No USB device selected!");
+            }
+            else
+            {
+                try
                 {
-                    bool receiverSamplingActive = func.GetHeadstageSamplingActive(r + 0);
-                    debugLog(String.Format("Receiver {0}: Sampling {1}", r.ToString(), receiverSamplingActive ? "ACTIVE" : "INACTIVE"));
+                    int receiver = 0;
+                    if (((CMcsUsbListEntryNet)parentForm.selectedUsbDevice).SerialNumber.EndsWith("-B"))
+                    {
+                        receiver = 4; // bit 0/1 select the timeslot of: bit 2/3 = 0 receiver according to USB port, 1 receiver A, 2 receiver B
+                    }
+                    CW2100_FunctionNet func = new CW2100_FunctionNet(this.mea);
+                    bool receiverSamplingActive = func.GetHeadstageSamplingActive(receiver + 0);
+                    debugLog(String.Format("Receiver {0}: Sampling {1}", parentForm.selectedUsbDevice.SerialNumber, receiverSamplingActive ? "ACTIVE" : "INACTIVE"));
                 }
-            } catch (Exception ex)
+                catch (Exception ex)
+                {
+                    debugLog("Exception caught: " + ex.ToString());
+                }
+            }
+        }
+
+        private void HeadstageSamplingOnButton_Click(object sender, EventArgs e)
+        {
+            if (parentForm.selectedUsbDevice == null)
             {
-                debugLog("Exception caught: " + ex.ToString());
+                debugLog("No USB device selected!");
+            }
+            else
+            {
+                try
+                {
+                    int receiver = 0;
+                    if (((CMcsUsbListEntryNet)parentForm.selectedUsbDevice).SerialNumber.EndsWith("-B"))
+                    {
+                        receiver = 4; // bit 0/1 select the timeslot of: bit 2/3 = 0 receiver according to USB port, 1 receiver A, 2 receiver B
+                    }
+                    CW2100_FunctionNet func = new CW2100_FunctionNet(this.mea);
+                    func.SetHeadstageSamplingActive(true, receiver + 0);
+                    debugLog("**Set HS Sampling Active");
+                }
+                catch (Exception ex)
+                {
+                    debugLog("Exception caught: " + ex.ToString());
+                }
+            }
+        }
+
+        private void HeadstageSamplingOffButton_Click(object sender, EventArgs e)
+        {
+            if (parentForm.selectedUsbDevice == null)
+            {
+                debugLog("No USB device selected!");
+            }
+            else
+            {
+                try
+                {
+                    int receiver = 0;
+                    if (((CMcsUsbListEntryNet)parentForm.selectedUsbDevice).SerialNumber.EndsWith("-B"))
+                    {
+                        receiver = 4; // bit 0/1 select the timeslot of: bit 2/3 = 0 receiver according to USB port, 1 receiver A, 2 receiver B
+                    }
+                    CW2100_FunctionNet func = new CW2100_FunctionNet(this.mea);
+                    func.SetHeadstageSamplingActive(true, receiver + 0);
+                    debugLog("**Set HS Sampling Inactive");
+                }
+                catch (Exception ex)
+                {
+                    debugLog("Exception caught: " + ex.ToString());
+                }
             }
         }
     }

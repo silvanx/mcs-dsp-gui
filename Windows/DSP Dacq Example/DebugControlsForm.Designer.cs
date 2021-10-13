@@ -56,6 +56,8 @@ namespace MCS_USB_Windows_Forms_Application1
             this.radioButton2 = new System.Windows.Forms.RadioButton();
             this.radioButton1 = new System.Windows.Forms.RadioButton();
             this.GetHeadstageSamplingButton = new System.Windows.Forms.Button();
+            this.HeadstageSamplingOnButton = new System.Windows.Forms.Button();
+            this.HeadstageSamplingOffButton = new System.Windows.Forms.Button();
             this.panel1.SuspendLayout();
             this.groupBox1.SuspendLayout();
             this.SuspendLayout();
@@ -404,11 +406,33 @@ namespace MCS_USB_Windows_Forms_Application1
             this.GetHeadstageSamplingButton.UseVisualStyleBackColor = true;
             this.GetHeadstageSamplingButton.Click += new System.EventHandler(this.GetHeadstageSamplingButton_Click);
             // 
+            // HeadstageSamplingOnButton
+            // 
+            this.HeadstageSamplingOnButton.Location = new System.Drawing.Point(560, 39);
+            this.HeadstageSamplingOnButton.Name = "HeadstageSamplingOnButton";
+            this.HeadstageSamplingOnButton.Size = new System.Drawing.Size(66, 26);
+            this.HeadstageSamplingOnButton.TabIndex = 8;
+            this.HeadstageSamplingOnButton.Text = "Smpl ON";
+            this.HeadstageSamplingOnButton.UseVisualStyleBackColor = true;
+            this.HeadstageSamplingOnButton.Click += new System.EventHandler(this.HeadstageSamplingOnButton_Click);
+            // 
+            // HeadstageSamplingOffButton
+            // 
+            this.HeadstageSamplingOffButton.Location = new System.Drawing.Point(632, 39);
+            this.HeadstageSamplingOffButton.Name = "HeadstageSamplingOffButton";
+            this.HeadstageSamplingOffButton.Size = new System.Drawing.Size(66, 26);
+            this.HeadstageSamplingOffButton.TabIndex = 9;
+            this.HeadstageSamplingOffButton.Text = "Smpl OFF";
+            this.HeadstageSamplingOffButton.UseVisualStyleBackColor = true;
+            this.HeadstageSamplingOffButton.Click += new System.EventHandler(this.HeadstageSamplingOffButton_Click);
+            // 
             // DebugControlsForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(705, 366);
+            this.Controls.Add(this.HeadstageSamplingOffButton);
+            this.Controls.Add(this.HeadstageSamplingOnButton);
             this.Controls.Add(this.GetHeadstageSamplingButton);
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.Read9A80RegisterButton);
@@ -457,5 +481,7 @@ namespace MCS_USB_Windows_Forms_Application1
         private System.Windows.Forms.Button Write9A80RegisterButton;
         private System.Windows.Forms.RadioButton radioButton17;
         private System.Windows.Forms.Button GetHeadstageSamplingButton;
+        private System.Windows.Forms.Button HeadstageSamplingOnButton;
+        private System.Windows.Forms.Button HeadstageSamplingOffButton;
     }
 }
