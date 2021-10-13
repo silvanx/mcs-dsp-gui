@@ -67,14 +67,7 @@ namespace MCS_USB_Windows_Forms_Application1
 
         private void Button2_Click(object sender, EventArgs e)
         {
-            string meaConnectionStatus = "";
-            if (this.mea.IsConnected())
-            {
-                meaConnectionStatus = "CONNECTED";
-            } else
-            {
-                meaConnectionStatus = "DISCONNECTED";
-            }
+            string meaConnectionStatus = this.mea.IsConnected() ? "CONNECTED" : "DISCONNECTED";
             debugLog("** MEA " + meaConnectionStatus);
         }
 
@@ -119,7 +112,19 @@ namespace MCS_USB_Windows_Forms_Application1
             try
             {
                 uint value = this.mea.ReadRegister(0x9A80);
-                debugLog("Value in 0x9A80 register: " + value.ToString());
+                debugLog("Value in 0x9A80 register: " + value.ToString("X"));
+            } catch (Exception ex)
+            {
+                debugLog("Exception caught: " + ex.ToString());
+            }
+        }
+
+        private void Write9A80RegisterButton_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                uint value = 0;
+                this.mea.WriteRegister(0x9A80, value);
             } catch (Exception ex)
             {
                 debugLog("Exception caught: " + ex.ToString());
