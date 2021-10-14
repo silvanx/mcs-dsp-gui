@@ -103,9 +103,12 @@ namespace MCS_USB_Windows_Forms_Application1
                 }
                 cbDeviceList.Items.Add(UsbDeviceList.GetUsbListEntry(i));
             }
-            if (cbDeviceList.Items.Count > 0)
+            if (cbDeviceList.Items.Count > 1)
             {
                 cbDeviceList.SelectedIndex = 1;
+            } else if (cbDeviceList.Items.Count > 0)
+            {
+                cbDeviceList.SelectedIndex = 0;
             }
 
             if (RawPort != null && DspPort != null)

@@ -24,9 +24,13 @@ namespace MCS_USB_Windows_Forms_Application1
             InitializeComponent();
         }
 
-        public void debugLog(string message)
+        public void debugLog(string message, bool ignoreNewline = false)
         {
-            string messageWithNewLine = message + "\n";
+            string messageWithNewLine = "";
+            if (ignoreNewline)
+                messageWithNewLine = message;
+            else
+                messageWithNewLine = message + "\n";
             debugOutputBox.AppendText(messageWithNewLine);
             debugOutputBox.ScrollToCaret();
         }
@@ -266,15 +270,12 @@ namespace MCS_USB_Windows_Forms_Application1
                         dur[1] = (ulong) Convert.ToUInt64(PulseWidthTextBox.Text);
                         dur[2] = (ulong) Convert.ToUInt64(PauseWidthTextBox.Text);
 
-                        debugLog("Amplitude:");
-                        debugLog(String.Join(", ", ampl.Select(p => p.ToString()).ToArray()));
-                        debugLog("Duration:");
-                        debugLog(String.Join(", ", dur.Select(p => p.ToString()).ToArray()));
-
+                        debugLog("Amplitude:" + String.Join(", ", ampl.Select(p => p.ToString()).ToArray()));
+                        debugLog("Duration:" + String.Join(", ", dur.Select(p => p.ToString()).ToArray()));
+                        
                         // Define the associated pulse
                         CStimulusFunctionNet.StimulusDeviceDataAndUnrolledData prep = stim.PrepareData(0, ampl, dur, STG_DestinationEnumNet.channeldata_current, 1);
-                        debugLog("Prepared Data:");
-                        debugLog(prep.ToString());
+                        debugLog(String.Format("Storing pulse {0} into memory...", i), true);
                         // Check the available memory in the headstage  
                         if (i == 0)
                         {
@@ -285,9 +286,9 @@ namespace MCS_USB_Windows_Forms_Application1
                         Debug.Assert(preplegth == prep.DeviceDataLength);
                         Debug.Assert(prep.DeviceDataLength <= 15);
 
-                        debugLog(String.Format("Storing pulse {0} into memory", i));
                         // Store pulse into designated memory
                         stim.SendPreparedData(0x10 * i + 0, prep, STG_DestinationEnumNet.channeldata_current);
+                        debugLog("OK");
                     }
                 }
                 catch (Exception ex)
