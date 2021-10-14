@@ -518,7 +518,14 @@ namespace MCS_USB_Windows_Forms_Application1
                     Debug.Assert(prep.DeviceDataLength <= 15);
 
                     // Store pulse into designated memory
-                    stim.SendPreparedData(0x10 * i + 0, prep, STG_DestinationEnumNet.channeldata_current);
+                    try
+                    {
+                        stim.SendPreparedData(0x10 * i + 0, prep, STG_DestinationEnumNet.channeldata_current);
+                    } catch (CUsbExceptionNet ex)
+                    {
+                        MessageBox.Show(String.Format("Error while uploading stim pattern {0}: {1}", i.ToString(), ex.Message));
+                    }
+                    
                 }
                 func.SetHeadstageSamplingActive(true, other_receiver + 0);
             }
@@ -550,6 +557,9 @@ namespace MCS_USB_Windows_Forms_Application1
                 if (!success)
                 {
                     MessageBox.Show("Firmware upload failed!");
+                } else
+                {
+                    MessageBox.Show("Firmware upload successful!");
                 }
             }
         }
