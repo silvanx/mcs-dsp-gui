@@ -431,6 +431,80 @@ namespace MCS_USB_Windows_Forms_Application1
             }
         }
 
+        private void UploadStimulationPatternsToHS(CMcsUsbListEntryNet port, int other_receiver, int delta_DBS_amp, out string uploadErrorMessage)
+        {
+            uploadErrorMessage = "";
+            uint status = mea.Connect(port);
+            if (status == 0)
+            {
+                mea.SetDataMode(DataModeEnumNet.Signed_32bit, 0);
+                mea.SetNumberOfAnalogChannels(Channels, 0, Channels, AnalogChannels, 0); // Read raw data
+
+                try
+                {
+                    mea.SetSamplerate(Samplerate, 1, 0);
+                }
+                catch (CUsbExceptionNet)
+                {
+                    Samplerate = mea.GetSamplerate(0);
+                }
+
+                CW2100_FunctionNet func = new CW2100_FunctionNet(mea);
+                CW2100_StimulatorFunctionNet stim = new CW2100_StimulatorFunctionNet(mea);
+
+                hsSamplingActive = func.GetHeadstageSamplingActive(other_receiver + 0);
+
+                int preplegth = 0;
+                
+                stim.SelectTimeSlot(other_receiver + 0);
+                
+                // Define the amplitude vector of the 3 segments of the biphasic pulse (in nA)
+                int[] ampl = new[] { 10000, -10000, 0 };
+
+                // Define the duraion vector of the 3 segments of the biphasic pulse (in us)
+                ulong[] dur = new ulong[] { 80, 80, 7600 };
+
+                func.SetHeadstageSamplingActive(false, other_receiver + 0);
+                // Define and upload each stimulation pattern
+                for (int i = 0; i < 16; i++)
+                {
+                    // Define the amplitude (nA) of each of the 3 segments
+                    ampl[0] = delta_DBS_amp * (i + 1);
+                    ampl[1] = -delta_DBS_amp * (i + 1);
+
+                    // choose, if global repeat is desired
+                    // Define the associated pulse
+                    CStimulusFunctionNet.StimulusDeviceDataAndUnrolledData prep = stim.PrepareData(0, ampl, dur, STG_DestinationEnumNet.channeldata_current, 1);
+
+                    // Check the available memory in the headstage  
+                    if (i == 0)
+                    {
+                        preplegth = prep.DeviceDataLength;
+                    }
+
+                    // Check that the pulse fits into the designated memory
+                    Debug.Assert(preplegth == prep.DeviceDataLength);
+                    Debug.Assert(prep.DeviceDataLength <= 15);
+
+                    // Store pulse into designated memory
+                    try
+                    {
+                        stim.SendPreparedData(0x10 * i + 0, prep, STG_DestinationEnumNet.channeldata_current);
+                    }
+                    catch (CUsbExceptionNet ex)
+                    {
+                        uploadErrorMessage += String.Format("Error while uploading stim pattern {0}: {1}", i.ToString(), ex.Message) + "\n";
+                    }
+                }
+                func.SetHeadstageSamplingActive(true, other_receiver + 0);
+            }
+            if (startDacq.Enabled)
+            {
+                mea.Disconnect();
+            }
+        }
+
+
         delegate void UploadDSBBinaryAction(CMcsUsbListEntryNet port);
 
 
@@ -457,78 +531,78 @@ namespace MCS_USB_Windows_Forms_Application1
                 other_receiver = 4; // bit 0/1 select the timeslot of: bit 2/3 = 0 receiver according to USB port, 1 receiver A, 2 receiver B
             }
 
-            string uploadErrorMessage = "";
-            uint status = mea.Connect(port, 63);
-            if (status == 0 && mea.GetDeviceId().IdProduct == ProductIdEnumNet.W2100)
-            {
-                mea.SetDataMode(DataModeEnumNet.Signed_32bit, 0);
+            UploadStimulationPatternsToHS(port, other_receiver, delta_DBS_amp, out string uploadErrorMessage);
+            
+            //uint status = mea.Connect(port, 63);
+            //if (status == 0 && mea.GetDeviceId().IdProduct == ProductIdEnumNet.W2100)
+            //{
+            //    mea.SetDataMode(DataModeEnumNet.Signed_32bit, 0);
 
-                mea.SetNumberOfAnalogChannels(Channels, 0, Channels, AnalogChannels, 0); // Read raw data
+            //    mea.SetNumberOfAnalogChannels(Channels, 0, Channels, AnalogChannels, 0); // Read raw data
 
-                try
-                {
-                    mea.SetSamplerate(Samplerate, 1, 0);
-                }
-                catch (CUsbExceptionNet)
-                {
-                    Samplerate = mea.GetSamplerate(0);
-                }
+            //    try
+            //    {
+            //        mea.SetSamplerate(Samplerate, 1, 0);
+            //    }
+            //    catch (CUsbExceptionNet)
+            //    {
+            //        Samplerate = mea.GetSamplerate(0);
+            //    }
 
-                CW2100_FunctionNet func = new CW2100_FunctionNet(mea);
-                hsSamplingActive = func.GetHeadstageSamplingActive(other_receiver + 0);
-                func.SetHeadstageSamplingActive(false, other_receiver + 0);
+            //    CW2100_FunctionNet func = new CW2100_FunctionNet(mea);
+            //    hsSamplingActive = func.GetHeadstageSamplingActive(other_receiver + 0);
+            //    func.SetHeadstageSamplingActive(false, other_receiver + 0);
 
-                // Send Stimulation pattern
-                bool first = true;
-                int preplegth = 0;
-                CW2100_StimulatorFunctionNet stim = new CW2100_StimulatorFunctionNet(mea);
-                stim.SelectTimeSlot(other_receiver + 0);
-                // Different strength
-                // Define the amplitude vector of the 3 segments of the biphasic pulse (in nA)
-                int[] ampl = new[] { 10000, -10000, 0 };
+            //    // Send Stimulation pattern
+            //    bool first = true;
+            //    int preplegth = 0;
+            //    CW2100_StimulatorFunctionNet stim = new CW2100_StimulatorFunctionNet(mea);
+            //    stim.SelectTimeSlot(other_receiver + 0);
+            //    // Different strength
+            //    // Define the amplitude vector of the 3 segments of the biphasic pulse (in nA)
+            //    int[] ampl = new[] { 10000, -10000, 0 };
 
-                // Define the duraion vector of the 3 segments of the biphasic pulse (in us)
-                // ulong[] dur = new ulong[] { 100, 100, 7492 };
-                ulong[] dur = new ulong[] { 80, 80, 7600 };
+            //    // Define the duraion vector of the 3 segments of the biphasic pulse (in us)
+            //    // ulong[] dur = new ulong[] { 100, 100, 7492 };
+            //    ulong[] dur = new ulong[] { 80, 80, 7600 };
 
-                // Define and upload each stimulation pattern
-                for (int i = 0; i < 16; i++)
-                {
-                    // Define the amplitude (nA) of each of the 3 segments
-                    ampl[0] = delta_DBS_amp * (i + 1);
-                    ampl[1] = -delta_DBS_amp * (i + 1);
+            //    // Define and upload each stimulation pattern
+            //    for (int i = 0; i < 16; i++)
+            //    {
+            //        // Define the amplitude (nA) of each of the 3 segments
+            //        ampl[0] = delta_DBS_amp * (i + 1);
+            //        ampl[1] = -delta_DBS_amp * (i + 1);
 
-                    // choose, if global repeat is desired
-                    // Define the associated pulse
-                    CStimulusFunctionNet.StimulusDeviceDataAndUnrolledData prep = stim.PrepareData(0, ampl, dur, STG_DestinationEnumNet.channeldata_current, 1);
+            //        // choose, if global repeat is desired
+            //        // Define the associated pulse
+            //        CStimulusFunctionNet.StimulusDeviceDataAndUnrolledData prep = stim.PrepareData(0, ampl, dur, STG_DestinationEnumNet.channeldata_current, 1);
 
-                    // Check the available memory in the headstage  
-                    if (first)
-                    {
-                        first = false;
-                        preplegth = prep.DeviceDataLength;
-                    }
+            //        // Check the available memory in the headstage  
+            //        if (first)
+            //        {
+            //            first = false;
+            //            preplegth = prep.DeviceDataLength;
+            //        }
 
-                    // Check that the pulse fits into the designated memory
-                    Debug.Assert(preplegth == prep.DeviceDataLength);
-                    Debug.Assert(prep.DeviceDataLength <= 15);
+            //        // Check that the pulse fits into the designated memory
+            //        Debug.Assert(preplegth == prep.DeviceDataLength);
+            //        Debug.Assert(prep.DeviceDataLength <= 15);
 
-                    // Store pulse into designated memory
-                    try
-                    {
-                        stim.SendPreparedData(0x10 * i + 0, prep, STG_DestinationEnumNet.channeldata_current);
-                    } catch (CUsbExceptionNet ex)
-                    {
-                        uploadErrorMessage += String.Format("Error while uploading stim pattern {0}: {1}", i.ToString(), ex.Message) + "\n";
-                    }
-                    
-                }
-                func.SetHeadstageSamplingActive(true, other_receiver + 0);
-            }
-            if (startDacq.Enabled)
-            {
-                mea.Disconnect();
-            }            
+            //        // Store pulse into designated memory
+            //        try
+            //        {
+            //            stim.SendPreparedData(0x10 * i + 0, prep, STG_DestinationEnumNet.channeldata_current);
+            //        } catch (CUsbExceptionNet ex)
+            //        {
+            //            uploadErrorMessage += String.Format("Error while uploading stim pattern {0}: {1}", i.ToString(), ex.Message) + "\n";
+            //        }
+            //    }
+            //    func.SetHeadstageSamplingActive(true, other_receiver + 0);
+            //}
+            //if (startDacq.Enabled)
+            //{
+            //    mea.Disconnect();
+            //}            
 
             if (String.IsNullOrEmpty(uploadErrorMessage))
             {
@@ -563,7 +637,7 @@ namespace MCS_USB_Windows_Forms_Application1
                 }
             } else
             {
-                MessageBox.Show("Following errors happened during stim parameter upload. The DSP firmware will not be uploaded\n" + uploadErrorMessage);
+                MessageBox.Show("The DSP firmware will not be uploaded.\nThe following errors happened during stim parameter upload:\n\n" + uploadErrorMessage);
             }
         }
 
