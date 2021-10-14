@@ -45,7 +45,7 @@ namespace MCS_USB_Windows_Forms_Application1
 
         // for W2100
         private int other_receiver = 0;
-        private bool w2100_hs_samling = false;
+        private bool hsSamplingActive = false;
 
         public CMcsUsbListEntryNet selectedUsbDevice
         {
@@ -282,7 +282,7 @@ namespace MCS_USB_Windows_Forms_Application1
                 {
                     CW2100_FunctionNet func = new CW2100_FunctionNet(mea);
                     func.SetHeadstageSamplingActive(true, other_receiver + 0);
-                    w2100_hs_samling = func.GetHeadstageSamplingActive(other_receiver + 0);
+                    hsSamplingActive = func.GetHeadstageSamplingActive(other_receiver + 0);
                 }
             }
             else
@@ -301,7 +301,7 @@ namespace MCS_USB_Windows_Forms_Application1
             if (mea.GetDeviceId().IdProduct == ProductIdEnumNet.W2100)
             {
                 CW2100_FunctionNet func = new CW2100_FunctionNet(mea);
-                if (w2100_hs_samling)
+                if (hsSamplingActive)
                 {
                     func.SetHeadstageSamplingActive(false, other_receiver + 0);
                 }
@@ -474,8 +474,8 @@ namespace MCS_USB_Windows_Forms_Application1
                 }
 
                 CW2100_FunctionNet func = new CW2100_FunctionNet(mea);
-                w2100_hs_samling = func.GetHeadstageSamplingActive(other_receiver + 0);
-                func.SetHeadstageSamplingActive(false, other_receiver + 0);
+                hsSamplingActive = func.GetHeadstageSamplingActive(other_receiver + 0);
+                //func.SetHeadstageSamplingActive(false, other_receiver + 0);
 
                 // Send Stimulation pattern
                 bool first = true;
@@ -520,6 +520,7 @@ namespace MCS_USB_Windows_Forms_Application1
                     // Store pulse into designated memory
                     try
                     {
+                        func.SetHeadstageSamplingActive(false, other_receiver + 0);
                         stim.SendPreparedData(0x10 * i + 0, prep, STG_DestinationEnumNet.channeldata_current);
                     } catch (CUsbExceptionNet ex)
                     {
@@ -711,7 +712,7 @@ namespace MCS_USB_Windows_Forms_Application1
                 }
 
                 CW2100_FunctionNet func = new CW2100_FunctionNet(mea);
-                w2100_hs_samling = func.GetHeadstageSamplingActive(other_receiver + 0);
+                hsSamplingActive = func.GetHeadstageSamplingActive(other_receiver + 0);
                 func.SetHeadstageSamplingActive(false, other_receiver + 0);
 
                 // Send Stimulation pattern
