@@ -663,12 +663,12 @@ namespace MCS_USB_Windows_Forms_Application1
             int PercentageStimOn = Int32.Parse(PercentageOnInputBox.Text);
 
             // Define stimulation frequency and period
-            int f_stim = 130;
-            int T_stim = (int)((1.0 / f_stim) * 10E6);       // in us
+            //int f_stim = 130;
+            //int T_stim = (int)((1.0 / f_stim) * 10E6);       // in us
 
             // Define on and off phases of stimulation pulse    (in us)
-            int pulse_on_phase_dur = 60;
-            int pulse_off_phase_dur = T_stim - 2 * pulse_on_phase_dur;
+            //int pulse_on_phase_dur = 60;
+            //int pulse_off_phase_dur = T_stim - 2 * pulse_on_phase_dur;
 
             // Define the upper and lower bounds for the controller output
             int MaxValue = maxAmplitudeValue * 1000;                //in nA
@@ -714,7 +714,7 @@ namespace MCS_USB_Windows_Forms_Application1
                 int[] ampl = new[] { 10000, -10000, 0 };
 
                 // Define the duraion vector of the 3 segments of the biphasic pulse (in us)
-                ulong[] dur = new ulong[] { 100, 100, 7492 };
+                ulong[] dur = new ulong[] { 80, 80, 7600 };
 
                 // Define each pulse
                 for (int i = 0; i < 16; i++)
