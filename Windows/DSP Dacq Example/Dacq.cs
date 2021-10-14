@@ -437,12 +437,12 @@ namespace MCS_USB_Windows_Forms_Application1
         void UploadDSBBinary(CMcsUsbListEntryNet port)
         {
             // Define stimulation frequency and period
-            int f_stim = 130;
-            int T_stim = (int)((1.0 / f_stim) * 10E6);       // in us
+            //int f_stim = 130;
+            //int T_stim = (int)((1.0 / f_stim) * 10E6);       // in us
 
             // Define on and off phases of stimulation pulse    (in us)
-            int pulse_on_phase_dur = 60;
-            int pulse_off_phase_dur = T_stim - 2 * pulse_on_phase_dur;
+            //int pulse_on_phase_dur = 60;
+            //int pulse_off_phase_dur = T_stim - 2 * pulse_on_phase_dur;
 
             // Define the upper and lower bounds for the controller output
             int MaxValue = maxAmplitudeValue * 1000;                //in nA
@@ -450,13 +450,14 @@ namespace MCS_USB_Windows_Forms_Application1
 
             // Define the step between pulses amplitude
             int delta_DBS_amp = (MaxValue - MinValue) / 16;    // in nA
-#if true
+
             other_receiver = 0;
-            if (((CMcsUsbListEntryNet)cbDeviceList.SelectedItem).SerialNumber.EndsWith("-B"))
+            if (port.SerialNumber.EndsWith("-B"))
             {
                 other_receiver = 4; // bit 0/1 select the timeslot of: bit 2/3 = 0 receiver according to USB port, 1 receiver A, 2 receiver B
             }
-            //uint status = mea.Connect((CMcsUsbListEntryNet)cbDeviceList.SelectedItem, 63);
+
+            string uploadErrorMessage = "";
             uint status = mea.Connect(port, 63);
             if (status == 0 && mea.GetDeviceId().IdProduct == ProductIdEnumNet.W2100)
             {
@@ -475,7 +476,7 @@ namespace MCS_USB_Windows_Forms_Application1
 
                 CW2100_FunctionNet func = new CW2100_FunctionNet(mea);
                 hsSamplingActive = func.GetHeadstageSamplingActive(other_receiver + 0);
-                //func.SetHeadstageSamplingActive(false, other_receiver + 0);
+                func.SetHeadstageSamplingActive(false, other_receiver + 0);
 
                 // Send Stimulation pattern
                 bool first = true;
@@ -490,17 +491,12 @@ namespace MCS_USB_Windows_Forms_Application1
                 // ulong[] dur = new ulong[] { 100, 100, 7492 };
                 ulong[] dur = new ulong[] { 80, 80, 7600 };
 
-                // Define each pulse
+                // Define and upload each stimulation pattern
                 for (int i = 0; i < 16; i++)
                 {
                     // Define the amplitude (nA) of each of the 3 segments
                     ampl[0] = delta_DBS_amp * (i + 1);
                     ampl[1] = -delta_DBS_amp * (i + 1);
-
-                    // Define the duration (us) of each of the 3 segments
-                    //dur[0] = (ulong)pulse_on_phase_dur;
-                    //dur[1] = (ulong)pulse_on_phase_dur;
-                    //dur[2] = (ulong)pulse_off_phase_dur;
 
                     // choose, if global repeat is desired
                     // Define the associated pulse
@@ -520,11 +516,10 @@ namespace MCS_USB_Windows_Forms_Application1
                     // Store pulse into designated memory
                     try
                     {
-                        func.SetHeadstageSamplingActive(false, other_receiver + 0);
                         stim.SendPreparedData(0x10 * i + 0, prep, STG_DestinationEnumNet.channeldata_current);
                     } catch (CUsbExceptionNet ex)
                     {
-                        MessageBox.Show(String.Format("Error while uploading stim pattern {0}: {1}", i.ToString(), ex.Message));
+                        uploadErrorMessage += String.Format("Error while uploading stim pattern {0}: {1}", i.ToString(), ex.Message) + "\n";
                     }
                     
                 }
@@ -534,34 +529,41 @@ namespace MCS_USB_Windows_Forms_Application1
             {
                 mea.Disconnect();
             }            
-#endif
-            CMcsUsbFactoryNet factorydev = new CMcsUsbFactoryNet();
-            if (factorydev.Connect(port, LockMask) == 0)
+
+            if (String.IsNullOrEmpty(uploadErrorMessage))
             {
-                // uint stimThresholdDigits = (uint)Math.Floor((float)stimThresholdValue / 0.381);
-                uint stimThresholdDigits = (uint)Math.Floor((float)stimThresholdValue);
-                uint maxAmplitude = (uint)MaxValue;
-                
-                factorydev.WriteRegister(0x1000, stimThresholdDigits);
-                factorydev.WriteRegister(0x1008, maxAmplitude);
-                uint propGainModified = (uint)Math.Floor(proportionalGain * 1000);
-                factorydev.WriteRegister(0x1018, propGainModified);
-
-                string FirmwareFile;
-                FirmwareFile = System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location);
-                FirmwareFile += @"\..\..\..\..\DSP\FB_W2100_SCU_MEA256\Release\";
-                FirmwareFile += "FB_W2100_SCU_MEA256.bin";
-
-                factorydev.Disconnect();
-
-                bool success = factorydev.LoadUserFirmware(FirmwareFile, port, LockMask); // Code for uploading compiled binary
-                if (!success)
+                CMcsUsbFactoryNet factorydev = new CMcsUsbFactoryNet();
+                if (factorydev.Connect(port, LockMask) == 0)
                 {
-                    MessageBox.Show("Firmware upload failed!");
-                } else
-                {
-                    MessageBox.Show("Firmware upload successful!");
+                    // uint stimThresholdDigits = (uint)Math.Floor((float)stimThresholdValue / 0.381);
+                    uint stimThresholdDigits = (uint)Math.Floor((float)stimThresholdValue);
+                    uint maxAmplitude = (uint)MaxValue;
+
+                    factorydev.WriteRegister(0x1000, stimThresholdDigits);
+                    factorydev.WriteRegister(0x1008, maxAmplitude);
+                    uint propGainModified = (uint)Math.Floor(proportionalGain * 1000);
+                    factorydev.WriteRegister(0x1018, propGainModified);
+
+                    string FirmwareFile;
+                    FirmwareFile = System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location);
+                    FirmwareFile += @"\..\..\..\..\DSP\FB_W2100_SCU_MEA256\Release\";
+                    FirmwareFile += "FB_W2100_SCU_MEA256.bin";
+
+                    factorydev.Disconnect();
+
+                    bool success = factorydev.LoadUserFirmware(FirmwareFile, port, LockMask); // Code for uploading compiled binary
+                    if (!success)
+                    {
+                        MessageBox.Show("Firmware upload failed!");
+                    }
+                    else
+                    {
+                        MessageBox.Show("Firmware upload successful!");
+                    }
                 }
+            } else
+            {
+                MessageBox.Show("Following errors happened during stim parameter upload. The DSP firmware will not be uploaded\n" + uploadErrorMessage);
             }
         }
 
