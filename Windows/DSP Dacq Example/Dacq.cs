@@ -241,7 +241,11 @@ namespace MCS_USB_Windows_Forms_Application1
                 other_receiver = 4; // bit 0/1 select the timeslot of: bit 2/3 = 0 receiver according to USB port, 1 receiver A, 2 receiver B
             }
 
-            uint status = mea.Connect(selectedUsbDevice, 63);
+            uint status;
+            if (mea.IsConnected())
+                status = 0;
+            else 
+                status = mea.Connect(selectedUsbDevice, 63);
             if (status == 0)
             {
                 int ChannelsInBlock;
@@ -461,7 +465,11 @@ namespace MCS_USB_Windows_Forms_Application1
                 other_receiver = 4; // bit 0/1 select the timeslot of: bit 2/3 = 0 receiver according to USB port, 1 receiver A, 2 receiver B
             }
 
-            uint status = mea.Connect(port);
+            uint status;
+            if (mea.IsConnected())
+                status = 0;
+            else
+                status = mea.Connect(port);
             if (status == 0)
             {
                 mea.SetDataMode(DataModeEnumNet.Signed_32bit, 0);
