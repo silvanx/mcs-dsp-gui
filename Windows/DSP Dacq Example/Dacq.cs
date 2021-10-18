@@ -42,6 +42,7 @@ namespace MCS_USB_Windows_Forms_Application1
         bool RandomStimOn = false;
 
         string RecordingFilename = null;
+        string AmplitudeRecordingFilename = null;
 
         // for W2100
         private int other_receiver = 0;
@@ -334,6 +335,29 @@ namespace MCS_USB_Windows_Forms_Application1
         }
 
 
+        private void SaveStimAmplitudeToFile(CMcsUsbListEntryNet port)
+        {
+            while (AmplitudeRecordingFilename != null)
+            {
+                int value = -1;
+                if (this.mea.IsConnected())
+                {
+                    value = Convert.ToInt32(this.mea.ReadRegister(0x9A80));
+                } else
+                {
+                    uint status = this.mea.Connect(port, 63);
+                    if (status == 0)
+                    {
+                        value = Convert.ToInt32(this.mea.ReadRegister(0x9A80));
+                    }
+                }
+                string timestamp = DateTime.Now.ToString("yyyy-MM-ddTHH-mm-ss");
+                StreamWriter file = new StreamWriter(AmplitudeRecordingFilename, append: true);
+                file.WriteLineAsync(timestamp + ", " + value.ToString());
+                Thread.Sleep(5);
+            }
+        }
+
         void mea_ChannelDataEvent(CMcsUsbDacqNet dacq, int CbHandle, int numFrames)
         {
             //Debug.WriteLine("data available " + numFrames);
@@ -555,7 +579,10 @@ namespace MCS_USB_Windows_Forms_Application1
                     }
                     else
                     {
+                        string DateTimeNow = DateTime.Now.ToString("yyyy-MM-ddTHH-mm-ss");
+                        AmplitudeRecordingFilename = DateTimeNow + "-amplitude.txt";
                         MessageBox.Show("Firmware upload successful!");
+                        Task.Run(() => SaveStimAmplitudeToFile(port));
                     }
                 }
             } else
@@ -607,7 +634,7 @@ namespace MCS_USB_Windows_Forms_Application1
         private void StopDSP_Click(object sender, EventArgs e)
         {
             CMcsUsbFactoryNet factorydev = new CMcsUsbFactoryNet(); // Create object of class CMcsUsbFactoryNet (provides firmware upgrade and register access capabilities)
-
+            AmplitudeRecordingFilename = null;
             if (DspPort != null || RawPort != null)
             {
                 CMcsUsbListEntryNet port = DspPort;
