@@ -43,6 +43,7 @@ namespace MCS_USB_Windows_Forms_Application1
 
         string RecordingFilename = null;
         string AmplitudeRecordingFilename = null;
+        int AmplitudeRecordingSamplerate = 200;
 
         List<int> AmplitudeSaveBuffer = new List<int>();
 
@@ -343,28 +344,46 @@ namespace MCS_USB_Windows_Forms_Application1
 
         private void SaveStimAmplitudeToFile()
         {
+            string filename = "";
             if (AmplitudeRecordingFilename != null)
             {
-                using (StreamWriter file = new StreamWriter(AmplitudeRecordingFilename, append: true))
+                filename = AmplitudeRecordingFilename;
+                using (StreamWriter file = new StreamWriter(filename, append: true))
                 {
-                    file.WriteLine(DateTime.Now.ToString("yyyy-MM-ddTHH-mm-ss.fff"));
+                    file.WriteLine("--- START RECORDING: " + DateTime.Now.ToString("yyyy-MM-ddTHH-mm-ss.fff") + " ---");
                 }
             }
             while (AmplitudeRecordingFilename != null)
             {
                 int len = AmplitudeSaveBuffer.Count();
+                double samplerateRatio = Samplerate / AmplitudeRecordingSamplerate;
+                int skip = (int) Math.Floor(samplerateRatio);
                 Console.WriteLine(len.ToString());
-                int[] values = new int[len];
-                AmplitudeSaveBuffer.CopyTo(values);
-                AmplitudeSaveBuffer.RemoveRange(0, len);
-                using (StreamWriter file = new StreamWriter(AmplitudeRecordingFilename, append: true))
+                Console.WriteLine(skip.ToString());
+                if (len > skip)
                 {
-                    foreach (uint value in values)
+                    int len_truncated = (int) Math.Floor((double) (len / skip)) * skip;
+                    Console.WriteLine(len_truncated.ToString());
+                    int[] values = new int[len];
+                    AmplitudeSaveBuffer.CopyTo(values);
+                    AmplitudeSaveBuffer.RemoveRange(0, len_truncated);
+                    using (StreamWriter file = new StreamWriter(filename, append: true))
                     {
-                        file.WriteLine(value.ToString());
+                        for (int i=0; i<len_truncated; i+=skip)
+                        {
+                            int value = values[i];
+                            file.WriteLine(value.ToString());
+                        }
                     }
                 }
                 Thread.Sleep(2000);
+            }
+            if (!String.IsNullOrEmpty(filename))
+            {
+                using (StreamWriter file = new StreamWriter(filename, append: true))
+                {
+                    file.WriteLine("--- END RECORDING: " + DateTime.Now.ToString("yyyy-MM-ddTHH-mm-ss.fff") + " ---");
+                }
             }
         }
 
