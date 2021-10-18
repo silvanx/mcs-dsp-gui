@@ -44,6 +44,8 @@ namespace MCS_USB_Windows_Forms_Application1
         string RecordingFilename = null;
         string AmplitudeRecordingFilename = null;
 
+        List<int> AmplitudeSaveBuffer = new List<int>();
+
         // for W2100
         private int other_receiver = 0;
         private bool hsSamplingActive = false;
@@ -339,26 +341,22 @@ namespace MCS_USB_Windows_Forms_Application1
         }
 
 
-        private void SaveStimAmplitudeToFile(CMcsUsbListEntryNet port)
+        private void SaveStimAmplitudeToFile()
         {
             while (AmplitudeRecordingFilename != null)
             {
-                int value = -1;
-                if (this.mea.IsConnected())
+                int len = AmplitudeSaveBuffer.Count();
+                int[] values = new int[len];
+                AmplitudeSaveBuffer.CopyTo(values);
+                AmplitudeSaveBuffer.RemoveRange(0, len);
+                using (StreamWriter file = new StreamWriter(AmplitudeRecordingFilename, append: true))
                 {
-                    value = Convert.ToInt32(this.mea.ReadRegister(0x9A80));
-                } else
-                {
-                    uint status = this.mea.Connect(port, 63);
-                    if (status == 0)
+                    foreach (uint value in values)
                     {
-                        value = Convert.ToInt32(this.mea.ReadRegister(0x9A80));
+                        file.WriteLine(value.ToString());
                     }
                 }
-                string timestamp = DateTime.Now.ToString("yyyy-MM-ddTHH-mm-ss");
-                StreamWriter file = new StreamWriter(AmplitudeRecordingFilename, append: true);
-                file.WriteLineAsync(timestamp + ", " + value.ToString());
-                Thread.Sleep(5);
+                Thread.Sleep(2000);
             }
         }
 
@@ -371,6 +369,13 @@ namespace MCS_USB_Windows_Forms_Application1
                 int[] rawData = mea.ChannelBlock_ReadFramesI32(0, numFrames, out int frames_read);
                 int[] data = new int[numFrames * TotalChannels];
                 Array.Copy(rawData, 0, data, 0, numFrames * TotalChannels);
+
+                int amplitudeChannel = 7;
+                for (int i = 0; i < numFrames; i++)
+                {
+                    AmplitudeSaveBuffer.Add(data[i * TotalChannels + Channels + AnalogChannels + amplitudeChannel]);
+                }
+
                 this.Invoke((MethodInvoker)delegate { SaveDataToFile(data, RecordingFilename, numFrames); });
                 for (int i = 0; i < TotalChannels; i++)
                 {
@@ -440,20 +445,6 @@ namespace MCS_USB_Windows_Forms_Application1
             if (data < min) min = (int) Math.Floor(data);
             if (data > max) max = (int) Math.Ceiling(data);
         }
-
-        //private void btResetSettings_Click(object sender, EventArgs e)
-        //{
-        //    if (mea.Connect(selectedUsbDevice) == 0)
-        //    {
-        //        if (mea.GetDeviceId().IdProduct == ProductIdEnumNet.W2100)
-        //        {
-        //            mea.SetDataMode(DataModeEnumNet.Unsigned_16bit, 0);
-        //            mea.SetNumberOfAnalogChannels(32, 0, 0, AnalogChannels, 0); // Read raw data
-        //        }
-
-        //        mea.Disconnect();
-        //    }
-        //}
 
         private void UploadStimulationPatternsToHS(CMcsUsbListEntryNet port, int delta_DBS_amp, out string uploadErrorMessage)
         {
@@ -590,7 +581,7 @@ namespace MCS_USB_Windows_Forms_Application1
                         string DateTimeNow = DateTime.Now.ToString("yyyy-MM-ddTHH-mm-ss");
                         AmplitudeRecordingFilename = DateTimeNow + "-amplitude.txt";
                         MessageBox.Show("Firmware upload successful!");
-                        Task.Run(() => SaveStimAmplitudeToFile(port));
+                        Task.Run(() => SaveStimAmplitudeToFile());
                     }
                 }
             } else
