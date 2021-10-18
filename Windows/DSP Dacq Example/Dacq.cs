@@ -343,9 +343,17 @@ namespace MCS_USB_Windows_Forms_Application1
 
         private void SaveStimAmplitudeToFile()
         {
+            if (AmplitudeRecordingFilename != null)
+            {
+                using (StreamWriter file = new StreamWriter(AmplitudeRecordingFilename, append: true))
+                {
+                    file.WriteLine(DateTime.Now.ToString("yyyy-MM-ddTHH-mm-ss.fff"));
+                }
+            }
             while (AmplitudeRecordingFilename != null)
             {
                 int len = AmplitudeSaveBuffer.Count();
+                Console.WriteLine(len.ToString());
                 int[] values = new int[len];
                 AmplitudeSaveBuffer.CopyTo(values);
                 AmplitudeSaveBuffer.RemoveRange(0, len);
@@ -370,12 +378,6 @@ namespace MCS_USB_Windows_Forms_Application1
                 int[] data = new int[numFrames * TotalChannels];
                 Array.Copy(rawData, 0, data, 0, numFrames * TotalChannels);
 
-                int amplitudeChannel = 7;
-                for (int i = 0; i < numFrames; i++)
-                {
-                    AmplitudeSaveBuffer.Add(data[i * TotalChannels + Channels + AnalogChannels + amplitudeChannel]);
-                }
-
                 this.Invoke((MethodInvoker)delegate { SaveDataToFile(data, RecordingFilename, numFrames); });
                 for (int i = 0; i < TotalChannels; i++)
                 {
@@ -390,6 +392,11 @@ namespace MCS_USB_Windows_Forms_Application1
                     {
                         data[i] = (data[i - TotalChannels] + data[i + TotalChannels]) / 2;
                     }
+                }
+                int amplitudeChannel = 11;
+                for (int i = 0; i < numFrames; i++)
+                {
+                    AmplitudeSaveBuffer.Add(data[i * TotalChannels + Channels + AnalogChannels + amplitudeChannel]);
                 }
                 BeginInvoke(new DisplayDataAction(DisplayData), data);
                 Thread.Sleep(250);
