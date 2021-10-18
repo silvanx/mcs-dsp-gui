@@ -126,29 +126,29 @@ namespace MCS_USB_Windows_Forms_Application1
             
 
             // Set Filters
-            CMcsUsbFactoryNet factorydev = new CMcsUsbFactoryNet(); // Create object of class CMcsUsbFactoryNet (provides firmware upgrade and register access capabilities)
-            if (DspPort != null && factorydev.Connect(DspPort, LockMask) == 0)  // if connect call returns zero, connect has been successful
-            {
-                //double[] xcoeffs;
-                //double[] ycoeffs;
-                //mkfilterNet.mkfilter("Bu", 0, "Lp", 2, 1000.0 / (float)Samplerate, 0, out xcoeffs, out ycoeffs);
-                //factorydev.WriteRegister(0x600, DoubleToFixedInt(1, 16, 30, xcoeffs[0])); // set b[0] fpr 30 Hz LP
-                //factorydev.WriteRegister(0x608, DoubleToFixedInt(1, 15, 30, xcoeffs[1])); // set b[1] fpr 30 Hz LP
-                //factorydev.WriteRegister(0x60C, DoubleToFixedInt(1, 30, 30, ycoeffs[1])); // set a[1] fpr 30 Hz LP
-                //factorydev.WriteRegister(0x610, DoubleToFixedInt(1, 16, 30, xcoeffs[2])); // set b[2] fpr 30 Hz LP
-                //factorydev.WriteRegister(0x614, DoubleToFixedInt(1, 30, 30, ycoeffs[2])); // set a[2] fpr 30 Hz LP
-                //factorydev.WriteRegister(0x61C, 0x00000001); // enable
+            //CMcsUsbFactoryNet factorydev = new CMcsUsbFactoryNet(); // Create object of class CMcsUsbFactoryNet (provides firmware upgrade and register access capabilities)
+            //if (DspPort != null && factorydev.Connect(DspPort, LockMask) == 0)  // if connect call returns zero, connect has been successful
+            //{
+            //    //double[] xcoeffs;
+            //    //double[] ycoeffs;
+            //    //mkfilterNet.mkfilter("Bu", 0, "Lp", 2, 1000.0 / (float)Samplerate, 0, out xcoeffs, out ycoeffs);
+            //    //factorydev.WriteRegister(0x600, DoubleToFixedInt(1, 16, 30, xcoeffs[0])); // set b[0] fpr 30 Hz LP
+            //    //factorydev.WriteRegister(0x608, DoubleToFixedInt(1, 15, 30, xcoeffs[1])); // set b[1] fpr 30 Hz LP
+            //    //factorydev.WriteRegister(0x60C, DoubleToFixedInt(1, 30, 30, ycoeffs[1])); // set a[1] fpr 30 Hz LP
+            //    //factorydev.WriteRegister(0x610, DoubleToFixedInt(1, 16, 30, xcoeffs[2])); // set b[2] fpr 30 Hz LP
+            //    //factorydev.WriteRegister(0x614, DoubleToFixedInt(1, 30, 30, ycoeffs[2])); // set a[2] fpr 30 Hz LP
+            //    //factorydev.WriteRegister(0x61C, 0x00000001); // enable
 
-                //mkfilterNet.mkfilter("Bu", 0, "Hp", 2, 1.0 / 50000.0, 0, out xcoeffs, out ycoeffs);
-                //factorydev.WriteRegister(0x620, DoubleToFixedInt(1, 16, 30, xcoeffs[0])); // set b[0] fpr 100 Hz HP
-                //factorydev.WriteRegister(0x628, DoubleToFixedInt(1, 15, 30, xcoeffs[1])); // set b[1] fpr 100 Hz HP
-                //factorydev.WriteRegister(0x62C, DoubleToFixedInt(1, 30, 30, ycoeffs[1])); // set a[1] fpr 100 Hz HP
-                //factorydev.WriteRegister(0x630, DoubleToFixedInt(1, 16, 30, xcoeffs[2])); // set b[2] fpr 100 Hz HP
-                //factorydev.WriteRegister(0x634, DoubleToFixedInt(1, 30, 30, ycoeffs[2])); // set a[2] fpr 100 Hz HP
-                //factorydev.WriteRegister(0x63C, 0x00000001); // enable
+            //    //mkfilterNet.mkfilter("Bu", 0, "Hp", 2, 1.0 / 50000.0, 0, out xcoeffs, out ycoeffs);
+            //    //factorydev.WriteRegister(0x620, DoubleToFixedInt(1, 16, 30, xcoeffs[0])); // set b[0] fpr 100 Hz HP
+            //    //factorydev.WriteRegister(0x628, DoubleToFixedInt(1, 15, 30, xcoeffs[1])); // set b[1] fpr 100 Hz HP
+            //    //factorydev.WriteRegister(0x62C, DoubleToFixedInt(1, 30, 30, ycoeffs[1])); // set a[1] fpr 100 Hz HP
+            //    //factorydev.WriteRegister(0x630, DoubleToFixedInt(1, 16, 30, xcoeffs[2])); // set b[2] fpr 100 Hz HP
+            //    //factorydev.WriteRegister(0x634, DoubleToFixedInt(1, 30, 30, ycoeffs[2])); // set a[2] fpr 100 Hz HP
+            //    //factorydev.WriteRegister(0x63C, 0x00000001); // enable
 
-                factorydev.Disconnect();
-            }
+            //    factorydev.Disconnect();
+            //}
         }
 
         static uint DoubleToFixedInt(int vk, int nk, int commaPos, double valF)
@@ -218,7 +218,7 @@ namespace MCS_USB_Windows_Forms_Application1
 
         private void startDacq_Click(object sender, EventArgs e)
         {
-            if (cbDeviceList.SelectedItem == null)
+            if (selectedUsbDevice == null)
             {
                 MessageBox.Show("No device selected!");
                 return;
@@ -235,21 +235,17 @@ namespace MCS_USB_Windows_Forms_Application1
             }
 
             other_receiver = 0;
-            if (((CMcsUsbListEntryNet) cbDeviceList.SelectedItem).SerialNumber.EndsWith("-B"))
+            if (selectedUsbDevice.SerialNumber.EndsWith("-B"))
             {
                 other_receiver = 4; // bit 0/1 select the timeslot of: bit 2/3 = 0 receiver according to USB port, 1 receiver A, 2 receiver B
             }
 
-            uint status = mea.Connect((CMcsUsbListEntryNet) cbDeviceList.SelectedItem, 63);
+            uint status = mea.Connect(selectedUsbDevice, 63);
             if (status == 0)
             {
                 int ChannelsInBlock;
 
                 mea.SetDataMode(DataModeEnumNet.Signed_32bit, 0);
-                //if (mea.GetDeviceId().IdProduct == ProductIdEnumNet.W2100)
-                //{
-                //    Samplerate = 20000;
-                //}
 
                 mea.SetNumberOfAnalogChannels(Channels, 0, Channels, AnalogChannels, 0); // Read raw data
 
@@ -417,19 +413,19 @@ namespace MCS_USB_Windows_Forms_Application1
             if (data > max) max = (int) Math.Ceiling(data);
         }
 
-        private void btResetSettings_Click(object sender, EventArgs e)
-        {
-            if (mea.Connect((CMcsUsbListEntryNet) cbDeviceList.SelectedItem) == 0)
-            {
-                if (mea.GetDeviceId().IdProduct == ProductIdEnumNet.W2100)
-                {
-                    mea.SetDataMode(DataModeEnumNet.Unsigned_16bit, 0);
-                    mea.SetNumberOfAnalogChannels(32, 0, 0, AnalogChannels, 0); // Read raw data
-                }
+        //private void btResetSettings_Click(object sender, EventArgs e)
+        //{
+        //    if (mea.Connect(selectedUsbDevice) == 0)
+        //    {
+        //        if (mea.GetDeviceId().IdProduct == ProductIdEnumNet.W2100)
+        //        {
+        //            mea.SetDataMode(DataModeEnumNet.Unsigned_16bit, 0);
+        //            mea.SetNumberOfAnalogChannels(32, 0, 0, AnalogChannels, 0); // Read raw data
+        //        }
 
-                mea.Disconnect();
-            }
-        }
+        //        mea.Disconnect();
+        //    }
+        //}
 
         private void UploadStimulationPatternsToHS(CMcsUsbListEntryNet port, int delta_DBS_amp, out string uploadErrorMessage)
         {
@@ -684,82 +680,6 @@ namespace MCS_USB_Windows_Forms_Application1
             int delta_DBS_amp = (MaxValue - MinValue) / 16;    // in nA
 
             UploadStimulationPatternsToHS(port, delta_DBS_amp, out string uploadErrorMessage);
-
-            //other_receiver = 0;
-            //if (port.SerialNumber.EndsWith("-B"))
-            //{
-            //    other_receiver = 4; // bit 0/1 select the timeslot of: bit 2/3 = 0 receiver according to USB port, 1 receiver A, 2 receiver B
-            //}
-            //uint status = mea.Connect(port, 63);
-
-
-            //if (status == 0 && mea.GetDeviceId().IdProduct == ProductIdEnumNet.W2100)
-            //{
-            //    mea.SetDataMode(DataModeEnumNet.Signed_32bit, 0);
-
-            //    mea.SetNumberOfAnalogChannels(Channels, 0, Channels, AnalogChannels, 0); // Read raw data
-
-            //    try
-            //    {
-            //        mea.SetSamplerate(Samplerate, 1, 0);
-            //    }
-            //    catch (CUsbExceptionNet)
-            //    {
-            //        Samplerate = mea.GetSamplerate(0);
-            //    }
-
-            //    CW2100_FunctionNet func = new CW2100_FunctionNet(mea);
-            //    hsSamplingActive = func.GetHeadstageSamplingActive(other_receiver + 0);
-            //    func.SetHeadstageSamplingActive(false, other_receiver + 0);
-
-            //    // Send Stimulation pattern
-            //    bool first = true;
-            //    int preplegth = 0;
-            //    CW2100_StimulatorFunctionNet stim = new CW2100_StimulatorFunctionNet(mea);
-            //    stim.SelectTimeSlot(other_receiver + 0);
-            //    // Different strength
-            //    // Define the amplitude vector of the 3 segments of the biphasic pulse (in nA)
-            //    int[] ampl = new[] { 10000, -10000, 0 };
-
-            //    // Define the duraion vector of the 3 segments of the biphasic pulse (in us)
-            //    ulong[] dur = new ulong[] { 80, 80, 7600 };
-
-            //    // Define each pulse
-            //    for (int i = 0; i < 16; i++)
-            //    {
-            //        // Define the amplitude (nA) of each of the 3 segments
-            //        ampl[0] = delta_DBS_amp * (i + 1);
-            //        ampl[1] = -delta_DBS_amp * (i + 1);
-
-            //        // Define the duration (us) of each of the 3 segments
-            //        //dur[0] = (ulong)pulse_on_phase_dur;
-            //        //dur[1] = (ulong)pulse_on_phase_dur;
-            //        //dur[2] = (ulong)pulse_off_phase_dur;
-
-            //        // choose, if global repeat is desired
-            //        // Define the associated pulse
-            //        CStimulusFunctionNet.StimulusDeviceDataAndUnrolledData prep = stim.PrepareData(0, ampl, dur, STG_DestinationEnumNet.channeldata_current, 1);
-
-            //        // Check the available memory in the headstage  
-            //        if (first)
-            //        {
-            //            first = false;
-            //            preplegth = prep.DeviceDataLength;
-            //        }
-
-            //        // Check that the pulse fits into the designated memory
-            //        Debug.Assert(preplegth == prep.DeviceDataLength);
-            //        Debug.Assert(prep.DeviceDataLength <= 15);
-
-            //        // Store pulse into designated memory
-            //        stim.SendPreparedData(0x10 * i + 0, prep, STG_DestinationEnumNet.channeldata_current);
-            //    }
-            //    func.SetHeadstageSamplingActive(true, other_receiver + 0);
-            //}
-            //if (startDacq.Enabled)
-            //{
-            //    mea.Disconnect();
-            //}
 
             if (String.IsNullOrEmpty(uploadErrorMessage))
             {
