@@ -91,11 +91,7 @@ namespace MCS_USB_Windows_Forms_Application1
             string headstagePresentString = "??";
             string headstageActiveString = "??";
 
-            uint status;
-            if (this.mea.IsConnected())
-                status = 0;
-            else
-                status = this.mea.Connect(parentForm.selectedUsbDevice);
+            uint status = this.mea.Connect(parentForm.selectedUsbDevice);
             if (status == 0)
             {
                 debugLog("** MEA PARAMS:");
