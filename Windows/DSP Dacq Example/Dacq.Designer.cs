@@ -69,6 +69,8 @@
             this.label9 = new System.Windows.Forms.Label();
             this.OpenDebugFormButton = new System.Windows.Forms.Button();
             this.panel1 = new System.Windows.Forms.Panel();
+            this.SamplerateSelectComboBox = new System.Windows.Forms.ComboBox();
+            this.label10 = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.dspData)).BeginInit();
             this.groupBox1.SuspendLayout();
             this.panel1.SuspendLayout();
@@ -103,7 +105,7 @@
             series2.Name = "Chart 2";
             this.dspData.Series.Add(series1);
             this.dspData.Series.Add(series2);
-            this.dspData.Size = new System.Drawing.Size(954, 387);
+            this.dspData.Size = new System.Drawing.Size(966, 341);
             this.dspData.TabIndex = 6;
             this.dspData.Text = "DSP Data";
             // 
@@ -202,7 +204,7 @@
             // cbDeviceList
             // 
             this.cbDeviceList.FormattingEnabled = true;
-            this.cbDeviceList.Location = new System.Drawing.Point(344, 36);
+            this.cbDeviceList.Location = new System.Drawing.Point(489, 9);
             this.cbDeviceList.Name = "cbDeviceList";
             this.cbDeviceList.Size = new System.Drawing.Size(121, 21);
             this.cbDeviceList.TabIndex = 32;
@@ -210,7 +212,7 @@
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(332, 19);
+            this.label1.Location = new System.Drawing.Point(331, 12);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(153, 13);
             this.label1.TabIndex = 33;
@@ -219,7 +221,7 @@
             // StopDSP
             // 
             this.StopDSP.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.StopDSP.Location = new System.Drawing.Point(780, 132);
+            this.StopDSP.Location = new System.Drawing.Point(788, 132);
             this.StopDSP.Name = "StopDSP";
             this.StopDSP.Size = new System.Drawing.Size(184, 40);
             this.StopDSP.TabIndex = 56;
@@ -230,7 +232,7 @@
             // UploadDSPBinary
             // 
             this.UploadDSPBinary.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.UploadDSPBinary.Location = new System.Drawing.Point(780, 86);
+            this.UploadDSPBinary.Location = new System.Drawing.Point(788, 86);
             this.UploadDSPBinary.Name = "UploadDSPBinary";
             this.UploadDSPBinary.Size = new System.Drawing.Size(184, 40);
             this.UploadDSPBinary.TabIndex = 55;
@@ -251,7 +253,7 @@
             // MaxAmplitudeTextBox
             // 
             this.MaxAmplitudeTextBox.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.MaxAmplitudeTextBox.Location = new System.Drawing.Point(883, 35);
+            this.MaxAmplitudeTextBox.Location = new System.Drawing.Point(891, 35);
             this.MaxAmplitudeTextBox.Name = "MaxAmplitudeTextBox";
             this.MaxAmplitudeTextBox.Size = new System.Drawing.Size(81, 20);
             this.MaxAmplitudeTextBox.TabIndex = 53;
@@ -261,7 +263,7 @@
             // 
             this.label2.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(784, 38);
+            this.label2.Location = new System.Drawing.Point(792, 38);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(97, 13);
             this.label2.TabIndex = 39;
@@ -291,7 +293,7 @@
             // 
             this.label3.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(784, 63);
+            this.label3.Location = new System.Drawing.Point(792, 63);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(73, 13);
             this.label3.TabIndex = 42;
@@ -300,7 +302,7 @@
             // StimThresholdTextBox
             // 
             this.StimThresholdTextBox.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.StimThresholdTextBox.Location = new System.Drawing.Point(883, 60);
+            this.StimThresholdTextBox.Location = new System.Drawing.Point(891, 60);
             this.StimThresholdTextBox.Name = "StimThresholdTextBox";
             this.StimThresholdTextBox.Size = new System.Drawing.Size(81, 20);
             this.StimThresholdTextBox.TabIndex = 54;
@@ -332,7 +334,7 @@
             // 
             this.maxYChartInput.Enabled = false;
             this.maxYChartInput.Location = new System.Drawing.Point(40, 18);
-            this.maxYChartInput.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.maxYChartInput.Margin = new System.Windows.Forms.Padding(2);
             this.maxYChartInput.Name = "maxYChartInput";
             this.maxYChartInput.Size = new System.Drawing.Size(79, 20);
             this.maxYChartInput.TabIndex = 45;
@@ -341,7 +343,7 @@
             // 
             this.minYChartInput.Enabled = false;
             this.minYChartInput.Location = new System.Drawing.Point(40, 39);
-            this.minYChartInput.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.minYChartInput.Margin = new System.Windows.Forms.Padding(2);
             this.minYChartInput.Name = "minYChartInput";
             this.minYChartInput.Size = new System.Drawing.Size(79, 20);
             this.minYChartInput.TabIndex = 46;
@@ -355,9 +357,9 @@
             this.groupBox1.Controls.Add(this.label4);
             this.groupBox1.Enabled = false;
             this.groupBox1.Location = new System.Drawing.Point(340, 103);
-            this.groupBox1.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.groupBox1.Margin = new System.Windows.Forms.Padding(2);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Padding = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.groupBox1.Padding = new System.Windows.Forms.Padding(2);
             this.groupBox1.Size = new System.Drawing.Size(203, 68);
             this.groupBox1.TabIndex = 47;
             this.groupBox1.TabStop = false;
@@ -377,7 +379,7 @@
             // StartRandomStimButton
             // 
             this.StartRandomStimButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.StartRandomStimButton.Location = new System.Drawing.Point(591, 86);
+            this.StartRandomStimButton.Location = new System.Drawing.Point(599, 86);
             this.StartRandomStimButton.Name = "StartRandomStimButton";
             this.StartRandomStimButton.Size = new System.Drawing.Size(184, 40);
             this.StartRandomStimButton.TabIndex = 48;
@@ -389,7 +391,7 @@
             // 
             this.StopRandomStimButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.StopRandomStimButton.Enabled = false;
-            this.StopRandomStimButton.Location = new System.Drawing.Point(591, 132);
+            this.StopRandomStimButton.Location = new System.Drawing.Point(599, 132);
             this.StopRandomStimButton.Name = "StopRandomStimButton";
             this.StopRandomStimButton.Size = new System.Drawing.Size(184, 40);
             this.StopRandomStimButton.TabIndex = 49;
@@ -401,7 +403,7 @@
             // 
             this.label6.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(637, 40);
+            this.label6.Location = new System.Drawing.Point(645, 40);
             this.label6.Name = "label6";
             this.label6.Size = new System.Drawing.Size(103, 13);
             this.label6.TabIndex = 50;
@@ -410,7 +412,7 @@
             // PercentageOnInputBox
             // 
             this.PercentageOnInputBox.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.PercentageOnInputBox.Location = new System.Drawing.Point(661, 60);
+            this.PercentageOnInputBox.Location = new System.Drawing.Point(669, 60);
             this.PercentageOnInputBox.Name = "PercentageOnInputBox";
             this.PercentageOnInputBox.Size = new System.Drawing.Size(53, 20);
             this.PercentageOnInputBox.TabIndex = 51;
@@ -419,7 +421,7 @@
             // ProportionalGainInput
             // 
             this.ProportionalGainInput.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.ProportionalGainInput.Location = new System.Drawing.Point(883, 9);
+            this.ProportionalGainInput.Location = new System.Drawing.Point(891, 9);
             this.ProportionalGainInput.Name = "ProportionalGainInput";
             this.ProportionalGainInput.Size = new System.Drawing.Size(81, 20);
             this.ProportionalGainInput.TabIndex = 52;
@@ -429,7 +431,7 @@
             // 
             this.label9.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.label9.AutoSize = true;
-            this.label9.Location = new System.Drawing.Point(784, 12);
+            this.label9.Location = new System.Drawing.Point(792, 12);
             this.label9.Name = "label9";
             this.label9.Size = new System.Drawing.Size(86, 13);
             this.label9.TabIndex = 53;
@@ -438,8 +440,8 @@
             // OpenDebugFormButton
             // 
             this.OpenDebugFormButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.OpenDebugFormButton.Location = new System.Drawing.Point(641, 12);
-            this.OpenDebugFormButton.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.OpenDebugFormButton.Location = new System.Drawing.Point(649, 12);
+            this.OpenDebugFormButton.Margin = new System.Windows.Forms.Padding(2);
             this.OpenDebugFormButton.Name = "OpenDebugFormButton";
             this.OpenDebugFormButton.Size = new System.Drawing.Size(92, 23);
             this.OpenDebugFormButton.TabIndex = 57;
@@ -455,16 +457,41 @@
             this.panel1.AutoSize = true;
             this.panel1.Controls.Add(this.dspData);
             this.panel1.Location = new System.Drawing.Point(9, 188);
-            this.panel1.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.panel1.Margin = new System.Windows.Forms.Padding(2);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(954, 387);
+            this.panel1.Size = new System.Drawing.Size(966, 341);
             this.panel1.TabIndex = 58;
+            // 
+            // SamplerateSelectComboBox
+            // 
+            this.SamplerateSelectComboBox.Enabled = false;
+            this.SamplerateSelectComboBox.FormattingEnabled = true;
+            this.SamplerateSelectComboBox.ImeMode = System.Windows.Forms.ImeMode.Off;
+            this.SamplerateSelectComboBox.Items.AddRange(new object[] {
+            "20000",
+            "25000"});
+            this.SamplerateSelectComboBox.Location = new System.Drawing.Point(489, 36);
+            this.SamplerateSelectComboBox.Name = "SamplerateSelectComboBox";
+            this.SamplerateSelectComboBox.Size = new System.Drawing.Size(121, 21);
+            this.SamplerateSelectComboBox.TabIndex = 59;
+            // 
+            // label10
+            // 
+            this.label10.AutoSize = true;
+            this.label10.Location = new System.Drawing.Point(381, 37);
+            this.label10.Name = "label10";
+            this.label10.Size = new System.Drawing.Size(102, 13);
+            this.label10.TabIndex = 60;
+            this.label10.Text = "Select sampling rate";
+            this.label10.TextAlign = System.Drawing.ContentAlignment.TopRight;
             // 
             // Dacq
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(974, 585);
+            this.ClientSize = new System.Drawing.Size(983, 541);
+            this.Controls.Add(this.label10);
+            this.Controls.Add(this.SamplerateSelectComboBox);
             this.Controls.Add(this.panel1);
             this.Controls.Add(this.OpenDebugFormButton);
             this.Controls.Add(this.label9);
@@ -545,6 +572,8 @@
         private System.Windows.Forms.Button ApplyYLimitChangesButton;
         private System.Windows.Forms.Button OpenDebugFormButton;
         private System.Windows.Forms.Panel panel1;
+        private System.Windows.Forms.ComboBox SamplerateSelectComboBox;
+        private System.Windows.Forms.Label label10;
     }
 }
 

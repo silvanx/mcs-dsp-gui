@@ -30,6 +30,8 @@ extern int StimDuration;
 extern int StimRepeats;
 extern int StimStepsize;
 
+extern int f_s;
+
 extern Uint32 StimulusEnable[HS1_CHANNELS / ELECTRODES_PER_REGISTER];
 extern Uint32 elec_config[HS1_CHANNELS / ELECTRODES_PER_REGISTER];
 extern Uint32 DAC_select[HS1_CHANNELS / (ELECTRODES_PER_REGISTER/2)];
