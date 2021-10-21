@@ -186,6 +186,8 @@ interrupt void interrupt6(void)
     static int c = 0;
     static int i = 0;
 
+    static int stepTestCallCounter = 0;
+
     // Multiply pulse vector by delta_DBS_amp to get the vector assoicated with the amplitude of the stimulation pulses
     if (first_run)
     {
@@ -563,7 +565,7 @@ interrupt void interrupt6(void)
             seg = stim_index;
 
         }
-        else
+        else if (StimProportionalGain == 0)
         {
             if (magnitude > threshold){
                 seg = 15;
@@ -571,6 +573,18 @@ interrupt void interrupt6(void)
             else {
                 seg = 0;
             }
+        }
+        else if (StimProportionalGain < 0) {
+            if (stepTestCallCounter >= 10)
+            {
+                seg = (seg + 1) % 16;
+                stepTestCallCounter = 0;
+            } else {
+                stepTestCallCounter++;
+            }
+        }
+        else {
+            seg = 0;
         }
         
 
