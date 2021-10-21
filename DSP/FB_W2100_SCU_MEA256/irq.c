@@ -134,7 +134,6 @@ interrupt void interrupt8(void)
         break;
 	}
 
-
 	if (update_waveform)
 	{
 	    UploadBiphaseRect(0, 0, StimAmplitude, StimDuration, StimRepeats);
@@ -146,8 +145,8 @@ interrupt void interrupt8(void)
 interrupt void interrupt6(void)
 {
 	// Define sampling frequency and period
-	// const float f_s = 20000;
-	// const float T_s = 1 / f_s;
+	const float f_s = 20000;
+	const float T_s = 1 / f_s;
 
 	// Define controller call period (23.08ms)
 	const float T_controller = 0.02308;
@@ -156,7 +155,7 @@ interrupt void interrupt6(void)
 	const int ratio_T_controller_T_s = T_controller * f_s;  //5 * 18 / 1000 * f_s;
 
 	// Define SetPoint being the target beta ARV 
-    // const float SetPoint = threshold;                     //set SetPoint randomly to be 5mV ie 5000uV
+    const float SetPoint = threshold;                     //set SetPoint randomly to be 5mV ie 5000uV
 
     // Define array that remembers previous inputs and outputs for the sake of filtering
     static double xPrevious1[LOWPASS_LENGTH];
@@ -170,9 +169,6 @@ interrupt void interrupt6(void)
     
     static int history_index = 0;
     
-    static int stimStepTestActive = 0;
-    static int stimStepTestGoingUp = 1;
-
     // Define a variable that is true just the first run
     static int first_run = 1; 
 
@@ -193,9 +189,6 @@ interrupt void interrupt6(void)
     // Multiply pulse vector by delta_DBS_amp to get the vector assoicated with the amplitude of the stimulation pulses
     if (first_run)
     {
-        if (StimProportionalGain < 0) {
-            stimStepTestActive = 1;
-        }
 
         // These should be zero anyway, since the arrays are declared static but better safe than sorry
         for (i = 0; i < LOWPASS_LENGTH; i++) {
@@ -251,10 +244,12 @@ interrupt void interrupt6(void)
 	double total_power;
 	static double relative_beta_power = 0;
     static float stimulation_output;
-    double magnitude = 0;
+	
     
 	// Define counter for function run
 	static int timestamp = 0; // exists only in this function but is created only once on the first function call (i.e. static)
+	static double timestamp_global;
+	static int segment = 0;
 	static int crossing_detected = 0;
 	
 	static int stg_electrode = 0;
@@ -449,70 +444,66 @@ interrupt void interrupt6(void)
 	}
 #else
 #if 1
-
-	if (!stimStepTestActive)
-	{
-        // Calculate current beta ARV (differential recording)
-        // xCurrent = abs(HS_Data_p[0][2] - HS_Data_p[0][0]); // NB: In uV
-        // Calculate current beta ARV (single electrode for testing with signal generator)
-        xCurrent = 0.25 * (HS_Data_p[0][0] + HS_Data_p[0][1] + HS_Data_p[0][2] + HS_Data_p[0][3]);
-
-        // Hardcoded filter parameters
-        // First downsampling (Butterworth, lowpass, cutoff 0.1 (normalized))
-        double a1[LOWPASS_LENGTH] = { 1, -2.37409474370935, 1.92935566909122, -0.532075368312092 };
-        double b1[LOWPASS_LENGTH] = { 0.00289819463372137, 0.00869458390116412, 0.00869458390116412, 0.00289819463372137 };
-        int decimationFactor1 = 10;
-
-        // Second downsampling (Butterworth, lowpass, cutoff 0.25 (normalized))
-        double a2[LOWPASS_LENGTH] = { 1, -1.45902906222806, 0.910369000290069, -0.197825187264319 };
-        double b2[LOWPASS_LENGTH] = { 0.0316893438497110, 0.0950680315491330, 0.0950680315491330, 0.0316893438497110 };
-        int decimationFactor2 = 4;
-
-        // Beta extraction (Butterworth, bandpass, 13-30 Hz, assuming 500 Hz sampling frequency)
-        double a3[BANDPASS_LENGTH] = { 1, -5.40212898354275, 12.3252130462259, -15.1987442456715, 10.6838109529814, -4.05972313481503, 0.651760197122122 };
-        double b3[BANDPASS_LENGTH] = { 0.000995173561555180, 0, -0.00298552068466554, 0, 0.00298552068466554, 0, -0.000995173561555180 };
-
-        filter(b1, a1, LOWPASS_LENGTH, xPrevious1, yPrevious1, xCurrent);
-        yCurrent1 = yPrevious1[0];
-        if (decimationCounter1 % decimationFactor1 == 0)
-        {
-            decimated1 = yCurrent1;
-            filter(b2, a2, LOWPASS_LENGTH, xPrevious2, yPrevious2, decimated1);
-            yCurrent2 = yPrevious2[0];
-            if (decimationCounter2 % decimationFactor2 == 0)
-            {
-                decimated2 = yCurrent2;
-                filter(b3, a3, BANDPASS_LENGTH, xPrevious3, yPrevious3, decimated2);
-                yCurrent3 = yPrevious3[0];
-
-                unfiltered_beta_history[history_index] = decimated2;
-                filtered_beta_history[history_index] = yCurrent3;
-                history_index = (history_index + 1) % POWER_SEGMENT_LENGTH;
-            }
-            decimationCounter2++;
-        }
-        decimationCounter1++;
-
-        filtered_state_value = abs(yPrevious3[0]);
-
-        inf_norm = 0;
-        beta_power = 0;
-        total_power = 0;
-        power_estimate_length = POWER_SEGMENT_LENGTH;
-
-        for (i = 0; i < POWER_SEGMENT_LENGTH; i++)
-        {
-            if (abs(filtered_beta_history[i]) > inf_norm)
-                inf_norm = abs(filtered_beta_history[i]);
-
-            beta_power += (1.0 / power_estimate_length) * filtered_beta_history[i] * filtered_beta_history[i];
-            total_power += (1.0 / power_estimate_length) * unfiltered_beta_history[i] * unfiltered_beta_history[i];
-        }
-
-        relative_beta_power = 1000.0 * beta_power / total_power;
+    // Calculate current beta ARV (differential recording)
+    // xCurrent = abs(HS_Data_p[0][2] - HS_Data_p[0][0]); // NB: In uV
+	// Calculate current beta ARV (single electrode for testing with signal generator)
+	xCurrent = 0.25 * (HS_Data_p[0][0] + HS_Data_p[0][1] + HS_Data_p[0][2] + HS_Data_p[0][3]);
     
-        magnitude = relative_beta_power;
+	// Hardcoded filter parameters
+	// First downsampling (Butterworth, lowpass, cutoff 0.1 (normalized))
+	double a1[LOWPASS_LENGTH] = { 1, -2.37409474370935, 1.92935566909122, -0.532075368312092 };
+	double b1[LOWPASS_LENGTH] = { 0.00289819463372137, 0.00869458390116412, 0.00869458390116412, 0.00289819463372137 };
+	int decimationFactor1 = 10;
+
+	// Second downsampling (Butterworth, lowpass, cutoff 0.25 (normalized))
+	double a2[LOWPASS_LENGTH] = { 1, -1.45902906222806, 0.910369000290069, -0.197825187264319 };
+	double b2[LOWPASS_LENGTH] = { 0.0316893438497110, 0.0950680315491330, 0.0950680315491330, 0.0316893438497110 };
+	int decimationFactor2 = 4;
+
+	// Beta extraction (Butterworth, bandpass, 13-30 Hz, assuming 500 Hz sampling frequency)
+	double a3[BANDPASS_LENGTH] = { 1, -5.40212898354275, 12.3252130462259, -15.1987442456715, 10.6838109529814, -4.05972313481503, 0.651760197122122 };
+	double b3[BANDPASS_LENGTH] = { 0.000995173561555180, 0, -0.00298552068466554, 0, 0.00298552068466554, 0, -0.000995173561555180 };
+
+	filter(b1, a1, LOWPASS_LENGTH, xPrevious1, yPrevious1, xCurrent);
+	yCurrent1 = yPrevious1[0];
+	if (decimationCounter1 % decimationFactor1 == 0)
+	{
+		decimated1 = yCurrent1;
+		filter(b2, a2, LOWPASS_LENGTH, xPrevious2, yPrevious2, decimated1);
+		yCurrent2 = yPrevious2[0];
+		if (decimationCounter2 % decimationFactor2 == 0)
+		{
+		    decimated2 = yCurrent2;
+			filter(b3, a3, BANDPASS_LENGTH, xPrevious3, yPrevious3, decimated2);
+			yCurrent3 = yPrevious3[0];
+
+			unfiltered_beta_history[history_index] = decimated2;
+			filtered_beta_history[history_index] = yCurrent3;
+			history_index = (history_index + 1) % POWER_SEGMENT_LENGTH;
+		}
+		decimationCounter2++;
 	}
+	decimationCounter1++;
+
+    filtered_state_value = abs(yPrevious3[0]);
+
+    inf_norm = 0;
+	beta_power = 0;
+	total_power = 0;
+	power_estimate_length = POWER_SEGMENT_LENGTH;
+
+	for (i = 0; i < POWER_SEGMENT_LENGTH; i++)
+	{
+		if (abs(filtered_beta_history[i]) > inf_norm)
+		    inf_norm = abs(filtered_beta_history[i]);
+
+		beta_power += (1.0 / power_estimate_length) * filtered_beta_history[i] * filtered_beta_history[i];
+		total_power += (1.0 / power_estimate_length) * unfiltered_beta_history[i] * unfiltered_beta_history[i];
+	}
+
+	relative_beta_power = 1000.0 * beta_power / total_power;
+
+	double magnitude = relative_beta_power;
 
 	// If we're about to update the controller but we're currently stimulating, delay the controller update by 400 us
     // if (timestamp == ratio_T_controller_T_s - 1  && (HS_Data_p[1][0] & 1) * 1000) {
@@ -522,78 +513,66 @@ interrupt void interrupt6(void)
     // Increment timestamp each function call and call controller when T_controller elapsed i.e. when timestamp ==	ratio_T_controller_T_s
     if (++timestamp ==	ratio_T_controller_T_s)
     {
+        for (c = 0; c < 16; c++)
+        {
+            pulse[c] = c * delta_DBS_amp;
+        }
         // set AUX output to 1
         aux_value |= 1;
-        WRITE_REGISTER(IFB_AUX_OUT, aux_value);
+	    WRITE_REGISTER(IFB_AUX_OUT, aux_value); 
         
-        if (!stimStepTestActive)
+        // reset timestamp counter
+        timestamp=0;
+        
+        // Relate the pulse index to the memory segment index assoicated with it 
+        if (StimProportionalGain > 0)
         {
-            for (c = 0; c < 16; c++)
+            if (threshold > 0)
             {
-                pulse[c] = c * delta_DBS_amp;
-            }
-
-            // reset timestamp counter
-            timestamp=0;
-
-            // Relate the pulse index to the memory segment index assoicated with it
-            if (StimProportionalGain > 0)
-            {
-                if (threshold > 0)
-                {
-                    error = (magnitude - threshold) / threshold;
-                }
-                else
-                {
-                    error = magnitude;
-                }
-                stimulation_output = (StimProportionalGain / 1000) * error;
-
-                if (stimulation_output > MaxValue)
-                {
-                    OutputValue = MaxValue;
-                }
-                else if (stimulation_output < MinValue)
-                {
-                    OutputValue = MinValue;
-                }
-                else
-                {
-                    OutputValue = stimulation_output;
-                }
-
-                stim_index = 0;
-                pulse_amp_diff = abs(pulse[0] - OutputValue);
-                for (c = 1; c < 16; c++)
-                {
-                    if (abs(pulse[c] - OutputValue) < pulse_amp_diff)
-                    {
-                        stim_index = c;
-                        pulse_amp_diff = abs(pulse[c] - OutputValue);
-                    }
-                }
-                seg = stim_index;
-
+                error = (magnitude - threshold) / threshold;
             }
             else
             {
-                if (magnitude > threshold){
-                    seg = 15;
-                }
-                else {
-                    seg = 0;
+                error = magnitude;
+            }
+            stimulation_output = (StimProportionalGain / 1000) * error;
+
+            if (stimulation_output > MaxValue)
+            {
+                OutputValue = MaxValue;
+            }
+            else if (stimulation_output < MinValue)
+            {
+                OutputValue = MinValue;
+            }
+            else
+            {
+                OutputValue = stimulation_output;
+            }
+
+            stim_index = 0;
+            pulse_amp_diff = abs(pulse[0] - OutputValue);
+            for (c = 1; c < 16; c++)
+            {
+                if (abs(pulse[c] - OutputValue) < pulse_amp_diff)
+                {
+                    stim_index = c;
+                    pulse_amp_diff = abs(pulse[c] - OutputValue);
                 }
             }
-        } else {
-            if (seg == 15)
-                stimStepTestGoingUp = 0;
-            if (seg == 0)
-                stimStepTestGoingUp = 1;
-            if (stimStepTestGoingUp)
-                seg = (seg + 1) % 16;
-            else
-                seg = (seg - 1) % 16;
+            seg = stim_index;
+
         }
+        else
+        {
+            if (magnitude > threshold){
+                seg = 15;
+            }
+            else {
+                seg = 0;
+            }
+        }
+        
 
         // Set AUX 1 output value to zero
         aux_value &= 0;
