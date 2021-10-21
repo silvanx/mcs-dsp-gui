@@ -30,10 +30,7 @@ namespace MCS_USB_Windows_Forms_Application1
 
         const uint LockMask = 64;
 
-        public int Samplerate
-        {
-            get { return Convert.ToInt32(SamplerateSelectComboBox.SelectedItem); }
-        }
+        public int Samplerate = 20000;
 
         int maxAmplitudeValue = 10;
         uint stimThresholdValue = 100000;
@@ -298,6 +295,12 @@ namespace MCS_USB_Windows_Forms_Application1
                         func.SetHeadstageSamplingActive(true, other_receiver + 0);
                         hsSamplingActive = func.GetHeadstageSamplingActive(other_receiver + 0);
                     }
+                } 
+                else
+                {
+                    startDacq.Enabled = true;
+                    stopDacq.Enabled = false;
+                    SaveToFileCheckBox.Enabled = true;
                 }
             }
             else
@@ -512,7 +515,8 @@ namespace MCS_USB_Windows_Forms_Application1
                 {
                     int sr = mea.GetSamplerate(0);
                     errorOccuredSettingSamplerate = true;
-                    MessageBox.Show(String.Format("Mismatched sampling rate. GUI {0} Device {1}", Samplerate, sr));
+                    uploadErrorMessage += (String.Format("Mismatched sampling rate. GUI {0} Device {1}\n", Samplerate, sr));
+                    //MessageBox.Show(String.Format("Mismatched sampling rate. GUI {0} Device {1}", Samplerate, sr));
                 }
 
                 if (!errorOccuredSettingSamplerate)
