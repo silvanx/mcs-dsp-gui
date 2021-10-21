@@ -30,7 +30,7 @@ namespace MCS_USB_Windows_Forms_Application1
 
         const uint LockMask = 64;
 
-        int Samplerate = 20000;
+        public int Samplerate = 20000;
 
         int maxAmplitudeValue = 10;
         uint stimThresholdValue = 100000;
@@ -218,6 +218,8 @@ namespace MCS_USB_Windows_Forms_Application1
             series0Channel.SelectedIndex = 0;
             series1Channel.SelectedIndex = 1;
 
+            SamplerateSelectComboBox.SelectedIndex = 0;
+
         }
 
         private void startDacq_Click(object sender, EventArgs e)
@@ -257,36 +259,48 @@ namespace MCS_USB_Windows_Forms_Application1
 
                 mea.SetNumberOfAnalogChannels(Channels, 0, Channels, AnalogChannels, 0); // Read raw data
 
+                bool errorOccuredSettingSamplerate = false;
                 try
                 {
                     mea.SetSamplerate(Samplerate, 1, 0);
                 }
                 catch (CUsbExceptionNet)
                 {
-                    Samplerate = mea.GetSamplerate(0);
+                    int sr = mea.GetSamplerate(0);
+                    errorOccuredSettingSamplerate = true;
+                    MessageBox.Show(String.Format("Mismatched sampling rate. GUI {0} Device {1}", Samplerate, sr));
                 }
 
-                mea.EnableDigitalIn((use_digital_in ? (DigitalDatastreamEnableEnumNet) 3 : 0), 0);
-
-                // map feedback bit 0 to digital(in) stream bit 4
-                mea.SetDigitalSource(DigitalTargetEnumNet.Digstream, 4, W2100DigitalSourceEnumNet.Feedback, 0);
-                mea.SetDigitalSource(DigitalTargetEnumNet.Digout, 0, W2100DigitalSourceEnumNet.Feedback, 0);
-
-                mea.EnableChecksum(true, 0);
-                ChannelsInBlock = mea.GetChannelsInBlock(0);
-
-                mea.GetChannelLayout(out int analogChannels, out int digitalChannels, out int checksumChannels, out int timestampChannels, out int channelsInBlock, 0);
-
-                TotalChannels = channelsInBlock / 2;
-                mea.SetSelectedData(TotalChannels, Samplerate * 10, Samplerate, SampleSizeNet.SampleSize32Signed, ChannelsInBlock);
-
-                mea.ChannelBlock_SetCheckChecksum((uint) checksumChannels, (uint) timestampChannels);
-                mea.StartDacq();
-                if (mea.GetDeviceId().IdProduct == ProductIdEnumNet.W2100)
+                if (! errorOccuredSettingSamplerate)
                 {
-                    CW2100_FunctionNet func = new CW2100_FunctionNet(mea);
-                    func.SetHeadstageSamplingActive(true, other_receiver + 0);
-                    hsSamplingActive = func.GetHeadstageSamplingActive(other_receiver + 0);
+                    mea.EnableDigitalIn((use_digital_in ? (DigitalDatastreamEnableEnumNet)3 : 0), 0);
+
+                    // map feedback bit 0 to digital(in) stream bit 4
+                    mea.SetDigitalSource(DigitalTargetEnumNet.Digstream, 4, W2100DigitalSourceEnumNet.Feedback, 0);
+                    mea.SetDigitalSource(DigitalTargetEnumNet.Digout, 0, W2100DigitalSourceEnumNet.Feedback, 0);
+
+                    mea.EnableChecksum(true, 0);
+                    ChannelsInBlock = mea.GetChannelsInBlock(0);
+
+                    mea.GetChannelLayout(out int analogChannels, out int digitalChannels, out int checksumChannels, out int timestampChannels, out int channelsInBlock, 0);
+
+                    TotalChannels = channelsInBlock / 2;
+                    mea.SetSelectedData(TotalChannels, Samplerate * 10, Samplerate, SampleSizeNet.SampleSize32Signed, ChannelsInBlock);
+
+                    mea.ChannelBlock_SetCheckChecksum((uint)checksumChannels, (uint)timestampChannels);
+                    mea.StartDacq();
+                    if (mea.GetDeviceId().IdProduct == ProductIdEnumNet.W2100)
+                    {
+                        CW2100_FunctionNet func = new CW2100_FunctionNet(mea);
+                        func.SetHeadstageSamplingActive(true, other_receiver + 0);
+                        hsSamplingActive = func.GetHeadstageSamplingActive(other_receiver + 0);
+                    }
+                } 
+                else
+                {
+                    startDacq.Enabled = true;
+                    stopDacq.Enabled = false;
+                    SaveToFileCheckBox.Enabled = true;
                 }
             }
             else
@@ -492,63 +506,71 @@ namespace MCS_USB_Windows_Forms_Application1
                 mea.SetDataMode(DataModeEnumNet.Signed_32bit, 0);
                 mea.SetNumberOfAnalogChannels(Channels, 0, Channels, AnalogChannels, 0); // Read raw data
 
+                bool errorOccuredSettingSamplerate = false;
                 try
                 {
                     mea.SetSamplerate(Samplerate, 1, 0);
                 }
                 catch (CUsbExceptionNet)
                 {
-                    Samplerate = mea.GetSamplerate(0);
+                    int sr = mea.GetSamplerate(0);
+                    errorOccuredSettingSamplerate = true;
+                    uploadErrorMessage += (String.Format("Mismatched sampling rate. GUI {0} Device {1}\n", Samplerate, sr));
+                    //MessageBox.Show(String.Format("Mismatched sampling rate. GUI {0} Device {1}", Samplerate, sr));
                 }
 
-                CW2100_FunctionNet func = new CW2100_FunctionNet(mea);
-                CW2100_StimulatorFunctionNet stim = new CW2100_StimulatorFunctionNet(mea);
-
-                hsSamplingActive = func.GetHeadstageSamplingActive(other_receiver + 0);
-
-                int preplegth = 0;
-                
-                stim.SelectTimeSlot(other_receiver + 0);
-                
-                // Define the amplitude vector of the 3 segments of the biphasic pulse (in nA)
-                int[] ampl = new[] { 10000, -10000, 0 };
-
-                // Define the duraion vector of the 3 segments of the biphasic pulse (in us)
-                ulong[] dur = new ulong[] { 80, 80, 7600 };
-
-                func.SetHeadstageSamplingActive(false, other_receiver + 0);
-                // Define and upload each stimulation pattern
-                for (int i = 0; i < 16; i++)
+                if (!errorOccuredSettingSamplerate)
                 {
-                    // Define the amplitude (nA) of each of the 3 segments
-                    ampl[0] = delta_DBS_amp * (i + 1);
-                    ampl[1] = -delta_DBS_amp * (i + 1);
 
-                    // choose, if global repeat is desired
-                    // Define the associated pulse
-                    CStimulusFunctionNet.StimulusDeviceDataAndUnrolledData prep = stim.PrepareData(0, ampl, dur, STG_DestinationEnumNet.channeldata_current, 1);
+                    CW2100_FunctionNet func = new CW2100_FunctionNet(mea);
+                    CW2100_StimulatorFunctionNet stim = new CW2100_StimulatorFunctionNet(mea);
 
-                    // Check the available memory in the headstage  
-                    if (i == 0)
+                    hsSamplingActive = func.GetHeadstageSamplingActive(other_receiver + 0);
+
+                    int preplegth = 0;
+
+                    stim.SelectTimeSlot(other_receiver + 0);
+
+                    // Define the amplitude vector of the 3 segments of the biphasic pulse (in nA)
+                    int[] ampl = new[] { 10000, -10000, 0 };
+
+                    // Define the duraion vector of the 3 segments of the biphasic pulse (in us)
+                    ulong[] dur = new ulong[] { 80, 80, 7600 };
+
+                    func.SetHeadstageSamplingActive(false, other_receiver + 0);
+                    // Define and upload each stimulation pattern
+                    for (int i = 0; i < 16; i++)
                     {
-                        preplegth = prep.DeviceDataLength;
-                    }
+                        // Define the amplitude (nA) of each of the 3 segments
+                        ampl[0] = delta_DBS_amp * (i + 1);
+                        ampl[1] = -delta_DBS_amp * (i + 1);
 
-                    // Check that the pulse fits into the designated memory
-                    Debug.Assert(preplegth == prep.DeviceDataLength);
-                    Debug.Assert(prep.DeviceDataLength <= 15);
+                        // choose, if global repeat is desired
+                        // Define the associated pulse
+                        CStimulusFunctionNet.StimulusDeviceDataAndUnrolledData prep = stim.PrepareData(0, ampl, dur, STG_DestinationEnumNet.channeldata_current, 1);
 
-                    // Store pulse into designated memory
-                    try
-                    {
-                        stim.SendPreparedData(0x10 * i + 0, prep, STG_DestinationEnumNet.channeldata_current);
+                        // Check the available memory in the headstage  
+                        if (i == 0)
+                        {
+                            preplegth = prep.DeviceDataLength;
+                        }
+
+                        // Check that the pulse fits into the designated memory
+                        Debug.Assert(preplegth == prep.DeviceDataLength);
+                        Debug.Assert(prep.DeviceDataLength <= 15);
+
+                        // Store pulse into designated memory
+                        try
+                        {
+                            stim.SendPreparedData(0x10 * i + 0, prep, STG_DestinationEnumNet.channeldata_current);
+                        }
+                        catch (CUsbExceptionNet ex)
+                        {
+                            uploadErrorMessage += String.Format("Error while uploading stim pattern {0}: {1}", i.ToString(), ex.Message) + "\n";
+                        }
                     }
-                    catch (CUsbExceptionNet ex)
-                    {
-                        uploadErrorMessage += String.Format("Error while uploading stim pattern {0}: {1}", i.ToString(), ex.Message) + "\n";
-                    }
+                    func.SetHeadstageSamplingActive(true, other_receiver + 0);
                 }
-                func.SetHeadstageSamplingActive(true, other_receiver + 0);
             } else
             {
                 MessageBox.Show(CMcsUsbNet.GetErrorText(status));
@@ -589,6 +611,7 @@ namespace MCS_USB_Windows_Forms_Application1
                     factorydev.WriteRegister(0x1008, maxAmplitude);
                     uint propGainModified = (uint)Math.Floor(proportionalGain * 1000);
                     factorydev.WriteRegister(0x1018, propGainModified);
+                    factorydev.WriteRegister(0x101c, (uint) Samplerate);
 
                     string FirmwareFile;
                     FirmwareFile = System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location);
@@ -618,41 +641,50 @@ namespace MCS_USB_Windows_Forms_Application1
 
         private void UploadDSPBinary_Click(object sender, EventArgs e)
         {
+            bool parseErrorHappened = false;
             if (! int.TryParse(MaxAmplitudeTextBox.Text, out maxAmplitudeValue))
             {
                 MessageBox.Show("Max amplitude has to be an integer");
+                parseErrorHappened = true;
             }
             else if (maxAmplitudeValue > 300 || maxAmplitudeValue <= 0)
             {
                 MessageBox.Show("Max amplitude has to be between 0 and 300 μA");
+                parseErrorHappened = true;
             }
 
             if (!uint.TryParse(StimThresholdTextBox.Text, out stimThresholdValue))
             {
                 MessageBox.Show("Max amplitude has to be a positive integer");
+                parseErrorHappened = true;
             }
             else if (stimThresholdValue < 0)
             {
                 MessageBox.Show("Stimulation threshold has to be positive");
+                parseErrorHappened = true;
             }
 
             if(! float.TryParse(ProportionalGainInput.Text, out proportionalGain))
             {
                 MessageBox.Show("Proportional Gain should be a number with maximum 3 decimal places");
+                parseErrorHappened = true;
             }
 
-            if (DspPort != null || RawPort != null)
+            if (!parseErrorHappened)
             {
-                CMcsUsbListEntryNet port = DspPort;
-                if (port == null)
+                if (DspPort != null || RawPort != null)
                 {
-                    port = RawPort;
+                    CMcsUsbListEntryNet port = DspPort;
+                    if (port == null)
+                    {
+                        port = RawPort;
+                    }
+                    BeginInvoke(new UploadDSBBinaryAction(UploadDSBBinary), port);
                 }
-                BeginInvoke(new UploadDSBBinaryAction(UploadDSBBinary), port);
-            }
-            else
-            {
-                MessageBox.Show("No port available");
+                else
+                {
+                    MessageBox.Show("No port available");
+                }
             }
         }
 

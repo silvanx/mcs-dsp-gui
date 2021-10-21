@@ -54,6 +54,7 @@ void main()
 	StimDuration  = initFromMailbox(MAILBOX_DURATION, 5);
 	StimRepeats   = initFromMailbox(MAILBOX_REPEATS, 1);
 	StimStepsize  = initFromMailbox(MAILBOX_STEPSIZE, 1);
+	f_s           = initFromMailbox(MAILBOX_SAMPLING_FREQUENCY, 20000);
 
 	WRITE_REGISTER(IFB_AUX_OUT, 0x0); // set AUX 1 to value 0
 	WRITE_REGISTER(IFB_AUX_OUT, 0x1); // set AUX 1 to value one
