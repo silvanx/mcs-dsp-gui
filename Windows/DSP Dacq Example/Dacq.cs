@@ -232,11 +232,12 @@ namespace MCS_USB_Windows_Forms_Application1
             stopDacq.Enabled = true;
             SaveToFileCheckBox.Enabled = false;
 
+            string DateTimeNow = DateTime.Now.ToString("yyyy-MM-ddTHH-mm-ss");
             if (SaveToFileCheckBox.Checked)
             {
-                string DateTimeNow = DateTime.Now.ToString("yyyy-MM-ddTHH-mm-ss");
                 RecordingFilename = DateTimeNow + "-data.bin";
             }
+            AmplitudeRecordingFilename = DateTimeNow + "-amplitude.txt";
 
             other_receiver = 0;
             if (selectedUsbDevice.SerialNumber.EndsWith("-B"))
@@ -288,6 +289,7 @@ namespace MCS_USB_Windows_Forms_Application1
                     func.SetHeadstageSamplingActive(true, other_receiver + 0);
                     hsSamplingActive = func.GetHeadstageSamplingActive(other_receiver + 0);
                 }
+                Task.Run(() => SaveStimAmplitudeToFile());
             }
             else
             {
@@ -302,6 +304,7 @@ namespace MCS_USB_Windows_Forms_Application1
         {
             SaveToFileCheckBox.Enabled = true;
             RecordingFilename = null;
+            AmplitudeRecordingFilename = null;
             if (mea.GetDeviceId().IdProduct == ProductIdEnumNet.W2100)
             {
                 CW2100_FunctionNet func = new CW2100_FunctionNet(mea);
@@ -604,10 +607,7 @@ namespace MCS_USB_Windows_Forms_Application1
                     }
                     else
                     {
-                        string DateTimeNow = DateTime.Now.ToString("yyyy-MM-ddTHH-mm-ss");
-                        AmplitudeRecordingFilename = DateTimeNow + "-amplitude.txt";
                         MessageBox.Show("Firmware upload successful!");
-                        Task.Run(() => SaveStimAmplitudeToFile());
                     }
                 }
             } else
