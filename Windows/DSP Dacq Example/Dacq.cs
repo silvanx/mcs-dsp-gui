@@ -358,14 +358,14 @@ namespace MCS_USB_Windows_Forms_Application1
                 int len = AmplitudeSaveBuffer.Count();
                 double samplerateRatio = Samplerate / AmplitudeRecordingSamplerate;
                 int skip = (int) Math.Floor(samplerateRatio);
-                Console.WriteLine(len.ToString());
-                Console.WriteLine(skip.ToString());
+                //Console.WriteLine(len.ToString());
+                //Console.WriteLine(skip.ToString());
                 if (len > skip)
                 {
                     int len_truncated = (int) Math.Floor((double) (len / skip)) * skip;
-                    Console.WriteLine(len_truncated.ToString());
+                    //Console.WriteLine(len_truncated.ToString());
                     int[] values = new int[len];
-                    AmplitudeSaveBuffer.CopyTo(values);
+                    AmplitudeSaveBuffer.CopyTo(0, values, 0, len_truncated);
                     AmplitudeSaveBuffer.RemoveRange(0, len_truncated);
                     using (StreamWriter file = new StreamWriter(filename, append: true))
                     {
