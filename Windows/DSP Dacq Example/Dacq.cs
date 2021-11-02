@@ -394,10 +394,10 @@ namespace MCS_USB_Windows_Forms_Application1
                             file.WriteLine(value.ToString());
                         }
                     }
-                    AmplitudeSaveBuffer.Clear();
                     file.WriteLine("--- END RECORDING: " + DateTime.Now.ToString("yyyy-MM-ddTHH-mm-ss.fff") + " ---");
                 }
             }
+            AmplitudeSaveBuffer.Clear();
         }
 
         void mea_ChannelDataEvent(CMcsUsbDacqNet dacq, int CbHandle, int numFrames)
