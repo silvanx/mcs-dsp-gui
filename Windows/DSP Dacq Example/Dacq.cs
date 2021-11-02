@@ -417,10 +417,10 @@ namespace MCS_USB_Windows_Forms_Application1
                     {
                         data[i] = data[i + TotalChannels];
                     }
-                    int lastFrame = numFrames * TotalChannels;
-                    if (data[lastFrame - (i + 1)] > 10e6 || data[lastFrame - (i + 1)] < -10e6)
+                    int finalFrameIndex = (numFrames - 1) * TotalChannels + i;
+                    if (data[finalFrameIndex] > 10e6 || data[finalFrameIndex] < -10e6)
                     {
-                        data[lastFrame - (i + 1)] = data[lastFrame - (i + 1)] = TotalChannels;
+                        data[finalFrameIndex] = data[finalFrameIndex - TotalChannels];
                     }
                 }
                 for (int i = TotalChannels; i < (numFrames - 1) * TotalChannels; i++)
