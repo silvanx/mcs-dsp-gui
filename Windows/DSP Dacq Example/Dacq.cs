@@ -348,6 +348,8 @@ namespace MCS_USB_Windows_Forms_Application1
         private void SaveStimAmplitudeToFile()
         {
             string filename = "";
+            double samplerateRatio = Samplerate / AmplitudeRecordingSamplerate;
+            int skip = (int)Math.Floor(samplerateRatio);
             if (AmplitudeRecordingFilename != null)
             {
                 filename = AmplitudeRecordingFilename;
@@ -359,8 +361,6 @@ namespace MCS_USB_Windows_Forms_Application1
             while (AmplitudeRecordingFilename != null)
             {
                 int len = AmplitudeSaveBuffer.Count();
-                double samplerateRatio = Samplerate / AmplitudeRecordingSamplerate;
-                int skip = (int) Math.Floor(samplerateRatio);
                 //Console.WriteLine(len.ToString());
                 //Console.WriteLine(skip.ToString());
                 if (len > skip)
@@ -385,6 +385,16 @@ namespace MCS_USB_Windows_Forms_Application1
             {
                 using (StreamWriter file = new StreamWriter(filename, append: true))
                 {
+                    int final_len = AmplitudeSaveBuffer.Count;
+                    if (final_len > skip)
+                    {
+                        for (int i = 0; i < final_len; i += skip)
+                        {
+                            int value = AmplitudeSaveBuffer.ElementAt(i);
+                            file.WriteLine(value.ToString());
+                        }
+                    }
+                    AmplitudeSaveBuffer.Clear();
                     file.WriteLine("--- END RECORDING: " + DateTime.Now.ToString("yyyy-MM-ddTHH-mm-ss.fff") + " ---");
                 }
             }
