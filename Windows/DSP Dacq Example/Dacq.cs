@@ -69,6 +69,7 @@ namespace MCS_USB_Windows_Forms_Application1
 
             startDacq.Enabled = true;
             stopDacq.Enabled = false;
+            feedbackChannelComboBox.SelectedIndex = 0;
             
             mea.ChannelDataEvent += new OnChannelData(mea_ChannelDataEvent);
         }

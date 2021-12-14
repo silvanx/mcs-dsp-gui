@@ -479,16 +479,16 @@
             "2-3",
             "2-4",
             "3-4"});
-            this.feedbackChannelComboBox.Location = new System.Drawing.Point(883, 7);
+            this.feedbackChannelComboBox.Location = new System.Drawing.Point(883, 6);
             this.feedbackChannelComboBox.Name = "feedbackChannelComboBox";
-            this.feedbackChannelComboBox.Size = new System.Drawing.Size(83, 21);
+            this.feedbackChannelComboBox.Size = new System.Drawing.Size(81, 21);
             this.feedbackChannelComboBox.TabIndex = 59;
             // 
             // label10
             // 
             this.label10.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.label10.AutoSize = true;
-            this.label10.Location = new System.Drawing.Point(784, 10);
+            this.label10.Location = new System.Drawing.Point(784, 9);
             this.label10.Name = "label10";
             this.label10.Size = new System.Drawing.Size(96, 13);
             this.label10.TabIndex = 60;
