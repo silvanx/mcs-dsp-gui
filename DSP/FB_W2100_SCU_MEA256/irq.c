@@ -132,7 +132,13 @@ interrupt void interrupt8(void)
     case MAILBOX_PROPORTIONAL_GAIN:
         StimProportionalGain = reg_value;
         break;
+
+    case MAILBOX_CHANNEL_SELECT:
+        StimChannelSelector = reg_value;
+        break;
 	}
+
+
 
 	if (update_waveform)
 	{
@@ -144,6 +150,11 @@ interrupt void interrupt8(void)
 // DMA finished Interrupt
 interrupt void interrupt6(void)
 {
+    // Set feedback channel
+    const int meanFeedback = (StimChannelSelector >> 4) & 1;
+    const int feedbackChannel1 = StimChannelSelector & 3;
+    const int feedbackChannel2 = (StimChannelSelector >> 2) & 3;
+
 	// Define sampling frequency and period
 	const float f_s = 20000;
 	const float T_s = 1 / f_s;
@@ -449,7 +460,16 @@ interrupt void interrupt6(void)
     // Calculate current beta ARV (differential recording)
     // xCurrent = abs(HS_Data_p[0][2] - HS_Data_p[0][0]); // NB: In uV
 	// Calculate current beta ARV (single electrode for testing with signal generator)
-	xCurrent = 0.25 * (HS_Data_p[0][0] + HS_Data_p[0][1] + HS_Data_p[0][2] + HS_Data_p[0][3]);
+    if (meanFeedback)
+    {
+        xCurrent = 0.25 * (HS_Data_p[0][0] + HS_Data_p[0][1] + HS_Data_p[0][2] + HS_Data_p[0][3]);
+    }
+    else if (feedbackChannel1 != feedbackChannel2) {
+        xCurrent = HS_Data_p[0][feedbackChannel1] - HS_Data_p[0][feedbackChannel2];
+    }
+    else {
+        xCurrent = HS_Data_p[0][feedbackChannel1];
+    }
     
 	// Hardcoded filter parameters
 	// First downsampling (Butterworth, lowpass, cutoff 0.1 (normalized))
@@ -619,9 +639,9 @@ MonitorData[13] = StimProportionalGain;
 MonitorData[14] = OutputValue;
 MonitorData[15] = stimulation_output;
 MonitorData[16] = delta_DBS_amp;
-MonitorData[17] = pulse[0];
-MonitorData[18] = pulse[5];
-MonitorData[19] = pulse[10];
+MonitorData[17] = meanFeedback;
+MonitorData[18] = feedbackChannel1;
+MonitorData[19] = feedbackChannel2;
 MonitorData[20] = pulse[15];
 MonitorData[21] = pulse[15];
 
