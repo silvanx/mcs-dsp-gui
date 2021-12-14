@@ -151,7 +151,7 @@ interrupt void interrupt8(void)
 interrupt void interrupt6(void)
 {
     // Set feedback channel
-    const int meanFeedback = (StimChannelSelector >> 4) & 1;
+    const int meanFeedback = ((StimChannelSelector >> 4) & 1);
     const int feedbackChannel1 = StimChannelSelector & 3;
     const int feedbackChannel2 = (StimChannelSelector >> 2) & 3;
 
@@ -642,7 +642,7 @@ MonitorData[16] = delta_DBS_amp;
 MonitorData[17] = meanFeedback;
 MonitorData[18] = feedbackChannel1;
 MonitorData[19] = feedbackChannel2;
-MonitorData[20] = pulse[15];
+MonitorData[20] = StimChannelSelector;
 MonitorData[21] = pulse[15];
 
 /*

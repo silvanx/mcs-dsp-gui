@@ -659,7 +659,7 @@ namespace MCS_USB_Windows_Forms_Application1
                 uint channel2 = uint.Parse(groups[2].Value) - 1;
                 returnValue = channel1 | (channel2 << 2);
             }
-            return returnValue;
+            return returnValue + 32;
         }
 
         private void UploadDSPBinary_Click(object sender, EventArgs e)

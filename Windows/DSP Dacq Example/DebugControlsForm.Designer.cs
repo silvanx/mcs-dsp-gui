@@ -59,6 +59,9 @@ namespace MCS_USB_Windows_Forms_Application1
             this.HeadstageSamplingOnButton = new System.Windows.Forms.Button();
             this.HeadstageSamplingOffButton = new System.Windows.Forms.Button();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.label7 = new System.Windows.Forms.Label();
+            this.label6 = new System.Windows.Forms.Label();
+            this.label5 = new System.Windows.Forms.Label();
             this.label4 = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
@@ -66,9 +69,7 @@ namespace MCS_USB_Windows_Forms_Application1
             this.PauseWidthTextBox = new System.Windows.Forms.TextBox();
             this.MaxAmplitudeTextBox = new System.Windows.Forms.TextBox();
             this.UploadStimParamsButton = new System.Windows.Forms.Button();
-            this.label5 = new System.Windows.Forms.Label();
-            this.label6 = new System.Windows.Forms.Label();
-            this.label7 = new System.Windows.Forms.Label();
+            this.readMailboxChannelButton = new System.Windows.Forms.Button();
             this.panel1.SuspendLayout();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
@@ -152,7 +153,7 @@ namespace MCS_USB_Windows_Forms_Application1
             // Read9A80RegisterButton
             // 
             this.Read9A80RegisterButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.Read9A80RegisterButton.Location = new System.Drawing.Point(418, 127);
+            this.Read9A80RegisterButton.Location = new System.Drawing.Point(418, 155);
             this.Read9A80RegisterButton.Margin = new System.Windows.Forms.Padding(2);
             this.Read9A80RegisterButton.Name = "Read9A80RegisterButton";
             this.Read9A80RegisterButton.Size = new System.Drawing.Size(138, 26);
@@ -182,7 +183,7 @@ namespace MCS_USB_Windows_Forms_Application1
             this.groupBox1.Controls.Add(this.radioButton3);
             this.groupBox1.Controls.Add(this.radioButton2);
             this.groupBox1.Controls.Add(this.radioButton1);
-            this.groupBox1.Location = new System.Drawing.Point(418, 156);
+            this.groupBox1.Location = new System.Drawing.Point(418, 182);
             this.groupBox1.Margin = new System.Windows.Forms.Padding(1);
             this.groupBox1.Name = "groupBox1";
             this.groupBox1.Padding = new System.Windows.Forms.Padding(1);
@@ -457,6 +458,33 @@ namespace MCS_USB_Windows_Forms_Application1
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Upload Stim Params";
             // 
+            // label7
+            // 
+            this.label7.AutoSize = true;
+            this.label7.Location = new System.Drawing.Point(112, 74);
+            this.label7.Name = "label7";
+            this.label7.Size = new System.Drawing.Size(18, 13);
+            this.label7.TabIndex = 19;
+            this.label7.Text = "us";
+            // 
+            // label6
+            // 
+            this.label6.AutoSize = true;
+            this.label6.Location = new System.Drawing.Point(112, 48);
+            this.label6.Name = "label6";
+            this.label6.Size = new System.Drawing.Size(18, 13);
+            this.label6.TabIndex = 18;
+            this.label6.Text = "us";
+            // 
+            // label5
+            // 
+            this.label5.AutoSize = true;
+            this.label5.Location = new System.Drawing.Point(112, 22);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(20, 13);
+            this.label5.TabIndex = 12;
+            this.label5.Text = "uA";
+            // 
             // label4
             // 
             this.label4.AutoSize = true;
@@ -518,38 +546,24 @@ namespace MCS_USB_Windows_Forms_Application1
             this.UploadStimParamsButton.UseVisualStyleBackColor = true;
             this.UploadStimParamsButton.Click += new System.EventHandler(this.UploadStimParamsButton_Click);
             // 
-            // label5
+            // readMailboxChannelButton
             // 
-            this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(112, 22);
-            this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(20, 13);
-            this.label5.TabIndex = 12;
-            this.label5.Text = "uA";
-            // 
-            // label6
-            // 
-            this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(112, 48);
-            this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(18, 13);
-            this.label6.TabIndex = 18;
-            this.label6.Text = "us";
-            // 
-            // label7
-            // 
-            this.label7.AutoSize = true;
-            this.label7.Location = new System.Drawing.Point(112, 74);
-            this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(18, 13);
-            this.label7.TabIndex = 19;
-            this.label7.Text = "us";
+            this.readMailboxChannelButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.readMailboxChannelButton.Location = new System.Drawing.Point(418, 126);
+            this.readMailboxChannelButton.Margin = new System.Windows.Forms.Padding(2);
+            this.readMailboxChannelButton.Name = "readMailboxChannelButton";
+            this.readMailboxChannelButton.Size = new System.Drawing.Size(138, 26);
+            this.readMailboxChannelButton.TabIndex = 11;
+            this.readMailboxChannelButton.Text = "Read 0x1022 register";
+            this.readMailboxChannelButton.UseVisualStyleBackColor = true;
+            this.readMailboxChannelButton.Click += new System.EventHandler(this.readMailboxChannelButton_Click);
             // 
             // DebugControlsForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(705, 366);
+            this.Controls.Add(this.readMailboxChannelButton);
             this.Controls.Add(this.groupBox2);
             this.Controls.Add(this.HeadstageSamplingOffButton);
             this.Controls.Add(this.HeadstageSamplingOnButton);
@@ -616,5 +630,6 @@ namespace MCS_USB_Windows_Forms_Application1
         private System.Windows.Forms.Label label7;
         private System.Windows.Forms.Label label6;
         private System.Windows.Forms.Label label5;
+        private System.Windows.Forms.Button readMailboxChannelButton;
     }
 }
