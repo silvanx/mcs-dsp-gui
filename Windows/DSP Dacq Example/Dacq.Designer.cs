@@ -28,10 +28,10 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea3 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
-            System.Windows.Forms.DataVisualization.Charting.Legend legend3 = new System.Windows.Forms.DataVisualization.Charting.Legend();
-            System.Windows.Forms.DataVisualization.Charting.Series series5 = new System.Windows.Forms.DataVisualization.Charting.Series();
-            System.Windows.Forms.DataVisualization.Charting.Series series6 = new System.Windows.Forms.DataVisualization.Charting.Series();
+            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea1 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+            System.Windows.Forms.DataVisualization.Charting.Legend legend1 = new System.Windows.Forms.DataVisualization.Charting.Legend();
+            System.Windows.Forms.DataVisualization.Charting.Series series1 = new System.Windows.Forms.DataVisualization.Charting.Series();
+            System.Windows.Forms.DataVisualization.Charting.Series series2 = new System.Windows.Forms.DataVisualization.Charting.Series();
             this.startDacq = new System.Windows.Forms.Button();
             this.dspData = new System.Windows.Forms.DataVisualization.Charting.Chart();
             this.series0Channel = new System.Windows.Forms.ComboBox();
@@ -88,23 +88,23 @@
             // 
             // dspData
             // 
-            chartArea3.Name = "ChartArea1";
-            this.dspData.ChartAreas.Add(chartArea3);
+            chartArea1.Name = "ChartArea1";
+            this.dspData.ChartAreas.Add(chartArea1);
             this.dspData.Dock = System.Windows.Forms.DockStyle.Fill;
-            legend3.Name = "Legend1";
-            this.dspData.Legends.Add(legend3);
+            legend1.Name = "Legend1";
+            this.dspData.Legends.Add(legend1);
             this.dspData.Location = new System.Drawing.Point(0, 0);
             this.dspData.Name = "dspData";
-            series5.ChartArea = "ChartArea1";
-            series5.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.FastLine;
-            series5.Legend = "Legend1";
-            series5.Name = "Chart 1";
-            series6.ChartArea = "ChartArea1";
-            series6.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.FastLine;
-            series6.Legend = "Legend1";
-            series6.Name = "Chart 2";
-            this.dspData.Series.Add(series5);
-            this.dspData.Series.Add(series6);
+            series1.ChartArea = "ChartArea1";
+            series1.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.FastLine;
+            series1.Legend = "Legend1";
+            series1.Name = "Chart 1";
+            series2.ChartArea = "ChartArea1";
+            series2.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.FastLine;
+            series2.Legend = "Legend1";
+            series2.Name = "Chart 2";
+            this.dspData.Series.Add(series1);
+            this.dspData.Series.Add(series2);
             this.dspData.Size = new System.Drawing.Size(957, 375);
             this.dspData.TabIndex = 6;
             this.dspData.Text = "DSP Data";
@@ -465,7 +465,6 @@
             // feedbackChannelComboBox
             // 
             this.feedbackChannelComboBox.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.feedbackChannelComboBox.Enabled = false;
             this.feedbackChannelComboBox.FormattingEnabled = true;
             this.feedbackChannelComboBox.Items.AddRange(new object[] {
             "mean",
