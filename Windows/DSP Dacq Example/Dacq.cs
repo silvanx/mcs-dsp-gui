@@ -12,6 +12,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Runtime.CompilerServices;
 using Mcs.Usb;
+using System.Text.RegularExpressions;
 
 namespace MCS_USB_Windows_Forms_Application1
 {
@@ -586,6 +587,7 @@ namespace MCS_USB_Windows_Forms_Application1
 
         void UploadDSBBinary(CMcsUsbListEntryNet port)
         {
+            uint selectedChannelValue = parseSelectedChannel(feedbackChannelComboBox.GetItemText(feedbackChannelComboBox.SelectedItem));
             // Define the upper and lower bounds for the controller output
             int MaxValue = maxAmplitudeValue * 1000;                //in nA
             const int MinValue = 0;                     //in nA
@@ -608,6 +610,7 @@ namespace MCS_USB_Windows_Forms_Application1
                     factorydev.WriteRegister(0x1008, maxAmplitude);
                     uint propGainModified = (uint)Math.Floor(proportionalGain * 1000);
                     factorydev.WriteRegister(0x1018, propGainModified);
+                    factorydev.WriteRegister(0x1022, selectedChannelValue);
 
                     string FirmwareFile;
                     FirmwareFile = System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location);
@@ -630,6 +633,33 @@ namespace MCS_USB_Windows_Forms_Application1
             {
                 MessageBox.Show("The DSP firmware will not be uploaded.\nThe following errors happened during stim parameter upload:\n\n" + uploadErrorMessage);
             }
+        }
+
+        static private uint parseSelectedChannel(string selected)
+        {
+            Regex meanRx = new Regex("^mean$");
+            Regex monopolarRx = new Regex("^[1-4]$");
+            Regex bipolarRx = new Regex("^([1-4])-([1-4])$");
+            uint returnValue = 16;
+
+            if (meanRx.IsMatch(selected))
+            {
+                returnValue = 16;
+            }
+            else if (monopolarRx.IsMatch(selected))
+            {
+                uint channel = uint.Parse(selected) - 1;
+                returnValue = channel | (channel << 2);
+            }
+            else if (bipolarRx.IsMatch(selected))
+            {
+                Match match = bipolarRx.Match(selected);
+                GroupCollection groups = match.Groups;
+                uint channel1 = uint.Parse(groups[1].Value) - 1;
+                uint channel2 = uint.Parse(groups[2].Value) - 1;
+                returnValue = channel1 | (channel2 << 2);
+            }
+            return returnValue;
         }
 
         private void UploadDSPBinary_Click(object sender, EventArgs e)
