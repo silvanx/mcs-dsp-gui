@@ -297,5 +297,18 @@ namespace MCS_USB_Windows_Forms_Application1
                 }
             }
         }
+
+        private void readMailboxChannelButton_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                uint value = this.mea.ReadRegister(0x1022);
+                debugLog("Value in 0x1022 register: " + Convert.ToString(value, 2));
+            }
+            catch (Exception ex)
+            {
+                debugLog("Exception caught: " + ex.ToString());
+            }
+        }
     }
 }
