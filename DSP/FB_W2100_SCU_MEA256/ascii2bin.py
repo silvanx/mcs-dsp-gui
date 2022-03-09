@@ -26,7 +26,7 @@ for line in fi:
      l=line.rstrip()
      x=unhexlify(l.replace(" ",""))
      data=array('b')
-     data.fromstring(x)
+     data.frombytes(x)
      data.tofile(fo)
     
      

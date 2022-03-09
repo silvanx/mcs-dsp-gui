@@ -27,3 +27,7 @@ Windows/FB_Example/.vs
 *.bak
 /Windows/FB_Example/FB_Example.csproj.user
 .vs/*
+.ccsproject
+.cproject
+.project
+.settings
