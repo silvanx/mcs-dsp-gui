@@ -532,7 +532,7 @@
             this.Controls.Add(this.series0Channel);
             this.Controls.Add(this.startDacq);
             this.Name = "Dacq";
-            this.Text = "Form1";
+            this.Text = "Closed-loop feedback GUI";
             ((System.ComponentModel.ISupportInitialize)(this.dspData)).EndInit();
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
