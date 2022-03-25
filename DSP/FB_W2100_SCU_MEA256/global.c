@@ -3,10 +3,13 @@
 int threshold;
 int deadtime;
 
+float StimProportionalGain;
+
 int StimAmplitude;
 int StimDuration;
 int StimRepeats;
 int StimStepsize;
+int StimChannelSelector;
 
 Uint32 StimulusEnable[HS1_CHANNELS / ELECTRODES_PER_REGISTER];
 Uint32 elec_config[HS1_CHANNELS / ELECTRODES_PER_REGISTER];
