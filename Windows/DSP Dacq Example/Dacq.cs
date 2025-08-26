@@ -14,7 +14,7 @@ using System.Runtime.CompilerServices;
 using Mcs.Usb;
 using System.Text.RegularExpressions;
 
-namespace MCS_USB_Windows_Forms_Application1
+namespace Biomed_Closed_Loop_GUI
 {
     public partial class Dacq : Form
     {
@@ -220,10 +220,7 @@ namespace MCS_USB_Windows_Forms_Application1
             series0Channel.SelectedIndex = 0;
             series1Channel.SelectedIndex = 1;
 
-            stimulationFrequencyComboBox.DataSource = new BindingSource(pulseParameters.blankDurations, null);
-            stimulationFrequencyComboBox.DisplayMember = "Key";
-            stimulationFrequencyComboBox.ValueMember = "Key";
-            stimulationFrequencyComboBox.SelectedValue = pulseParameters.defaultFrequency;
+            textBoxStimFrequency.Text = PulseParameters.defaultFrequency.ToString();
 
 
         }
@@ -542,7 +539,7 @@ namespace MCS_USB_Windows_Forms_Application1
                 // Define the duration vector of the 3 segments of the biphasic pulse (in us)
                 ulong positivePulseDuration = 80;
                 ulong negativePulseDuration = 80;
-                ulong blankDuration = pulseParameters.blankDurations[stimFrequency];
+                ulong blankDuration = PulseParameters.blankDuration(stimFrequency, positivePulseDuration, negativePulseDuration);
 
                 ulong[] dur = new ulong[] { positivePulseDuration, negativePulseDuration, blankDuration };
                 //ulong[] dur = new ulong[] { 80, 80, 7600 };
@@ -605,7 +602,7 @@ namespace MCS_USB_Windows_Forms_Application1
 
             // Define the step between pulses amplitude
             int delta_DBS_amp = (MaxValue - MinValue) / 16;    // in nA
-            int stimFrequency = (int) stimulationFrequencyComboBox.SelectedValue;
+            int stimFrequency = Int32.Parse(textBoxStimFrequency.Text);
 
             UploadStimulationPatternsToHS(port, delta_DBS_amp, stimFrequency, out string uploadErrorMessage);
             
@@ -788,7 +785,7 @@ namespace MCS_USB_Windows_Forms_Application1
 
             // Define the step between pulses amplitude
             int delta_DBS_amp = (MaxValue - MinValue) / 16;    // in nA
-            int stimFrequency = (int)stimulationFrequencyComboBox.SelectedValue;
+            int stimFrequency = Int32.Parse(textBoxStimFrequency.Text);
 
             UploadStimulationPatternsToHS(port, delta_DBS_amp, stimFrequency, out string uploadErrorMessage);
 
@@ -865,6 +862,15 @@ namespace MCS_USB_Windows_Forms_Application1
         {
             Form DebugForm = new DebugControlsForm(this, mea, UsbDeviceList);
             DebugForm.Show();
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            int stimFrequency = Int32.Parse(textBoxStimFrequency.Text);
+            ulong positivePulseDuration = 80;
+            ulong negativePulseDuration = 80;
+            ulong blankDuration = PulseParameters.blankDuration(stimFrequency, positivePulseDuration, negativePulseDuration);
+            MessageBox.Show(String.Format("F: {0}; Blank: {1} us", stimFrequency, blankDuration));
         }
     }
 }

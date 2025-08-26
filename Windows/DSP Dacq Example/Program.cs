@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Forms;
 
-namespace MCS_USB_Windows_Forms_Application1
+namespace Biomed_Closed_Loop_GUI
 {
     static class Program
     {

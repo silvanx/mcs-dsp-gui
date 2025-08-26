@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace MCS_USB_Windows_Forms_Application1.Properties {
+namespace Biomed_Closed_Loop_GUI.Properties {
     using System;
     
     

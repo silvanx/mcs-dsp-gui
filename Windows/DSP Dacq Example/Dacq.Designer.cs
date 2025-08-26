@@ -1,4 +1,4 @@
-﻿namespace MCS_USB_Windows_Forms_Application1
+﻿namespace Biomed_Closed_Loop_GUI
 {
     partial class Dacq
     {
@@ -73,7 +73,7 @@
             this.feedbackChannelComboBox = new System.Windows.Forms.ComboBox();
             this.label10 = new System.Windows.Forms.Label();
             this.label11 = new System.Windows.Forms.Label();
-            this.stimulationFrequencyComboBox = new System.Windows.Forms.ComboBox();
+            this.textBoxStimFrequency = new System.Windows.Forms.TextBox();
             ((System.ComponentModel.ISupportInitialize)(this.dspData)).BeginInit();
             this.groupBox1.SuspendLayout();
             this.panel1.SuspendLayout();
@@ -317,7 +317,7 @@
             // 
             this.label3.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(1045, 106);
+            this.label3.Location = new System.Drawing.Point(1047, 105);
             this.label3.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(91, 16);
@@ -530,42 +530,30 @@
             // 
             this.label11.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.label11.AutoSize = true;
-            this.label11.Location = new System.Drawing.Point(1045, 139);
+            this.label11.Location = new System.Drawing.Point(1047, 136);
             this.label11.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label11.Name = "label11";
             this.label11.Size = new System.Drawing.Size(122, 16);
             this.label11.TabIndex = 62;
             this.label11.Text = "Stim frequency (Hz)";
             // 
-            // stimulationFrequencyComboBox
+            // textBoxStimFrequency
             // 
-            this.stimulationFrequencyComboBox.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.stimulationFrequencyComboBox.FormattingEnabled = true;
-            this.stimulationFrequencyComboBox.Items.AddRange(new object[] {
-            "mean",
-            "1",
-            "2",
-            "3",
-            "4",
-            "1-2",
-            "1-3",
-            "1-4",
-            "2-3",
-            "2-4",
-            "3-4"});
-            this.stimulationFrequencyComboBox.Location = new System.Drawing.Point(1177, 135);
-            this.stimulationFrequencyComboBox.Margin = new System.Windows.Forms.Padding(4);
-            this.stimulationFrequencyComboBox.Name = "stimulationFrequencyComboBox";
-            this.stimulationFrequencyComboBox.Size = new System.Drawing.Size(107, 24);
-            this.stimulationFrequencyComboBox.TabIndex = 61;
+            this.textBoxStimFrequency.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.textBoxStimFrequency.Location = new System.Drawing.Point(1177, 133);
+            this.textBoxStimFrequency.Margin = new System.Windows.Forms.Padding(4);
+            this.textBoxStimFrequency.Name = "textBoxStimFrequency";
+            this.textBoxStimFrequency.Size = new System.Drawing.Size(107, 22);
+            this.textBoxStimFrequency.TabIndex = 63;
+            this.textBoxStimFrequency.Text = "130";
             // 
             // Dacq
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1299, 815);
+            this.Controls.Add(this.textBoxStimFrequency);
             this.Controls.Add(this.label11);
-            this.Controls.Add(this.stimulationFrequencyComboBox);
             this.Controls.Add(this.label10);
             this.Controls.Add(this.feedbackChannelComboBox);
             this.Controls.Add(this.panel1);
@@ -653,7 +641,7 @@
         private System.Windows.Forms.ComboBox feedbackChannelComboBox;
         private System.Windows.Forms.Label label10;
         private System.Windows.Forms.Label label11;
-        private System.Windows.Forms.ComboBox stimulationFrequencyComboBox;
+        private System.Windows.Forms.TextBox textBoxStimFrequency;
     }
 }
 

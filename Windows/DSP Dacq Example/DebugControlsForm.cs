@@ -9,8 +9,9 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using Mcs.Usb;
 using System.Diagnostics;
+using System.Reflection;
 
-namespace MCS_USB_Windows_Forms_Application1
+namespace Biomed_Closed_Loop_GUI
 {
     public partial class DebugControlsForm : Form
     {
@@ -49,6 +50,9 @@ namespace MCS_USB_Windows_Forms_Application1
             this.mea = mea;
             this.usbDeviceList = usbDeviceList;
             InitializeComponent();
+
+            var versionInfo = String.Format("Ver. {0}", Assembly.GetExecutingAssembly().GetName().Version.ToString());
+            versionInfoLabel.Text = versionInfo;
 
             debugLog("--- DEBUG WINDOW OPEN ---");
             debugLog("USB Device list contains " + this.usbDeviceList.Count.ToString() + " entries");

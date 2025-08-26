@@ -70,7 +70,7 @@
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="pulseParameters.cs" />
+    <Compile Include="PulseParameters.cs" />
     <EmbeddedResource Include="Dacq.resx">
       <DependentUpon>Dacq.cs</DependentUpon>
     </EmbeddedResource>
