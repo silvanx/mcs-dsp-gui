@@ -28,3 +28,6 @@ Windows/FB_Example/.vs
 /Windows/FB_Example/FB_Example.csproj.user
 .vs/*
 .settings
+Windows/DSP Dacq Example/Closed-loop feedback GUI.csproj.user
+Windows/DSP Dacq Example/Closed-loop feedback GUI_TemporaryKey.pfx
+Windows/DSP Dacq Example/publish/
