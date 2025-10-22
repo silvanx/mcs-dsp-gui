@@ -9,7 +9,7 @@
     <OutputType>WinExe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>MCS_USB_Windows_Forms_Application1</RootNamespace>
-    <AssemblyName>MCS USB Windows Forms Application1</AssemblyName>
+    <AssemblyName>MCS Closed Loop Feedback GUI</AssemblyName>
     <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <TargetFrameworkProfile>
     </TargetFrameworkProfile>
