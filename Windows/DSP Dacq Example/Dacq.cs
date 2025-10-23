@@ -13,11 +13,14 @@ using System.IO;
 using System.Runtime.CompilerServices;
 using Mcs.Usb;
 using System.Text.RegularExpressions;
+using Microsoft.Extensions.Logging;
 
 namespace Biomed_Closed_Loop_GUI
 {
     public partial class Dacq : Form
     {
+        private readonly ILogger<Dacq> _logger;
+
         CMcsUsbListEntryNet RawPort;
         CMcsUsbListEntryNet DspPort;
 
@@ -60,8 +63,11 @@ namespace Biomed_Closed_Loop_GUI
         CMcsUsbListNet UsbDeviceList = new CMcsUsbListNet(DeviceEnumNet.MCS_DEVICE_USB);
         CMeaUSBDeviceNet mea = new CMeaUSBDeviceNet();
 
-        public Dacq()
+        public Dacq(ILogger<Dacq> logger)
         {
+            _logger = logger;
+
+            _logger.LogInformation("Starting App");
             InitializeComponent();
             UsbDeviceList.DeviceArrival += new OnDeviceArrivalRemoval(devices_DeviceArrival);
             UsbDeviceList.DeviceRemoval += new OnDeviceArrivalRemoval(devices_DeviceRemoval);
@@ -88,6 +94,7 @@ namespace Biomed_Closed_Loop_GUI
 
         private void SearchDevice()
         {
+            _logger.LogInformation("Searching for Devices...");
             RawPort = null;
             DspPort = null;
 
@@ -671,29 +678,36 @@ namespace Biomed_Closed_Loop_GUI
             return returnValue + 32;
         }
 
+        private void LogAndShowError(string message)
+        {
+            _logger.LogError(message);
+            MessageBox.Show(message);
+        }
+
         private void UploadDSPBinary_Click(object sender, EventArgs e)
         {
+            _logger.LogInformation("Binary upload requested. Checking parameters...");
             if (! int.TryParse(MaxAmplitudeTextBox.Text, out maxAmplitudeValue))
             {
-                MessageBox.Show("Max amplitude has to be an integer");
+                LogAndShowError("Max amplitude has to be an integer");
             }
             else if (maxAmplitudeValue > 300 || maxAmplitudeValue <= 0)
             {
-                MessageBox.Show("Max amplitude has to be between 0 and 300 μA");
+                LogAndShowError("Max amplitude has to be between 0 and 300 μA");
             }
 
             if (!uint.TryParse(StimThresholdTextBox.Text, out stimThresholdValue))
             {
-                MessageBox.Show("Max amplitude has to be a positive integer");
+                LogAndShowError("Max amplitude has to be a positive integer");
             }
             else if (stimThresholdValue < 0)
             {
-                MessageBox.Show("Stimulation threshold has to be positive");
+                LogAndShowError("Stimulation threshold has to be positive");
             }
 
             if(! float.TryParse(ProportionalGainInput.Text, out proportionalGain))
             {
-                MessageBox.Show("Proportional Gain should be a number with maximum 3 decimal places");
+                LogAndShowError("Proportional Gain should be a number with maximum 3 decimal places");
             }
 
             if (DspPort != null || RawPort != null)
@@ -707,7 +721,7 @@ namespace Biomed_Closed_Loop_GUI
             }
             else
             {
-                MessageBox.Show("No port available");
+                LogAndShowError("No port available");
             }
         }
 
