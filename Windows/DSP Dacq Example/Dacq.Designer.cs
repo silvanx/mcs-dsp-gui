@@ -48,7 +48,7 @@
             this.cbDeviceList = new System.Windows.Forms.ComboBox();
             this.label1 = new System.Windows.Forms.Label();
             this.StopDSP = new System.Windows.Forms.Button();
-            this.UploadDSPBinary = new System.Windows.Forms.Button();
+            this.UploadDSPBinaryButton = new System.Windows.Forms.Button();
             this.SaveToFileCheckBox = new System.Windows.Forms.CheckBox();
             this.MaxAmplitudeTextBox = new System.Windows.Forms.TextBox();
             this.label2 = new System.Windows.Forms.Label();
@@ -247,17 +247,17 @@
             this.StopDSP.UseVisualStyleBackColor = true;
             this.StopDSP.Click += new System.EventHandler(this.StopDSP_Click);
             // 
-            // UploadDSPBinary
+            // UploadDSPBinaryButton
             // 
-            this.UploadDSPBinary.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.UploadDSPBinary.Location = new System.Drawing.Point(1039, 167);
-            this.UploadDSPBinary.Margin = new System.Windows.Forms.Padding(4);
-            this.UploadDSPBinary.Name = "UploadDSPBinary";
-            this.UploadDSPBinary.Size = new System.Drawing.Size(245, 49);
-            this.UploadDSPBinary.TabIndex = 55;
-            this.UploadDSPBinary.Text = "Upload DSP Binary";
-            this.UploadDSPBinary.UseVisualStyleBackColor = true;
-            this.UploadDSPBinary.Click += new System.EventHandler(this.UploadDSPBinary_Click);
+            this.UploadDSPBinaryButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.UploadDSPBinaryButton.Location = new System.Drawing.Point(1039, 167);
+            this.UploadDSPBinaryButton.Margin = new System.Windows.Forms.Padding(4);
+            this.UploadDSPBinaryButton.Name = "UploadDSPBinaryButton";
+            this.UploadDSPBinaryButton.Size = new System.Drawing.Size(245, 49);
+            this.UploadDSPBinaryButton.TabIndex = 55;
+            this.UploadDSPBinaryButton.Text = "Upload DSP Binary";
+            this.UploadDSPBinaryButton.UseVisualStyleBackColor = true;
+            this.UploadDSPBinaryButton.Click += new System.EventHandler(this.UploadDSPBinary_Click);
             // 
             // SaveToFileCheckBox
             // 
@@ -573,7 +573,7 @@
             this.Controls.Add(this.DisplayInMicrovoltsChannel1);
             this.Controls.Add(this.SaveToFileCheckBox);
             this.Controls.Add(this.StopDSP);
-            this.Controls.Add(this.UploadDSPBinary);
+            this.Controls.Add(this.UploadDSPBinaryButton);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.cbDeviceList);
             this.Controls.Add(this.btnDeviceOK);
@@ -616,7 +616,7 @@
         private System.Windows.Forms.ComboBox cbDeviceList;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Button StopDSP;
-        private System.Windows.Forms.Button UploadDSPBinary;
+        private System.Windows.Forms.Button UploadDSPBinaryButton;
         private System.Windows.Forms.CheckBox SaveToFileCheckBox;
         private System.Windows.Forms.TextBox MaxAmplitudeTextBox;
         private System.Windows.Forms.Label label2;

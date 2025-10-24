@@ -643,6 +643,7 @@ namespace Biomed_Closed_Loop_GUI
                 if (!File.Exists(FirmwareFile))
                 {
                     LogAndShowError("The selected firmware file doesn't exist!");
+                    return;
                 }
 
                 bool success = factorydev.LoadUserFirmware(FirmwareFile, port, LockMask); // Code for uploading compiled binary
