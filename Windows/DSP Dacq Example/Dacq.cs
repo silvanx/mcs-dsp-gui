@@ -505,6 +505,7 @@ namespace Biomed_Closed_Loop_GUI
         private void UploadStimulationPatternsToHS(CMcsUsbListEntryNet port, int delta_DBS_amp, int stimFrequency, out string uploadErrorMessage)
         {
             uploadErrorMessage = "";
+            _logger.LogInformation("Uploading stimulation patterns to the headstage...");
 
             other_receiver = 0;
             if (port.SerialNumber.EndsWith("-B"))
@@ -612,43 +613,49 @@ namespace Biomed_Closed_Loop_GUI
             int stimFrequency = Int32.Parse(textBoxStimFrequency.Text);
 
             UploadStimulationPatternsToHS(port, delta_DBS_amp, stimFrequency, out string uploadErrorMessage);
-            
-            if (String.IsNullOrEmpty(uploadErrorMessage))
+            if (!String.IsNullOrEmpty(uploadErrorMessage))
             {
-                CMcsUsbFactoryNet factorydev = new CMcsUsbFactoryNet();
-                if (factorydev.Connect(port, LockMask) == 0)
-                {
-                    // uint stimThresholdDigits = (uint)Math.Floor((float)stimThresholdValue / 0.381);
-                    uint stimThresholdDigits = (uint)Math.Floor((float)stimThresholdValue);
-                    uint maxAmplitude = (uint)MaxValue;
-
-                    factorydev.WriteRegister(0x1000, stimThresholdDigits);
-                    factorydev.WriteRegister(0x1008, maxAmplitude);
-                    uint propGainModified = (uint)Math.Floor(proportionalGain * 1000);
-                    factorydev.WriteRegister(0x1018, propGainModified);
-                    factorydev.WriteRegister(0x1022, selectedChannelValue);
-
-                    string FirmwareFile;
-                    FirmwareFile = System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location);
-                    FirmwareFile += @"\..\..\..\..\DSP\FB_W2100_SCU_MEA256\Release\";
-                    FirmwareFile += "FB_W2100_SCU_MEA256.bin";
-
-                    factorydev.Disconnect();
-
-                    bool success = factorydev.LoadUserFirmware(FirmwareFile, port, LockMask); // Code for uploading compiled binary
-                    if (!success)
-                    {
-                        MessageBox.Show("Firmware upload failed!");
-                    }
-                    else
-                    {
-                        MessageBox.Show("Firmware upload successful!");
-                    }
-                }
-            } else
-            {
-                MessageBox.Show("The DSP firmware will not be uploaded.\nThe following errors happened during stim parameter upload:\n\n" + uploadErrorMessage);
+                LogAndShowError("The DSP firmware will not be uploaded.\nThe following errors happened during stim parameter upload:\n\n" + uploadErrorMessage);
+                return;
             }
+            _logger.LogInformation("Uploading stimulation patterns to the headstage SUCCESSFUL");
+
+            CMcsUsbFactoryNet factorydev = new CMcsUsbFactoryNet();
+            if (factorydev.Connect(port, LockMask) == 0)
+            {
+                // uint stimThresholdDigits = (uint)Math.Floor((float)stimThresholdValue / 0.381);
+                uint stimThresholdDigits = (uint)Math.Floor((float)stimThresholdValue);
+                uint maxAmplitude = (uint)MaxValue;
+                uint propGainModified = (uint)Math.Floor(proportionalGain * 1000);
+
+                _logger.LogInformation($"Writing stimulation params to 0x1000 register...\n\tthreshold: {stimThresholdDigits}\n\tmax: {maxAmplitude}\n\tproportional gain: {propGainModified}\n\tselected channel: {selectedChannelValue}");
+                factorydev.WriteRegister(0x1000, stimThresholdDigits);
+                factorydev.WriteRegister(0x1008, maxAmplitude);
+                factorydev.WriteRegister(0x1018, propGainModified);
+                factorydev.WriteRegister(0x1022, selectedChannelValue);
+                factorydev.Disconnect();
+
+                string FirmwareFile;
+                FirmwareFile = System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location);
+                FirmwareFile += @"\..\..\..\..\DSP\FB_W2100_SCU_MEA256\Release\";
+                FirmwareFile += "FB_W2100_SCU_MEA256.bin";
+
+                if (!File.Exists(FirmwareFile))
+                {
+                    LogAndShowError("The selected firmware file doesn't exist!");
+                }
+
+                bool success = factorydev.LoadUserFirmware(FirmwareFile, port, LockMask); // Code for uploading compiled binary
+                if (!success)
+                {
+                    LogAndShowError("Firmware upload failed!");
+                }
+                else
+                {
+                    _logger.LogInformation("Firmware upload successful");
+                    MessageBox.Show("Firmware upload successful!");
+                }
+             }
         }
 
         static private uint parseSelectedChannel(string selected)
@@ -712,11 +719,7 @@ namespace Biomed_Closed_Loop_GUI
 
             if (DspPort != null || RawPort != null)
             {
-                CMcsUsbListEntryNet port = DspPort;
-                if (port == null)
-                {
-                    port = RawPort;
-                }
+                CMcsUsbListEntryNet port = DspPort ?? RawPort;
                 BeginInvoke(new UploadDSBBinaryAction(UploadDSBBinary), port);
             }
             else
