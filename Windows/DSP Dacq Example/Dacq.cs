@@ -45,6 +45,8 @@ namespace Biomed_Closed_Loop_GUI
 
         bool RandomStimOn = false;
 
+        string FirmwareFile;
+
         string RecordingFilename = null;
         string AmplitudeRecordingFilename = null;
         int AmplitudeRecordingSamplerate = 200;
@@ -229,6 +231,9 @@ namespace Biomed_Closed_Loop_GUI
 
             textBoxStimFrequency.Text = PulseParameters.defaultFrequency.ToString();
 
+            FirmwareFile = System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location);
+            FirmwareFile += @"\..\..\..\..\DSP\FB_W2100_SCU_MEA256\Release\";
+            FirmwareFile += "FB_W2100_SCU_MEA256.bin";
 
         }
 
@@ -635,14 +640,9 @@ namespace Biomed_Closed_Loop_GUI
                 factorydev.WriteRegister(0x1022, selectedChannelValue);
                 factorydev.Disconnect();
 
-                string FirmwareFile;
-                FirmwareFile = System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location);
-                FirmwareFile += @"\..\..\..\..\DSP\FB_W2100_SCU_MEA256\Release\";
-                FirmwareFile += "FB_W2100_SCU_MEA256.bin";
-
                 if (!File.Exists(FirmwareFile))
                 {
-                    LogAndShowError("The selected firmware file doesn't exist!");
+                    LogAndShowError($"The selected firmware file doesn't exist!\n{FirmwareFile}");
                     return;
                 }
 
@@ -889,6 +889,23 @@ namespace Biomed_Closed_Loop_GUI
             ulong negativePulseDuration = 80;
             ulong blankDuration = PulseParameters.blankDuration(stimFrequency, positivePulseDuration, negativePulseDuration);
             MessageBox.Show(String.Format("F: {0}; Blank: {1} us", stimFrequency, blankDuration));
+        }
+
+        private void ChooseFirmwareFileButton_Click(object sender, EventArgs e)
+        {
+            string filePath = "";
+            using (OpenFileDialog ofd = new OpenFileDialog())
+            {
+                ofd.InitialDirectory = new FileInfo(FirmwareFile).Directory.FullName;
+                ofd.Filter = "DSP Binary Files (*.bin)|*.bin|All Files|*.*";
+
+                if (ofd.ShowDialog() == DialogResult.OK)
+                {
+                    filePath = ofd.FileName;
+                    _logger.LogInformation($"New firmware file selected: {filePath}");
+                    FirmwareFile = filePath;
+                }
+            }
         }
     }
 }
