@@ -894,9 +894,16 @@ namespace Biomed_Closed_Loop_GUI
         private void ChooseFirmwareFileButton_Click(object sender, EventArgs e)
         {
             string filePath = "";
+            string initialDirectory = new FileInfo(FirmwareFile).Directory.FullName;
+            if (!Directory.Exists(initialDirectory))
+            {
+                _logger.LogWarning($"Directory {initialDirectory} does not exist; falling back to the assembly location");
+                initialDirectory = Path.GetDirectoryName(System.Reflection.Assembly.GetEntryAssembly().Location);
+            }
             using (OpenFileDialog ofd = new OpenFileDialog())
             {
-                ofd.InitialDirectory = new FileInfo(FirmwareFile).Directory.FullName;
+
+                ofd.InitialDirectory = initialDirectory;
                 ofd.Filter = "DSP Binary Files (*.bin)|*.bin|All Files|*.*";
 
                 if (ofd.ShowDialog() == DialogResult.OK)
