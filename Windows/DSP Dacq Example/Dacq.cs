@@ -239,9 +239,10 @@ namespace Biomed_Closed_Loop_GUI
 
         private void startDacq_Click(object sender, EventArgs e)
         {
+            _logger.LogInformation("Starting data acquisition...");
             if (selectedUsbDevice == null)
             {
-                MessageBox.Show("No device selected!");
+                LogAndShowError("No device selected!");
                 return;
             }
 
@@ -269,6 +270,7 @@ namespace Biomed_Closed_Loop_GUI
                 status = mea.Connect(selectedUsbDevice, 63);
             if (status == 0)
             {
+                _logger.LogInformation("MEA connection OK");
                 int ChannelsInBlock;
 
                 mea.SetDataMode(DataModeEnumNet.Signed_32bit, 0);
@@ -283,6 +285,7 @@ namespace Biomed_Closed_Loop_GUI
                 {
                     Samplerate = mea.GetSamplerate(0);
                 }
+                _logger.LogInformation($"Sample rate: {Samplerate}");
 
                 mea.EnableDigitalIn((use_digital_in ? (DigitalDatastreamEnableEnumNet) 3 : 0), 0);
 
@@ -310,7 +313,8 @@ namespace Biomed_Closed_Loop_GUI
             }
             else
             {
-                MessageBox.Show(CMcsUsbNet.GetErrorText(status));
+                _logger.LogError("Could not connect to MEA!");
+                LogAndShowError(CMcsUsbNet.GetErrorText(status));
                 startDacq.Enabled = true;
                 stopDacq.Enabled = false;
                 SaveToFileCheckBox.Enabled = true;
@@ -319,6 +323,7 @@ namespace Biomed_Closed_Loop_GUI
 
         private void stopDacq_Click(object sender, EventArgs e)
         {
+            _logger.LogInformation("Stopping data acquisition...");
             SaveToFileCheckBox.Enabled = true;
             RecordingFilename = null;
             AmplitudeRecordingFilename = null;
@@ -327,6 +332,7 @@ namespace Biomed_Closed_Loop_GUI
                 CW2100_FunctionNet func = new CW2100_FunctionNet(mea);
                 if (hsSamplingActive)
                 {
+                    _logger.LogInformation("Disabling headstage sampling...");
                     func.SetHeadstageSamplingActive(false, other_receiver + 0);
                 }
             }
@@ -335,6 +341,7 @@ namespace Biomed_Closed_Loop_GUI
             stopDacq.Enabled = false;
 
             mea.StopDacq();
+            _logger.LogInformation("Disconnecting from MEA...");
             mea.Disconnect();
         }
 
@@ -525,6 +532,7 @@ namespace Biomed_Closed_Loop_GUI
                 status = mea.Connect(port);
             if (status == 0)
             {
+                _logger.LogInformation("MEA connection OK");
                 mea.SetDataMode(DataModeEnumNet.Signed_32bit, 0);
                 mea.SetNumberOfAnalogChannels(Channels, 0, Channels, AnalogChannels, 0); // Read raw data
 
@@ -536,6 +544,7 @@ namespace Biomed_Closed_Loop_GUI
                 {
                     Samplerate = mea.GetSamplerate(0);
                 }
+                _logger.LogInformation($"Sample rate: {Samplerate}");
 
                 CW2100_FunctionNet func = new CW2100_FunctionNet(mea);
                 CW2100_StimulatorFunctionNet stim = new CW2100_StimulatorFunctionNet(mea);
@@ -557,7 +566,9 @@ namespace Biomed_Closed_Loop_GUI
                 ulong[] dur = new ulong[] { positivePulseDuration, negativePulseDuration, blankDuration };
                 //ulong[] dur = new ulong[] { 80, 80, 7600 };
 
+                _logger.LogInformation("Disabling headstage sampling");
                 func.SetHeadstageSamplingActive(false, other_receiver + 0);
+                _logger.LogInformation("Starting stim parameters upload");
                 // Define and upload each stimulation pattern
                 for (int i = 0; i < 16; i++)
                 {
@@ -573,6 +584,7 @@ namespace Biomed_Closed_Loop_GUI
                     if (i == 0)
                     {
                         preplegth = prep.DeviceDataLength;
+                        _logger.LogInformation($"Device data length {preplegth} (max 15)");
                     }
 
                     // Check that the pulse fits into the designated memory
@@ -580,6 +592,7 @@ namespace Biomed_Closed_Loop_GUI
                     Debug.Assert(prep.DeviceDataLength <= 15);
 
                     // Store pulse into designated memory
+                    _logger.LogInformation($"Uploading pattern {1}");
                     try
                     {
                         stim.SendPreparedData(0x10 * i + 0, prep, STG_DestinationEnumNet.channeldata_current);
@@ -589,10 +602,12 @@ namespace Biomed_Closed_Loop_GUI
                         uploadErrorMessage += String.Format("Error while uploading stim pattern {0}: {1}", i.ToString(), ex.Message) + "\n";
                     }
                 }
+                _logger.LogInformation("Enabling headstage sampling");
                 func.SetHeadstageSamplingActive(true, other_receiver + 0);
             } else
             {
-                MessageBox.Show(CMcsUsbNet.GetErrorText(status));
+                _logger.LogError("Error connecting to MEA");
+                LogAndShowError(CMcsUsbNet.GetErrorText(status));
             }
 
             // Do not disconnect if data plotting is running
@@ -731,26 +746,25 @@ namespace Biomed_Closed_Loop_GUI
 
         private void StopDSP_Click(object sender, EventArgs e)
         {
+            _logger.LogInformation("Stopping DSP...");
             CMcsUsbFactoryNet factorydev = new CMcsUsbFactoryNet(); // Create object of class CMcsUsbFactoryNet (provides firmware upgrade and register access capabilities)
             AmplitudeRecordingFilename = null;
             if (DspPort != null || RawPort != null)
             {
-                CMcsUsbListEntryNet port = DspPort;
-                if (port == null)
-                {
-                    port = RawPort;
-                }
+                CMcsUsbListEntryNet port = DspPort ?? RawPort;
 
                 if (factorydev.Connect(port, LockMask) == 0) // if connect call returns zero, connect has been successful
                 {
+                    _logger.LogInformation("Connection OK");
                     factorydev.Coldstart(CFirmwareDestinationNet.MCU1);
                     factorydev.WriteRegister(0x9A80, 0);
+                    _logger.LogInformation("DSP stopped, disconnecting...");
                     factorydev.Disconnect();
                 }
             }
             else
             {
-                MessageBox.Show("No port available");
+                LogAndShowError("No port available");
             }
         }
 
@@ -758,36 +772,31 @@ namespace Biomed_Closed_Loop_GUI
         {
             if (!int.TryParse(MaxAmplitudeTextBox.Text, out maxAmplitudeValue))
             {
-                MessageBox.Show("Max amplitude has to be an integer");
+                LogAndShowError("Max amplitude has to be an integer");
             }
             else if (maxAmplitudeValue > 300 || maxAmplitudeValue <= 0)
             {
-                MessageBox.Show("Max amplitude has to be between 0 and 300 μA");
+                LogAndShowError("Max amplitude has to be between 0 and 300 μA");
             }
             if (!int.TryParse(PercentageOnInputBox.Text, out int PercentageStimOn))
             {
-                MessageBox.Show("Percentage has to be an integer");
+                LogAndShowError("Percentage has to be an integer");
             }
             else if (PercentageStimOn > 99 || PercentageStimOn < 0)
             {
-                MessageBox.Show("Percentage has to be between 0 and 99");
+                LogAndShowError("Percentage has to be between 0 and 99");
             }
 
             if (DspPort != null || RawPort != null)
             {
-                CMcsUsbListEntryNet port = DspPort;
-                if (port == null)
-                {
-                    port = RawPort;
-                }
+                CMcsUsbListEntryNet port = DspPort ?? RawPort;
                 PercentageOnInputBox.Enabled = false;
                 StopRandomStimButton.Enabled = true;
                 Task.Run(() => RandomOnOffStimulation(port));
-                //BeginInvoke(new RandomOnOffStimulationAction(RandomOnOffStimulation), port);
             }
             else
             {
-                MessageBox.Show("No port available");
+                LogAndShowError("No port available");
             }
         }
 
@@ -796,6 +805,7 @@ namespace Biomed_Closed_Loop_GUI
         void RandomOnOffStimulation(CMcsUsbListEntryNet port)
         {
             int PercentageStimOn = Int32.Parse(PercentageOnInputBox.Text);
+            _logger.LogInformation($"Starting random stim ({PercentageStimOn}% ON...");
 
             // Define the upper and lower bounds for the controller output
             int MaxValue = maxAmplitudeValue * 1000;                //in nA
@@ -837,11 +847,12 @@ namespace Biomed_Closed_Loop_GUI
                     }
                     factorydev.WriteRegister(0x9A80, 0);
                     factorydev.Disconnect();
+                    _logger.LogInformation("Random stim finished");
                     MessageBox.Show("Random Stim Finished");
                 }
             } else
             {
-                MessageBox.Show("Random Stimulation will not proceed.\nThe following errors were encountered while uploading stimulation patterns to HS:\n\n" + uploadErrorMessage);
+                LogAndShowError("Random Stimulation will not proceed.\nThe following errors were encountered while uploading stimulation patterns to HS:\n\n" + uploadErrorMessage);
             }
         }
 
@@ -849,6 +860,7 @@ namespace Biomed_Closed_Loop_GUI
 
         private void StopRandomStimButton_Click(object sender, EventArgs e)
         {
+            _logger.LogInformation("Stopping random stim...");
             RandomStimOn = false;
             StopRandomStimButton.Enabled = false;
             PercentageOnInputBox.Enabled = true;
