@@ -14,6 +14,7 @@ using System.Runtime.CompilerServices;
 using Mcs.Usb;
 using System.Text.RegularExpressions;
 using Microsoft.Extensions.Logging;
+using System.Xml.Serialization;
 
 namespace Biomed_Closed_Loop_GUI
 {
@@ -53,6 +54,9 @@ namespace Biomed_Closed_Loop_GUI
 
         List<int> AmplitudeSaveBuffer = new List<int>();
 
+        TabPage lastSelectedTab;
+        TabPage selectedTab;
+
         // for W2100
         private int other_receiver = 0;
         private bool hsSamplingActive = false;
@@ -69,7 +73,6 @@ namespace Biomed_Closed_Loop_GUI
         {
             _logger = logger;
 
-            _logger.LogInformation("Starting App");
             InitializeComponent();
             UsbDeviceList.DeviceArrival += new OnDeviceArrivalRemoval(devices_DeviceArrival);
             UsbDeviceList.DeviceRemoval += new OnDeviceArrivalRemoval(devices_DeviceRemoval);
@@ -228,6 +231,17 @@ namespace Biomed_Closed_Loop_GUI
 
             series0Channel.SelectedIndex = 0;
             series1Channel.SelectedIndex = 1;
+
+            selectedTab = tabPage1;
+            lastSelectedTab = tabPage1;
+
+            tabControl1.DrawMode = TabDrawMode.OwnerDrawFixed;
+            tabControl1.DrawItem += tabControl1_DrawItem;
+
+            tabPage2.Enabled = false;
+            tabPage3.Enabled = false;
+            tabPage4.Enabled = false;
+            tabPage5.Enabled = false;
 
             textBoxStimFrequency.Text = PulseParameters.defaultFrequency.ToString();
 
@@ -592,14 +606,14 @@ namespace Biomed_Closed_Loop_GUI
                     Debug.Assert(prep.DeviceDataLength <= 15);
 
                     // Store pulse into designated memory
-                    _logger.LogInformation($"Uploading pattern {1}");
+                    _logger.LogInformation($"Uploading pattern {i}\tAmplitudes: {string.Join(" ", ampl)}\tDurations: {string.Join(" ", dur)}");
                     try
                     {
                         stim.SendPreparedData(0x10 * i + 0, prep, STG_DestinationEnumNet.channeldata_current);
                     }
                     catch (CUsbExceptionNet ex)
                     {
-                        uploadErrorMessage += String.Format("Error while uploading stim pattern {0}: {1}", i.ToString(), ex.Message) + "\n";
+                        uploadErrorMessage += $"Error while uploading stim pattern {i.ToString()}: {ex.Message}\n";
                     }
                 }
                 _logger.LogInformation("Enabling headstage sampling");
@@ -648,7 +662,7 @@ namespace Biomed_Closed_Loop_GUI
                 uint maxAmplitude = (uint)MaxValue;
                 uint propGainModified = (uint)Math.Floor(proportionalGain * 1000);
 
-                _logger.LogInformation($"Writing stimulation params to 0x1000 register...\n\tthreshold: {stimThresholdDigits}\n\tmax: {maxAmplitude}\n\tproportional gain: {propGainModified}\n\tselected channel: {selectedChannelValue}");
+                _logger.LogInformation($"Writing stimulation params to 0x1000 register...\n\tthreshold: {stimThresholdDigits}\n\tmax: {maxAmplitude}\n\tproportional gain: {propGainModified}\n\tselected channel: {selectedChannelValue}\n\tstim frequency: {stimFrequency}");
                 factorydev.WriteRegister(0x1000, stimThresholdDigits);
                 factorydev.WriteRegister(0x1008, maxAmplitude);
                 factorydev.WriteRegister(0x1018, propGainModified);
@@ -805,7 +819,7 @@ namespace Biomed_Closed_Loop_GUI
         void RandomOnOffStimulation(CMcsUsbListEntryNet port)
         {
             int PercentageStimOn = Int32.Parse(PercentageOnInputBox.Text);
-            _logger.LogInformation($"Starting random stim ({PercentageStimOn}% ON...");
+            _logger.LogInformation($"Starting random stim ({PercentageStimOn}%) ON...");
 
             // Define the upper and lower bounds for the controller output
             int MaxValue = maxAmplitudeValue * 1000;                //in nA
@@ -901,6 +915,29 @@ namespace Biomed_Closed_Loop_GUI
             ulong negativePulseDuration = 80;
             ulong blankDuration = PulseParameters.blankDuration(stimFrequency, positivePulseDuration, negativePulseDuration);
             MessageBox.Show(String.Format("F: {0}; Blank: {1} us", stimFrequency, blankDuration));
+        }
+
+        private void tabControl1_SelectedIndexChanged(object sender, EventArgs e)
+        { 
+            int[] disabledTabs = { 1, 2, 3, 4};
+            if (disabledTabs.Contains(tabControl1.SelectedIndex))
+            {
+                tabControl1.SelectedTab = lastSelectedTab;
+            }
+            selectedTab = tabControl1.SelectedTab;
+            lastSelectedTab = tabControl1.SelectedTab;
+        }
+
+        
+
+        private void tabControl1_DrawItem(object sender, DrawItemEventArgs e)
+        {
+            var tabControl = sender as TabControl;
+            var tabPage = tabControl.TabPages[e.Index];
+            var textColor = tabPage.Enabled ? Color.Black : Color.Gray;
+            var font = tabPage.Enabled ? e.Font : new Font(e.Font, FontStyle.Italic);
+            Rectangle rect = tabControl.GetTabRect(e.Index);
+            TextRenderer.DrawText(e.Graphics, tabPage.Text, font, rect, textColor, TextFormatFlags.HorizontalCenter | TextFormatFlags.VerticalCenter);
         }
 
         private void ChooseFirmwareFileButton_Click(object sender, EventArgs e)
